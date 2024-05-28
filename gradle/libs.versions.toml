@@ -1,5 +1,5 @@
 [versions]
-kotlin-version = "1.9.23"
+kotlin-version = "2.0.0"
 arrow-version = "1.2.4"
 kotlinx-serialization-json-version = "1.6.3"
 kotest-version = "5.9.0"
