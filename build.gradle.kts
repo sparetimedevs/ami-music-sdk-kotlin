@@ -27,7 +27,13 @@ kotlin {
     jvm {
         compilations.all { kotlinOptions.jvmTarget = "11" }
         withJava()
-        testRuns["test"].executionTask.configure { useJUnitPlatform() }
+        testRuns["test"].executionTask.configure {
+            useJUnitPlatform()
+            filter {
+                // Exclude all compatibility tests
+                excludeTestsMatching("backwardscompat.*")
+            }
+        }
     }
     js(IR) { browser { commonWebpackConfig { cssSupport { enabled.set(true) } } } }
     val hostOs = System.getProperty("os.name")
@@ -86,3 +92,32 @@ afterEvaluate {
     val spotlessApply = tasks.findByName("spotlessApply")
     tasks.withType<KotlinCompile> { dependsOn(spotlessApply) }
 }
+
+val compatibilityTest by
+    tasks.registering(Test::class) {
+        description = "Runs compatibility tests."
+        group = "verification"
+
+        javaLauncher.set(
+            javaToolchains.launcherFor { languageVersion.set(JavaLanguageVersion.of(11)) }
+        )
+
+        useJUnitPlatform()
+        testClassesDirs = kotlin.jvm().compilations.get("test").output.classesDirs
+        classpath +=
+            objects
+                .fileCollection()
+                .from(
+                    tasks.named("compileKotlinJvm"),
+                    tasks.named("compileTestKotlinJvm"),
+                    configurations.named("jvmRuntimeClasspath"),
+                    configurations.named("jvmTestRuntimeClasspath"),
+                )
+
+        filter {
+            // Exclude all unit tests
+            excludeTestsMatching("com.sparetimedevs.ami.*")
+            // Include all compatibility tests
+            includeTestsMatching("backwardscompat.*")
+        }
+    }

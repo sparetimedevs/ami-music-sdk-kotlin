@@ -23,14 +23,11 @@ import com.sparetimedevs.ami.music.input.Score as InputScore
 import com.sparetimedevs.ami.music.input.toInput
 import com.sparetimedevs.ami.music.input.validation.validateInput
 import io.kotest.assertions.arrow.core.shouldBeRight
-import io.kotest.core.annotation.Ignored
 import io.kotest.core.spec.style.StringSpec
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.json.Json
 import okhttp3.OkHttpClient
 
-@Ignored // TODO, figure out a way to not always run this test (maybe using a filter see:
-// https://kotest.io/docs/framework/conditional/conditional-tests-with-gradle.html )
 class PingPongTest :
     StringSpec({
         val httpClient = OkHttpClient()
