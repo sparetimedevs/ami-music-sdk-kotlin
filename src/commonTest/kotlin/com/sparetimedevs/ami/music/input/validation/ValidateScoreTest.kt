@@ -16,9 +16,12 @@
 
 package com.sparetimedevs.ami.music.input.validation
 
+import com.sparetimedevs.ami.core.validation.ValidationError
 import com.sparetimedevs.ami.music.data.kotlin.score.Score
 import com.sparetimedevs.ami.music.example.getExampleScore0
 import com.sparetimedevs.ami.music.example.getExampleScore0Input
+import com.sparetimedevs.ami.music.example.getExampleScore0InvalidInput
+import io.kotest.assertions.arrow.core.shouldBeLeft
 import io.kotest.assertions.arrow.core.shouldBeRight
 import io.kotest.core.spec.style.StringSpec
 
@@ -31,5 +34,16 @@ class ValidateScoreTest :
             inputScore.validate() shouldBeRight expectedScore
         }
 
-        // TODO write test for when multiple things do not pass the validation.
+        "validate score should return validation errors with invalid input" {
+            val inputScore: com.sparetimedevs.ami.music.input.Score = getExampleScore0InvalidInput()
+            val expectedValidationErrors =
+                listOf(
+                    ValidationError(message = "Note value can't be value QUARTAAAR"),
+                    // TODO write test for when multiple things do not pass the validation.
+                    //                    ValidationError(message = "octave = 127"),
+                    //                    ValidationError(message = "noteName = \"L\""),
+                )
+
+            inputScore.validate() shouldBeLeft expectedValidationErrors
+        }
     })
