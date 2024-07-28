@@ -20,6 +20,7 @@ import arrow.core.Either
 import arrow.core.raise.either
 import arrow.core.raise.ensure
 import com.sparetimedevs.ami.core.validation.ValidationError
+import com.sparetimedevs.ami.core.validation.ValidationErrorForId
 import com.sparetimedevs.ami.core.validation.getOrThrow
 import kotlin.jvm.JvmInline
 import kotlinx.serialization.Serializable
@@ -29,17 +30,21 @@ import kotlinx.serialization.Serializable
 public value class Octave private constructor(public val value: Byte) {
     public companion object {
 
-        public fun validate(input: Byte): Either<ValidationError, Octave> = either {
+        public fun validate(
+            input: Byte,
+            forId: ValidationErrorForId
+        ): Either<ValidationError, Octave> = either {
             // Are these good minimums and maximums?
             ensure(input > -13f) {
-                ValidationError("Octave can't be lesser than -12, the input was $input ")
+                ValidationError("Octave can't be lesser than -12, the input was $input", forId)
             }
             ensure(input < 13) {
-                ValidationError("Octave can't be greater than 12, the input was $input ")
+                ValidationError("Octave can't be greater than 12, the input was $input", forId)
             }
             Octave(input)
         }
 
-        public fun unsafeCreate(input: Byte): Octave = validate(input).getOrThrow()
+        public fun unsafeCreate(input: Byte): Octave =
+            validate(input, ValidationErrorForId.unsafeCreate("For unsafe create.")).getOrThrow()
     }
 }

@@ -20,6 +20,7 @@ import arrow.core.Either
 import arrow.core.left
 import arrow.core.right
 import com.sparetimedevs.ami.core.validation.ValidationError
+import com.sparetimedevs.ami.core.validation.ValidationErrorForId
 import kotlinx.serialization.Serializable
 
 @Serializable
@@ -335,7 +336,10 @@ public enum class NoteValue(public val value: Double) {
     _4096TH(0.000244140625);
 
     public companion object {
-        public fun validate(input: String): Either<ValidationError, NoteValue> =
+        public fun validate(
+            input: String,
+            forId: ValidationErrorForId
+        ): Either<ValidationError, NoteValue> =
             when (input) {
                 MAXIMA.name -> MAXIMA.right()
                 LONG.name -> LONG.right()
@@ -353,7 +357,7 @@ public enum class NoteValue(public val value: Double) {
                 _1024TH.name -> _1024TH.right()
                 _2048TH.name -> _2048TH.right()
                 _4096TH.name -> _4096TH.right()
-                else -> ValidationError("Note value can't be value $input").left()
+                else -> ValidationError("Note value can't be value $input", forId).left()
             }
     }
 }

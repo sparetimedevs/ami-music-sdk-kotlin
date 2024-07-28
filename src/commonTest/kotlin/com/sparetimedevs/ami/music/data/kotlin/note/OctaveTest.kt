@@ -17,19 +17,21 @@
 package com.sparetimedevs.ami.music.data.kotlin.note
 
 import com.sparetimedevs.ami.core.validation.ValidationError
+import com.sparetimedevs.ami.core.validation.ValidationErrorForId
 import io.kotest.assertions.arrow.core.shouldBeLeft
 import io.kotest.assertions.arrow.core.shouldBeRight
 import io.kotest.core.spec.style.StringSpec
 
 class OctaveTest :
     StringSpec({
+        val forId = ValidationErrorForId.unsafeCreate("test")
         "validate should return valid octave" {
             val input: Byte = 4
-            Octave.validate(input) shouldBeRight Octave.unsafeCreate(4)
+            Octave.validate(input, forId) shouldBeRight Octave.unsafeCreate(4)
         }
         "validate should return invalid with error" {
             val input: Byte = -13
-            Octave.validate(input) shouldBeLeft
-                ValidationError("Octave can't be lesser than -12, the input was -13 ")
+            Octave.validate(input, forId) shouldBeLeft
+                ValidationError("Octave can't be lesser than -12, the input was -13", forId)
         }
     })

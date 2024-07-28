@@ -22,6 +22,7 @@ import arrow.core.NonEmptyList
 import arrow.core.right
 import arrow.core.toEitherNel
 import com.sparetimedevs.ami.core.validation.ValidationError
+import com.sparetimedevs.ami.core.validation.ValidationErrorForId
 import com.sparetimedevs.ami.music.data.kotlin.measure.Measure
 import com.sparetimedevs.ami.music.data.kotlin.measure.MeasureAttributes
 import com.sparetimedevs.ami.music.data.kotlin.part.Part
@@ -43,16 +44,25 @@ public fun com.sparetimedevs.ami.music.input.Score.validate(): EitherNel<Validat
 public fun com.sparetimedevs.ami.music.input.Part.validate(): EitherNel<ValidationError, Part> =
     Either.zipOrAccumulate(
         PartId.validate(this.id).toEitherNel(),
-        this.measures.map { measure -> measure.validate() }.combineAllValidationErrors()
+        this.measures
+            .withIndex()
+            .map { (id, measure) ->
+                measure.validate(ValidationErrorForId.unsafeCreate("measure:$id"))
+            }
+            .combineAllValidationErrors()
     ) { id, measures ->
         Part(id, measures)
     }
 
-public fun com.sparetimedevs.ami.music.input.Measure.validate():
-    EitherNel<ValidationError, Measure> =
+public fun com.sparetimedevs.ami.music.input.Measure.validate(
+    forId: ValidationErrorForId
+): EitherNel<ValidationError, Measure> =
     Either.zipOrAccumulate(
         this.attributes.validate(),
-        this.notes.map { note -> validateNote(note) }.combineAllValidationErrors()
+        // TODO add identifier to ValidationErrors. Something like
+        // "part-id:the-p-id;measure-id:the-measure-id"
+
+        this.notes.map { note -> validateNote(note, forId) }.combineAllValidationErrors()
     ) { attributes, notes ->
         Measure(attributes, notes)
     }
@@ -64,13 +74,24 @@ public fun com.sparetimedevs.ami.music.input.MeasureAttributes?.validate():
 }
 
 // TODO move somewhere where it makes sense.
-public fun <T> Iterable<Either<NonEmptyList<ValidationError>, T>>.combineAllValidationErrors():
-    EitherNel<ValidationError, List<T>> =
+public fun <T> Iterable<Either<NonEmptyList<ValidationError>, T>>.combineAllValidationErrors(
+    //    forId: ValidationErrorForId
+): EitherNel<ValidationError, List<T>> =
     this.fold(emptyList<T>().right()) {
         acc: Either<NonEmptyList<ValidationError>, List<T>>,
         el: Either<NonEmptyList<ValidationError>, T> ->
         Either.zipOrAccumulate(
-            { e1: NonEmptyList<ValidationError>, e2: NonEmptyList<ValidationError> -> e1 + e2 },
+            { e1: NonEmptyList<ValidationError>, e2: NonEmptyList<ValidationError> ->
+                e1 + e2
+                //                    e2.map {
+                //                        it.copy(
+                //                            forId =
+                //                                ValidationErrorForId.unsafeCreate(
+                //                                    "ID: $errorIdPrefix" + it.forId.value
+                //                                )
+                //                        )
+                //                    }
+            },
             acc,
             el,
             { b1: List<T>, b2: T -> b1 + b2 }

@@ -35,12 +35,10 @@ public value class PartId private constructor(public val value: String) {
 
         public fun validate(input: String): Either<ValidationError, PartId> = either {
             ensure(input.isNotEmpty()) {
-                ValidationError("Part ID can't be empty, the input was $input ")
+                ValidationError("Part ID can't be empty, the input was $input")
             }
             ensure(input.length <= 128) {
-                ValidationError(
-                    "Part ID can't be longer than 128 characters, the input was $input "
-                )
+                ValidationError("Part ID can't be longer than 128 characters, the input was $input")
             }
             PartId(input)
         }

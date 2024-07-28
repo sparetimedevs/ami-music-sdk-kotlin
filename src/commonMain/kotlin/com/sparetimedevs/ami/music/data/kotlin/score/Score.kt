@@ -35,11 +35,11 @@ public value class ScoreId private constructor(public val value: String) {
 
         public fun validate(input: String): Either<ValidationError, ScoreId> = either {
             ensure(input.isNotEmpty()) {
-                ValidationError("Score ID can't be empty, the input was $input ")
+                ValidationError("Score ID can't be empty, the input was $input")
             }
             ensure(input.length <= 128) {
                 ValidationError(
-                    "Score ID can't be longer than 128 characters, the input was $input "
+                    "Score ID can't be longer than 128 characters, the input was $input"
                 )
             }
             ScoreId(input)
@@ -56,11 +56,11 @@ public value class ScoreTitle private constructor(public val value: String) {
 
         public fun validate(input: String): Either<ValidationError, ScoreTitle> = either {
             ensure(input.isNotEmpty()) {
-                ValidationError("Score title can't be empty, the input was $input ")
+                ValidationError("Score title can't be empty, the input was $input")
             }
             ensure(input.length < 513) {
                 ValidationError(
-                    "Score title can't be longer than 512 characters, the input was $input "
+                    "Score title can't be longer than 512 characters, the input was $input"
                 )
             }
             ScoreTitle(input)

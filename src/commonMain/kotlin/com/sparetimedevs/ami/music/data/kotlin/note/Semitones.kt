@@ -39,10 +39,10 @@ public value class Semitones private constructor(public val value: Float) {
         public fun validate(input: Float): Either<ValidationError, Semitones> = either {
             // Are these good minimums and maximums?
             ensure(input > -10.0f) {
-                ValidationError("Semitones can't be lesser than -10.0, the input was $input ")
+                ValidationError("Semitones can't be lesser than -10.0, the input was $input")
             }
             ensure(input < 10.0f) {
-                ValidationError("Semitones can't be greater than 10.0, the input was $input ")
+                ValidationError("Semitones can't be greater than 10.0, the input was $input")
             }
             Semitones(input)
         }

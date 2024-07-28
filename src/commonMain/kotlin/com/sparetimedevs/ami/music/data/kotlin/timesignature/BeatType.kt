@@ -30,7 +30,7 @@ public value class BeatType private constructor(public val value: Byte) {
     public companion object {
         public fun validate(input: Byte): Either<ValidationError, BeatType> = either {
             ensure(input > 0) {
-                ValidationError("BeatType can't be zero or negative, the input was $input ")
+                ValidationError("BeatType can't be zero or negative, the input was $input")
             }
             BeatType(input)
         }

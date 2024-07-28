@@ -17,6 +17,7 @@
 package com.sparetimedevs.ami.music.input.validation
 
 import com.sparetimedevs.ami.core.validation.ValidationError
+import com.sparetimedevs.ami.core.validation.ValidationErrorForId
 import com.sparetimedevs.ami.music.data.kotlin.score.Score
 import com.sparetimedevs.ami.music.example.getExampleScore0
 import com.sparetimedevs.ami.music.example.getExampleScore0Input
@@ -38,7 +39,22 @@ class ValidateScoreTest :
             val inputScore: com.sparetimedevs.ami.music.input.Score = getExampleScore0InvalidInput()
             val expectedValidationErrors =
                 listOf(
-                    ValidationError(message = "Note value can't be value QUARTAAAR"),
+                    ValidationError(
+                        message = "Note value can't be value QUARTAAAR",
+                        forId =
+                            ValidationErrorForId.unsafeCreate(
+                                "measure:0" // TODO probably want part:partId in here as well. And
+                                // maybe note:index.
+                            )
+                    ),
+                    ValidationError(
+                        message = "Octave can't be greater than 12, the input was 127",
+                        forId = ValidationErrorForId.unsafeCreate("measure:0")
+                    ),
+                    ValidationError(
+                        message = "Note name can't be value L",
+                        forId = ValidationErrorForId.unsafeCreate("measure:0")
+                    )
                     // TODO write test for when multiple things do not pass the validation.
                     //                    ValidationError(message = "octave = 127"),
                     //                    ValidationError(message = "noteName = \"L\""),
