@@ -30,6 +30,10 @@ public data class ValidationError(
         )
 )
 
+// TODO could also model this as
+// ScoreValidationErrorForId(scoreId = ScoreId("aaa"), PartValidationErrorForId(partId =
+// PartId("bbb"), MeasureValidationErrorForId(measureIndex = 0, NoteValidationErrorForId(noteIndex =
+// 2 ))))
 @Serializable
 @JvmInline
 public value class ValidationErrorForId private constructor(public val value: String) {
@@ -49,4 +53,7 @@ public value class ValidationErrorForId private constructor(public val value: St
 
         public fun unsafeCreate(input: String): ValidationErrorForId = validate(input).getOrThrow()
     }
+
+    public fun expand(input: String): ValidationErrorForId =
+        validate(this.value + ';' + input).getOrThrow()
 }

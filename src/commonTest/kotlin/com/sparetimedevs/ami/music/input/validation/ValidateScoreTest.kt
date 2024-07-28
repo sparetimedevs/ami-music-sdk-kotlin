@@ -43,21 +43,23 @@ class ValidateScoreTest :
                         message = "Note value can't be value QUARTAAAR",
                         forId =
                             ValidationErrorForId.unsafeCreate(
-                                "measure:0" // TODO probably want part:partId in here as well. And
-                                // maybe note:index.
+                                "score:d737b4ae-fbaa-4b0d-9d36-d3651e30e93a;part:p-1;measure:0;note:0"
                             )
                     ),
                     ValidationError(
                         message = "Octave can't be greater than 12, the input was 127",
-                        forId = ValidationErrorForId.unsafeCreate("measure:0")
+                        forId =
+                            ValidationErrorForId.unsafeCreate(
+                                "score:d737b4ae-fbaa-4b0d-9d36-d3651e30e93a;part:p-1;measure:0;note:1"
+                            )
                     ),
                     ValidationError(
                         message = "Note name can't be value L",
-                        forId = ValidationErrorForId.unsafeCreate("measure:0")
+                        forId =
+                            ValidationErrorForId.unsafeCreate(
+                                "score:d737b4ae-fbaa-4b0d-9d36-d3651e30e93a;part:p-1;measure:0;note:3"
+                            )
                     )
-                    // TODO write test for when multiple things do not pass the validation.
-                    //                    ValidationError(message = "octave = 127"),
-                    //                    ValidationError(message = "noteName = \"L\""),
                 )
 
             inputScore.validate() shouldBeLeft expectedValidationErrors

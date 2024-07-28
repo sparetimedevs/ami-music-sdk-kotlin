@@ -31,24 +31,33 @@ import com.sparetimedevs.ami.music.data.kotlin.score.Score
 import com.sparetimedevs.ami.music.data.kotlin.score.ScoreId
 import com.sparetimedevs.ami.music.data.kotlin.score.ScoreTitle
 
-public fun com.sparetimedevs.ami.music.input.Score.validate(): EitherNel<ValidationError, Score> =
-    Either.zipOrAccumulate(
-        ScoreId.validate(this.id).toEitherNel(),
+public fun com.sparetimedevs.ami.music.input.Score.validate(): EitherNel<ValidationError, Score> {
+    val scoreId: Either<NonEmptyList<ValidationError>, ScoreId> =
+        ScoreId.validate(this.id).toEitherNel()
+    val scoreValidationErrorForId =
+        ValidationErrorForId.unsafeCreate(
+            scoreId.fold({ "score:no-valid-score-id" }, { "score:${it.value}" })
+        )
+    return Either.zipOrAccumulate(
+        scoreId,
         if (this.title != null) ScoreTitle.validate(this.title).toEitherNel()
         else Either.Right(null),
-        this.parts.map { part -> part.validate() }.combineAllValidationErrors()
+        this.parts
+            .map { part -> part.validate(scoreValidationErrorForId.expand("part:${part.id}")) }
+            .combineAllValidationErrors()
     ) { id: ScoreId, title: ScoreTitle?, parts: List<Part> ->
         Score(id, title, parts)
     }
+}
 
-public fun com.sparetimedevs.ami.music.input.Part.validate(): EitherNel<ValidationError, Part> =
+public fun com.sparetimedevs.ami.music.input.Part.validate(
+    forId: ValidationErrorForId
+): EitherNel<ValidationError, Part> =
     Either.zipOrAccumulate(
         PartId.validate(this.id).toEitherNel(),
         this.measures
             .withIndex()
-            .map { (id, measure) ->
-                measure.validate(ValidationErrorForId.unsafeCreate("measure:$id"))
-            }
+            .map { (id, measure) -> measure.validate(forId.expand("measure:$id")) }
             .combineAllValidationErrors()
     ) { id, measures ->
         Part(id, measures)
@@ -59,10 +68,10 @@ public fun com.sparetimedevs.ami.music.input.Measure.validate(
 ): EitherNel<ValidationError, Measure> =
     Either.zipOrAccumulate(
         this.attributes.validate(),
-        // TODO add identifier to ValidationErrors. Something like
-        // "part-id:the-p-id;measure-id:the-measure-id"
-
-        this.notes.map { note -> validateNote(note, forId) }.combineAllValidationErrors()
+        this.notes
+            .withIndex()
+            .map { (id, note) -> validateNote(note, forId.expand("note:$id")) }
+            .combineAllValidationErrors()
     ) { attributes, notes ->
         Measure(attributes, notes)
     }
