@@ -21,6 +21,7 @@ import arrow.core.raise.either
 import arrow.core.raise.ensure
 import com.sparetimedevs.ami.core.util.randomUuidString
 import com.sparetimedevs.ami.core.validation.ValidationError
+import com.sparetimedevs.ami.core.validation.ValidationErrorFor
 import com.sparetimedevs.ami.core.validation.getOrThrow
 import com.sparetimedevs.ami.music.data.kotlin.measure.Measure
 import kotlin.jvm.JvmInline
@@ -33,17 +34,23 @@ public value class PartId private constructor(public val value: String) {
 
         public operator fun invoke(): PartId = PartId(randomUuidString())
 
-        public fun validate(input: String): Either<ValidationError, PartId> = either {
+        public fun validate(
+            input: String,
+            validationErrorFor: ValidationErrorFor?
+        ): Either<ValidationError, PartId> = either {
             ensure(input.isNotEmpty()) {
-                ValidationError("Part ID can't be empty, the input was $input")
+                ValidationError("Part ID can't be empty, the input was $input", validationErrorFor)
             }
             ensure(input.length <= 128) {
-                ValidationError("Part ID can't be longer than 128 characters, the input was $input")
+                ValidationError(
+                    "Part ID can't be longer than 128 characters, the input was $input",
+                    validationErrorFor
+                )
             }
             PartId(input)
         }
 
-        public fun unsafeCreate(input: String): PartId = validate(input).getOrThrow()
+        public fun unsafeCreate(input: String): PartId = validate(input, null).getOrThrow()
     }
 }
 

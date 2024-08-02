@@ -21,7 +21,7 @@ import arrow.core.EitherNel
 import arrow.core.leftNel
 import arrow.core.right
 import com.sparetimedevs.ami.core.validation.ValidationError
-import com.sparetimedevs.ami.core.validation.ValidationErrorForId
+import com.sparetimedevs.ami.core.validation.ValidationErrorForNote
 import com.sparetimedevs.ami.music.data.kotlin.note.Note
 import com.sparetimedevs.ami.music.data.kotlin.note.Note.Chord
 import com.sparetimedevs.ami.music.data.kotlin.note.Note.Pitched
@@ -34,43 +34,50 @@ import com.sparetimedevs.ami.music.data.kotlin.note.Octave
 import com.sparetimedevs.ami.music.data.kotlin.note.Pitch
 import com.sparetimedevs.ami.music.data.kotlin.note.Semitones
 
-public fun validateNote(input: Any, forId: ValidationErrorForId): EitherNel<ValidationError, Note> =
+public fun validateNote(
+    input: Any,
+    validationErrorFor: ValidationErrorForNote,
+): EitherNel<ValidationError, Note> =
     when (input) {
-        is com.sparetimedevs.ami.music.input.Pitched -> input.validate(forId)
-        is com.sparetimedevs.ami.music.input.Chord -> input.validate(forId)
+        is com.sparetimedevs.ami.music.input.Pitched -> input.validate(validationErrorFor)
+        is com.sparetimedevs.ami.music.input.Chord -> input.validate(validationErrorFor)
         // TODO add Unpitched, Rest
-        else -> ValidationError("Note can't be of type ${input::class.simpleName}", forId).leftNel()
+        else ->
+            ValidationError("Note can't be of type ${input::class.simpleName}", validationErrorFor)
+                .leftNel()
     }
 
 public fun com.sparetimedevs.ami.music.input.Pitched.validate(
-    forId: ValidationErrorForId
+    validationErrorFor: ValidationErrorForNote
 ): EitherNel<ValidationError, Pitched> =
     Either.zipOrAccumulate(
-        this.duration.validate(forId),
+        this.duration.validate(validationErrorFor),
         this.noteAttributes.validate(),
-        this.pitch.validate(forId)
+        this.pitch.validate(validationErrorFor)
     ) { duration, noteAttributes, pitch ->
         Pitched(duration, noteAttributes, pitch)
     }
 
 public fun com.sparetimedevs.ami.music.input.Chord.validate(
-    forId: ValidationErrorForId
+    validationErrorFor: ValidationErrorForNote
 ): EitherNel<ValidationError, Chord> =
     Either.zipOrAccumulate(
-        this.duration.validate(forId),
+        this.duration.validate(validationErrorFor),
         this.noteAttributes.validate(),
-        this.rootNote.validate(forId),
-        this.pitches.map { pitch -> pitch.validate(forId) }.combineAllValidationErrors()
+        this.rootNote.validate(validationErrorFor),
+        this.pitches
+            .map { pitch -> pitch.validate(validationErrorFor) }
+            .combineAllValidationErrors()
     ) { duration, noteAttributes, rootNote, pitches ->
         Chord(duration, noteAttributes, rootNote, pitches)
     }
 
 public fun com.sparetimedevs.ami.music.input.NoteDuration.validate(
-    forId: ValidationErrorForId
+    validationErrorFor: ValidationErrorForNote
 ): EitherNel<ValidationError, NoteDuration> =
     Either.zipOrAccumulate(
-        NoteValue.validate(this.noteValue, forId),
-        NoteModifier.validate(this.modifier)
+        NoteValue.validate(this.noteValue, validationErrorFor),
+        NoteModifier.validate(this.modifier, validationErrorFor)
     ) { noteValue, modifier ->
         NoteDuration(noteValue, modifier)
     }
@@ -82,12 +89,12 @@ public fun com.sparetimedevs.ami.music.input.NoteAttributes.validate():
 }
 
 public fun com.sparetimedevs.ami.music.input.Pitch.validate(
-    forId: ValidationErrorForId
+    validationErrorFor: ValidationErrorForNote
 ): EitherNel<ValidationError, Pitch> =
     Either.zipOrAccumulate(
-        NoteName.validate(this.noteName, forId),
-        Octave.validate(this.octave, forId),
-        Semitones.validate(this.alter)
+        NoteName.validate(this.noteName, validationErrorFor),
+        Octave.validate(this.octave, validationErrorFor),
+        Semitones.validate(this.alter, validationErrorFor)
     ) { noteName, octave, alter ->
         Pitch(noteName, octave, alter)
     }

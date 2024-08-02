@@ -21,6 +21,7 @@ import arrow.core.raise.either
 import arrow.core.raise.ensure
 import com.sparetimedevs.ami.core.util.randomUuidString
 import com.sparetimedevs.ami.core.validation.ValidationError
+import com.sparetimedevs.ami.core.validation.ValidationErrorFor
 import com.sparetimedevs.ami.core.validation.getOrThrow
 import com.sparetimedevs.ami.music.data.kotlin.part.Part
 import kotlin.jvm.JvmInline
@@ -33,19 +34,23 @@ public value class ScoreId private constructor(public val value: String) {
 
         public operator fun invoke(): ScoreId = ScoreId(randomUuidString())
 
-        public fun validate(input: String): Either<ValidationError, ScoreId> = either {
+        public fun validate(
+            input: String,
+            validationErrorFor: ValidationErrorFor?
+        ): Either<ValidationError, ScoreId> = either {
             ensure(input.isNotEmpty()) {
-                ValidationError("Score ID can't be empty, the input was $input")
+                ValidationError("Score ID can't be empty, the input was $input", validationErrorFor)
             }
             ensure(input.length <= 128) {
                 ValidationError(
-                    "Score ID can't be longer than 128 characters, the input was $input"
+                    "Score ID can't be longer than 128 characters, the input was $input",
+                    validationErrorFor
                 )
             }
             ScoreId(input)
         }
 
-        public fun unsafeCreate(input: String): ScoreId = validate(input).getOrThrow()
+        public fun unsafeCreate(input: String): ScoreId = validate(input, null).getOrThrow()
     }
 }
 
@@ -54,19 +59,26 @@ public value class ScoreId private constructor(public val value: String) {
 public value class ScoreTitle private constructor(public val value: String) {
     public companion object {
 
-        public fun validate(input: String): Either<ValidationError, ScoreTitle> = either {
+        public fun validate(
+            input: String,
+            validationErrorFor: ValidationErrorFor?
+        ): Either<ValidationError, ScoreTitle> = either {
             ensure(input.isNotEmpty()) {
-                ValidationError("Score title can't be empty, the input was $input")
+                ValidationError(
+                    "Score title can't be empty, the input was $input",
+                    validationErrorFor
+                )
             }
             ensure(input.length < 513) {
                 ValidationError(
-                    "Score title can't be longer than 512 characters, the input was $input"
+                    "Score title can't be longer than 512 characters, the input was $input",
+                    validationErrorFor
                 )
             }
             ScoreTitle(input)
         }
 
-        public fun unsafeCreate(input: String): ScoreTitle = validate(input).getOrThrow()
+        public fun unsafeCreate(input: String): ScoreTitle = validate(input, null).getOrThrow()
     }
 }
 

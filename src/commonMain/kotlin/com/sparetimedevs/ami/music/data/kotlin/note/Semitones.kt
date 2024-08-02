@@ -20,6 +20,7 @@ import arrow.core.Either
 import arrow.core.raise.either
 import arrow.core.raise.ensure
 import com.sparetimedevs.ami.core.validation.ValidationError
+import com.sparetimedevs.ami.core.validation.ValidationErrorFor
 import com.sparetimedevs.ami.core.validation.getOrThrow
 import kotlin.jvm.JvmInline
 import kotlinx.serialization.Serializable
@@ -36,17 +37,26 @@ public value class Semitones private constructor(public val value: Float) {
 
         public val DefaultSemitones: Semitones = Semitones(0.0f)
 
-        public fun validate(input: Float): Either<ValidationError, Semitones> = either {
+        public fun validate(
+            input: Float,
+            validationErrorFor: ValidationErrorFor?
+        ): Either<ValidationError, Semitones> = either {
             // Are these good minimums and maximums?
             ensure(input > -10.0f) {
-                ValidationError("Semitones can't be lesser than -10.0, the input was $input")
+                ValidationError(
+                    "Semitones can't be lesser than -10.0, the input was $input",
+                    validationErrorFor
+                )
             }
             ensure(input < 10.0f) {
-                ValidationError("Semitones can't be greater than 10.0, the input was $input")
+                ValidationError(
+                    "Semitones can't be greater than 10.0, the input was $input",
+                    validationErrorFor
+                )
             }
             Semitones(input)
         }
 
-        public fun unsafeCreate(input: Float): Semitones = validate(input).getOrThrow()
+        public fun unsafeCreate(input: Float): Semitones = validate(input, null).getOrThrow()
     }
 }

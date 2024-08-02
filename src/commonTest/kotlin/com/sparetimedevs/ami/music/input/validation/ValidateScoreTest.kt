@@ -17,7 +17,7 @@
 package com.sparetimedevs.ami.music.input.validation
 
 import com.sparetimedevs.ami.core.validation.ValidationError
-import com.sparetimedevs.ami.core.validation.ValidationErrorForId
+import com.sparetimedevs.ami.core.validation.ValidationErrorForNote
 import com.sparetimedevs.ami.music.data.kotlin.score.Score
 import com.sparetimedevs.ami.music.example.getExampleScore0
 import com.sparetimedevs.ami.music.example.getExampleScore0Input
@@ -32,7 +32,9 @@ class ValidateScoreTest :
             val inputScore: com.sparetimedevs.ami.music.input.Score = getExampleScore0Input()
             val expectedScore: Score = getExampleScore0()
 
-            inputScore.validate() shouldBeRight expectedScore
+            inputScore.validate(
+                validationErrorFor = null /* null because it doesn't have a parent */
+            ) shouldBeRight expectedScore
         }
 
         "validate score should return validation errors with invalid input" {
@@ -41,27 +43,38 @@ class ValidateScoreTest :
                 listOf(
                     ValidationError(
                         message = "Note value can't be value QUARTAAAR",
-                        forId =
-                            ValidationErrorForId.unsafeCreate(
-                                "score:d737b4ae-fbaa-4b0d-9d36-d3651e30e93a;part:p-1;measure:0;note:0"
+                        validationErrorFor =
+                            ValidationErrorForNote(
+                                "d737b4ae-fbaa-4b0d-9d36-d3651e30e93a",
+                                "p-1",
+                                0,
+                                0
                             )
                     ),
                     ValidationError(
                         message = "Octave can't be greater than 12, the input was 127",
-                        forId =
-                            ValidationErrorForId.unsafeCreate(
-                                "score:d737b4ae-fbaa-4b0d-9d36-d3651e30e93a;part:p-1;measure:0;note:1"
+                        validationErrorFor =
+                            ValidationErrorForNote(
+                                "d737b4ae-fbaa-4b0d-9d36-d3651e30e93a",
+                                "p-1",
+                                0,
+                                1
                             )
                     ),
                     ValidationError(
                         message = "Note name can't be value L",
-                        forId =
-                            ValidationErrorForId.unsafeCreate(
-                                "score:d737b4ae-fbaa-4b0d-9d36-d3651e30e93a;part:p-1;measure:0;note:3"
+                        validationErrorFor =
+                            ValidationErrorForNote(
+                                "d737b4ae-fbaa-4b0d-9d36-d3651e30e93a",
+                                "p-1",
+                                0,
+                                3
                             )
                     )
                 )
 
-            inputScore.validate() shouldBeLeft expectedValidationErrors
+            inputScore.validate(
+                validationErrorFor = null /* null because it doesn't have a parent */
+            ) shouldBeLeft expectedValidationErrors
         }
     })

@@ -22,4 +22,5 @@ import com.sparetimedevs.ami.core.asEitherWithAccumulatedValidationErrors
 import com.sparetimedevs.ami.music.data.kotlin.score.Score
 
 public fun com.sparetimedevs.ami.music.input.Score.validateInput(): Either<DomainError, Score> =
-    this.validate().asEitherWithAccumulatedValidationErrors()
+    this.validate(validationErrorFor = null /* null because it doesn't have a parent */)
+        .asEitherWithAccumulatedValidationErrors()

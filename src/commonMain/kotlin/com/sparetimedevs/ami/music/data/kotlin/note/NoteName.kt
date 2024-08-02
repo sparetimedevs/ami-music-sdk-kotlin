@@ -20,7 +20,7 @@ import arrow.core.Either
 import arrow.core.left
 import arrow.core.right
 import com.sparetimedevs.ami.core.validation.ValidationError
-import com.sparetimedevs.ami.core.validation.ValidationErrorForId
+import com.sparetimedevs.ami.core.validation.ValidationErrorFor
 import kotlinx.serialization.Serializable
 
 @Serializable
@@ -47,7 +47,7 @@ public enum class NoteName {
 
         public fun validate(
             input: String,
-            forId: ValidationErrorForId
+            validationErrorFor: ValidationErrorFor?
         ): Either<ValidationError, NoteName> =
             when (input) {
                 A_FLAT.name -> A_FLAT.right()
@@ -67,7 +67,8 @@ public enum class NoteName {
                 G_FLAT.name -> G_FLAT.right()
                 G.name -> G.right()
                 G_SHARP.name -> G_SHARP.right()
-                else -> ValidationError("Note name can't be value $input", forId).left()
+                else ->
+                    ValidationError("Note name can't be value $input", validationErrorFor).left()
             }
     }
 }

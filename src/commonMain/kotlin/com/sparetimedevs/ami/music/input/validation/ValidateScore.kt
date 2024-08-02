@@ -22,7 +22,10 @@ import arrow.core.NonEmptyList
 import arrow.core.right
 import arrow.core.toEitherNel
 import com.sparetimedevs.ami.core.validation.ValidationError
-import com.sparetimedevs.ami.core.validation.ValidationErrorForId
+import com.sparetimedevs.ami.core.validation.ValidationErrorFor
+import com.sparetimedevs.ami.core.validation.ValidationErrorForMeasure
+import com.sparetimedevs.ami.core.validation.ValidationErrorForPart
+import com.sparetimedevs.ami.core.validation.ValidationErrorForScore
 import com.sparetimedevs.ami.music.data.kotlin.measure.Measure
 import com.sparetimedevs.ami.music.data.kotlin.measure.MeasureAttributes
 import com.sparetimedevs.ami.music.data.kotlin.part.Part
@@ -31,19 +34,20 @@ import com.sparetimedevs.ami.music.data.kotlin.score.Score
 import com.sparetimedevs.ami.music.data.kotlin.score.ScoreId
 import com.sparetimedevs.ami.music.data.kotlin.score.ScoreTitle
 
-public fun com.sparetimedevs.ami.music.input.Score.validate(): EitherNel<ValidationError, Score> {
+public fun com.sparetimedevs.ami.music.input.Score.validate(
+    validationErrorFor: ValidationErrorFor?
+): EitherNel<ValidationError, Score> {
     val scoreId: Either<NonEmptyList<ValidationError>, ScoreId> =
-        ScoreId.validate(this.id).toEitherNel()
-    val scoreValidationErrorForId =
-        ValidationErrorForId.unsafeCreate(
-            scoreId.fold({ "score:no-valid-score-id" }, { "score:${it.value}" })
-        )
+        ScoreId.validate(this.id, validationErrorFor).toEitherNel()
+    val validationErrorForScore =
+        ValidationErrorForScore(scoreId.fold({ "no-valid-score-id" }, { it.value }))
     return Either.zipOrAccumulate(
         scoreId,
-        if (this.title != null) ScoreTitle.validate(this.title).toEitherNel()
+        if (this.title != null)
+            ScoreTitle.validate(this.title, validationErrorForScore).toEitherNel()
         else Either.Right(null),
         this.parts
-            .map { part -> part.validate(scoreValidationErrorForId.expand("part:${part.id}")) }
+            .map { part -> part.validate(validationErrorForScore.expandToPart(part.id)) }
             .combineAllValidationErrors()
     ) { id: ScoreId, title: ScoreTitle?, parts: List<Part> ->
         Score(id, title, parts)
@@ -51,26 +55,26 @@ public fun com.sparetimedevs.ami.music.input.Score.validate(): EitherNel<Validat
 }
 
 public fun com.sparetimedevs.ami.music.input.Part.validate(
-    forId: ValidationErrorForId
+    validationErrorFor: ValidationErrorForPart
 ): EitherNel<ValidationError, Part> =
     Either.zipOrAccumulate(
-        PartId.validate(this.id).toEitherNel(),
+        PartId.validate(this.id, validationErrorFor).toEitherNel(),
         this.measures
             .withIndex()
-            .map { (id, measure) -> measure.validate(forId.expand("measure:$id")) }
+            .map { (index, measure) -> measure.validate(validationErrorFor.expandToMeasure(index)) }
             .combineAllValidationErrors()
     ) { id, measures ->
         Part(id, measures)
     }
 
 public fun com.sparetimedevs.ami.music.input.Measure.validate(
-    forId: ValidationErrorForId
+    validationErrorFor: ValidationErrorForMeasure
 ): EitherNel<ValidationError, Measure> =
     Either.zipOrAccumulate(
         this.attributes.validate(),
         this.notes
             .withIndex()
-            .map { (id, note) -> validateNote(note, forId.expand("note:$id")) }
+            .map { (index, note) -> validateNote(note, validationErrorFor.expandToNote(index)) }
             .combineAllValidationErrors()
     ) { attributes, notes ->
         Measure(attributes, notes)
@@ -83,24 +87,13 @@ public fun com.sparetimedevs.ami.music.input.MeasureAttributes?.validate():
 }
 
 // TODO move somewhere where it makes sense.
-public fun <T> Iterable<Either<NonEmptyList<ValidationError>, T>>.combineAllValidationErrors(
-    //    forId: ValidationErrorForId
-): EitherNel<ValidationError, List<T>> =
+public fun <T> Iterable<Either<NonEmptyList<ValidationError>, T>>.combineAllValidationErrors():
+    EitherNel<ValidationError, List<T>> =
     this.fold(emptyList<T>().right()) {
         acc: Either<NonEmptyList<ValidationError>, List<T>>,
         el: Either<NonEmptyList<ValidationError>, T> ->
         Either.zipOrAccumulate(
-            { e1: NonEmptyList<ValidationError>, e2: NonEmptyList<ValidationError> ->
-                e1 + e2
-                //                    e2.map {
-                //                        it.copy(
-                //                            forId =
-                //                                ValidationErrorForId.unsafeCreate(
-                //                                    "ID: $errorIdPrefix" + it.forId.value
-                //                                )
-                //                        )
-                //                    }
-            },
+            { e1: NonEmptyList<ValidationError>, e2: NonEmptyList<ValidationError> -> e1 + e2 },
             acc,
             el,
             { b1: List<T>, b2: T -> b1 + b2 }

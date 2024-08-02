@@ -20,6 +20,7 @@ import arrow.core.Either
 import arrow.core.raise.either
 import arrow.core.raise.ensure
 import com.sparetimedevs.ami.core.validation.ValidationError
+import com.sparetimedevs.ami.core.validation.ValidationErrorFor
 import com.sparetimedevs.ami.core.validation.getOrThrow
 import kotlin.jvm.JvmInline
 import kotlinx.serialization.Serializable
@@ -28,13 +29,19 @@ import kotlinx.serialization.Serializable
 @JvmInline
 public value class BeatType private constructor(public val value: Byte) {
     public companion object {
-        public fun validate(input: Byte): Either<ValidationError, BeatType> = either {
+        public fun validate(
+            input: Byte,
+            validationErrorFor: ValidationErrorFor?
+        ): Either<ValidationError, BeatType> = either {
             ensure(input > 0) {
-                ValidationError("BeatType can't be zero or negative, the input was $input")
+                ValidationError(
+                    "BeatType can't be zero or negative, the input was $input",
+                    validationErrorFor
+                )
             }
             BeatType(input)
         }
 
-        public fun unsafeCreate(input: Byte): BeatType = validate(input).getOrThrow()
+        public fun unsafeCreate(input: Byte): BeatType = validate(input, null).getOrThrow()
     }
 }

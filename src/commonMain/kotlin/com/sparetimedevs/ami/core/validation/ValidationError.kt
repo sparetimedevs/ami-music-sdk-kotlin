@@ -16,44 +16,120 @@
 
 package com.sparetimedevs.ami.core.validation
 
-import arrow.core.Either
-import arrow.core.raise.either
-import arrow.core.raise.ensure
-import kotlin.jvm.JvmInline
-import kotlinx.serialization.Serializable
-
 public data class ValidationError(
     val message: String = "There was an error while validating the input.",
-    val forId: ValidationErrorForId =
-        ValidationErrorForId.unsafeCreate(
-            "TODO remove this, only hear so compilation works until all is addressed."
-        )
+    // validationErrorFor is nullable because we do not always have a rich context (e.g. when
+    // unsafeCreate is used).
+    val validationErrorFor: ValidationErrorFor?
 )
 
-// TODO could also model this as
-// ScoreValidationErrorForId(scoreId = ScoreId("aaa"), PartValidationErrorForId(partId =
-// PartId("bbb"), MeasureValidationErrorForId(measureIndex = 0, NoteValidationErrorForId(noteIndex =
-// 2 ))))
-@Serializable
-@JvmInline
-public value class ValidationErrorForId private constructor(public val value: String) {
-    public companion object {
+public interface ValidationErrorFor
 
-        public fun validate(input: String): Either<ValidationError, ValidationErrorForId> = either {
-            ensure(input.isNotEmpty()) {
-                ValidationError("ValidationErrorForId can't be empty, the input was $input")
-            }
-            ensure(input.length < 1025) {
-                ValidationError(
-                    "ValidationErrorForId can't be longer than 1024 characters, the input was $input"
-                )
-            }
-            ValidationErrorForId(input)
-        }
+public open class ValidationErrorForScore(public open val scoreId: String) : ValidationErrorFor {
+    public open fun expandToPart(partId: String): ValidationErrorForPart =
+        ValidationErrorForPart(this.scoreId, partId)
 
-        public fun unsafeCreate(input: String): ValidationErrorForId = validate(input).getOrThrow()
+    override fun equals(other: Any?): Boolean {
+        if (this === other) return true
+        if (other !is ValidationErrorForScore) return false
+
+        if (scoreId != other.scoreId) return false
+
+        return true
     }
 
-    public fun expand(input: String): ValidationErrorForId =
-        validate(this.value + ';' + input).getOrThrow()
+    override fun hashCode(): Int {
+        return scoreId.hashCode()
+    }
+}
+
+public open class ValidationErrorForPart(
+    public override val scoreId: String,
+    public open val partId: String
+) : ValidationErrorForScore(scoreId) {
+    public override fun expandToPart(partId: String): ValidationErrorForPart =
+        throw RuntimeException("Don't use this.")
+
+    public open fun expandToMeasure(measureIndex: Int): ValidationErrorForMeasure =
+        ValidationErrorForMeasure(this.scoreId, this.partId, measureIndex)
+
+    override fun equals(other: Any?): Boolean {
+        if (this === other) return true
+        if (other !is ValidationErrorForPart) return false
+        if (!super.equals(other)) return false
+
+        if (scoreId != other.scoreId) return false
+        if (partId != other.partId) return false
+
+        return true
+    }
+
+    override fun hashCode(): Int {
+        var result = super.hashCode()
+        result = 31 * result + scoreId.hashCode()
+        result = 31 * result + partId.hashCode()
+        return result
+    }
+}
+
+public open class ValidationErrorForMeasure(
+    public override val scoreId: String,
+    public override val partId: String,
+    public open val measureIndex: Int
+) : ValidationErrorForPart(scoreId, partId) {
+    public override fun expandToMeasure(measureIndex: Int): ValidationErrorForMeasure =
+        throw RuntimeException("Don't use this.")
+
+    public open fun expandToNote(noteIndex: Int): ValidationErrorForNote =
+        ValidationErrorForNote(this.scoreId, this.partId, this.measureIndex, noteIndex)
+
+    override fun equals(other: Any?): Boolean {
+        if (this === other) return true
+        if (other !is ValidationErrorForMeasure) return false
+        if (!super.equals(other)) return false
+
+        if (scoreId != other.scoreId) return false
+        if (partId != other.partId) return false
+        if (measureIndex != other.measureIndex) return false
+
+        return true
+    }
+
+    override fun hashCode(): Int {
+        var result = super.hashCode()
+        result = 31 * result + scoreId.hashCode()
+        result = 31 * result + partId.hashCode()
+        result = 31 * result + measureIndex
+        return result
+    }
+}
+
+public open class ValidationErrorForNote(
+    public override val scoreId: String,
+    public override val partId: String,
+    public override val measureIndex: Int,
+    public open val noteIndex: Int
+) : ValidationErrorForMeasure(scoreId, partId, measureIndex) {
+    public override fun expandToNote(noteIndex: Int): ValidationErrorForNote =
+        throw RuntimeException("Don't use this.")
+
+    override fun equals(other: Any?): Boolean {
+        if (this === other) return true
+        if (other !is ValidationErrorForNote) return false
+
+        if (scoreId != other.scoreId) return false
+        if (partId != other.partId) return false
+        if (measureIndex != other.measureIndex) return false
+        if (noteIndex != other.noteIndex) return false
+
+        return true
+    }
+
+    override fun hashCode(): Int {
+        var result = scoreId.hashCode()
+        result = 31 * result + partId.hashCode()
+        result = 31 * result + measureIndex
+        result = 31 * result + noteIndex
+        return result
+    }
 }
