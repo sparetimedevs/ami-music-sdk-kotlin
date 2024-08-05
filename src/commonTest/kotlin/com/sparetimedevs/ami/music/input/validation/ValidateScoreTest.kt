@@ -16,8 +16,16 @@
 
 package com.sparetimedevs.ami.music.input.validation
 
+import com.sparetimedevs.ami.core.validation.MeasureIndex
+import com.sparetimedevs.ami.core.validation.NoValidationIdentifier
+import com.sparetimedevs.ami.core.validation.NoteIndex
 import com.sparetimedevs.ami.core.validation.ValidationError
 import com.sparetimedevs.ami.core.validation.ValidationErrorForNote
+import com.sparetimedevs.ami.core.validation.ValidationIdentifierForMeasure
+import com.sparetimedevs.ami.core.validation.ValidationIdentifierForNote
+import com.sparetimedevs.ami.core.validation.ValidationIdentifierForPart
+import com.sparetimedevs.ami.core.validation.ValidationIdentifierForScore
+import com.sparetimedevs.ami.music.data.kotlin.part.PartId
 import com.sparetimedevs.ami.music.data.kotlin.score.Score
 import com.sparetimedevs.ami.music.example.getExampleScore0
 import com.sparetimedevs.ami.music.example.getExampleScore0Input
@@ -32,9 +40,7 @@ class ValidateScoreTest :
             val inputScore: com.sparetimedevs.ami.music.input.Score = getExampleScore0Input()
             val expectedScore: Score = getExampleScore0()
 
-            inputScore.validate(
-                validationErrorFor = null /* null because it doesn't have a parent */
-            ) shouldBeRight expectedScore
+            inputScore.validate() shouldBeRight expectedScore
         }
 
         "validate score should return validation errors with invalid input" {
@@ -46,9 +52,28 @@ class ValidateScoreTest :
                         validationErrorFor =
                             ValidationErrorForNote(
                                 "d737b4ae-fbaa-4b0d-9d36-d3651e30e93a",
-                                "p-1",
-                                0,
-                                0
+                                PartId.unsafeCreate("p-1"),
+                                measureIndex = MeasureIndex.getValidOrNull(0),
+                                noteIndex = NoteIndex.getValidOrNull(0)
+                            ),
+                        validationIdentifier =
+                            ValidationIdentifierForNote(
+                                noteIndex = 0,
+                                validationIdentifierParent =
+                                    ValidationIdentifierForMeasure(
+                                        measureIndex = 0,
+                                        validationIdentifierParent =
+                                            ValidationIdentifierForPart(
+                                                partId = "p-1",
+                                                validationIdentifierParent =
+                                                    ValidationIdentifierForScore(
+                                                        scoreId =
+                                                            "d737b4ae-fbaa-4b0d-9d36-d3651e30e93a",
+                                                        validationIdentifierParent =
+                                                            NoValidationIdentifier
+                                                    )
+                                            )
+                                    )
                             )
                     ),
                     ValidationError(
@@ -56,9 +81,28 @@ class ValidateScoreTest :
                         validationErrorFor =
                             ValidationErrorForNote(
                                 "d737b4ae-fbaa-4b0d-9d36-d3651e30e93a",
-                                "p-1",
-                                0,
-                                1
+                                PartId.unsafeCreate("p-1"),
+                                measureIndex = MeasureIndex.getValidOrNull(0),
+                                noteIndex = NoteIndex.getValidOrNull(1)
+                            ),
+                        validationIdentifier =
+                            ValidationIdentifierForNote(
+                                noteIndex = 1,
+                                validationIdentifierParent =
+                                    ValidationIdentifierForMeasure(
+                                        measureIndex = 0,
+                                        validationIdentifierParent =
+                                            ValidationIdentifierForPart(
+                                                partId = "p-1",
+                                                validationIdentifierParent =
+                                                    ValidationIdentifierForScore(
+                                                        scoreId =
+                                                            "d737b4ae-fbaa-4b0d-9d36-d3651e30e93a",
+                                                        validationIdentifierParent =
+                                                            NoValidationIdentifier
+                                                    )
+                                            )
+                                    )
                             )
                     ),
                     ValidationError(
@@ -66,15 +110,32 @@ class ValidateScoreTest :
                         validationErrorFor =
                             ValidationErrorForNote(
                                 "d737b4ae-fbaa-4b0d-9d36-d3651e30e93a",
-                                "p-1",
-                                0,
-                                3
+                                PartId.unsafeCreate("p-1"),
+                                measureIndex = MeasureIndex.getValidOrNull(0),
+                                noteIndex = NoteIndex.getValidOrNull(3)
+                            ),
+                        validationIdentifier =
+                            ValidationIdentifierForNote(
+                                noteIndex = 3,
+                                validationIdentifierParent =
+                                    ValidationIdentifierForMeasure(
+                                        measureIndex = 0,
+                                        validationIdentifierParent =
+                                            ValidationIdentifierForPart(
+                                                partId = "p-1",
+                                                validationIdentifierParent =
+                                                    ValidationIdentifierForScore(
+                                                        scoreId =
+                                                            "d737b4ae-fbaa-4b0d-9d36-d3651e30e93a",
+                                                        validationIdentifierParent =
+                                                            NoValidationIdentifier
+                                                    )
+                                            )
+                                    )
                             )
                     )
                 )
 
-            inputScore.validate(
-                validationErrorFor = null /* null because it doesn't have a parent */
-            ) shouldBeLeft expectedValidationErrors
+            inputScore.validate() shouldBeLeft expectedValidationErrors
         }
     })

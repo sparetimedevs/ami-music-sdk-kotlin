@@ -20,8 +20,11 @@ import arrow.core.Either
 import arrow.core.raise.either
 import arrow.core.raise.ensure
 import com.sparetimedevs.ami.core.util.randomUuidString
+import com.sparetimedevs.ami.core.validation.NoValidationIdentifier
 import com.sparetimedevs.ami.core.validation.ValidationError
 import com.sparetimedevs.ami.core.validation.ValidationErrorFor
+import com.sparetimedevs.ami.core.validation.ValidationErrorForUnknown
+import com.sparetimedevs.ami.core.validation.ValidationIdentifier
 import com.sparetimedevs.ami.core.validation.getOrThrow
 import com.sparetimedevs.ami.music.data.kotlin.measure.Measure
 import kotlin.jvm.JvmInline
@@ -36,21 +39,28 @@ public value class PartId private constructor(public val value: String) {
 
         public fun validate(
             input: String,
-            validationErrorFor: ValidationErrorFor?
+            validationErrorFor: ValidationErrorFor = ValidationErrorForUnknown,
+            validationIdentifier: ValidationIdentifier = NoValidationIdentifier
         ): Either<ValidationError, PartId> = either {
             ensure(input.isNotEmpty()) {
-                ValidationError("Part ID can't be empty, the input was $input", validationErrorFor)
+                ValidationError(
+                    "Part ID can't be empty, the input was $input",
+                    validationErrorFor,
+                    validationIdentifier
+                )
             }
             ensure(input.length <= 128) {
                 ValidationError(
                     "Part ID can't be longer than 128 characters, the input was $input",
-                    validationErrorFor
+                    validationErrorFor,
+                    validationIdentifier
                 )
             }
             PartId(input)
         }
 
-        public fun unsafeCreate(input: String): PartId = validate(input, null).getOrThrow()
+        public fun unsafeCreate(input: String): PartId =
+            validate(input, ValidationErrorForUnknown, NoValidationIdentifier).getOrThrow()
     }
 }
 

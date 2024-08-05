@@ -19,8 +19,11 @@ package com.sparetimedevs.ami.music.data.kotlin.timesignature
 import arrow.core.Either
 import arrow.core.raise.either
 import arrow.core.raise.ensure
+import com.sparetimedevs.ami.core.validation.NoValidationIdentifier
 import com.sparetimedevs.ami.core.validation.ValidationError
 import com.sparetimedevs.ami.core.validation.ValidationErrorFor
+import com.sparetimedevs.ami.core.validation.ValidationErrorForUnknown
+import com.sparetimedevs.ami.core.validation.ValidationIdentifier
 import com.sparetimedevs.ami.core.validation.getOrThrow
 import kotlin.jvm.JvmInline
 import kotlinx.serialization.Serializable
@@ -31,17 +34,20 @@ public value class Beats private constructor(public val value: Byte) {
     public companion object {
         public fun validate(
             input: Byte,
-            validationErrorFor: ValidationErrorFor?
+            validationErrorFor: ValidationErrorFor = ValidationErrorForUnknown,
+            validationIdentifier: ValidationIdentifier = NoValidationIdentifier
         ): Either<ValidationError, Beats> = either {
             ensure(input > 0) {
                 ValidationError(
                     "Beats can't be zero or negative, the input was $input",
-                    validationErrorFor
+                    validationErrorFor,
+                    validationIdentifier
                 )
             }
             Beats(input)
         }
 
-        public fun unsafeCreate(input: Byte): Beats = validate(input, null).getOrThrow()
+        public fun unsafeCreate(input: Byte): Beats =
+            validate(input, ValidationErrorForUnknown, NoValidationIdentifier).getOrThrow()
     }
 }

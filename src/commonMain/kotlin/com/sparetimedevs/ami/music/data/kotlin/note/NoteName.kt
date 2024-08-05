@@ -19,8 +19,11 @@ package com.sparetimedevs.ami.music.data.kotlin.note
 import arrow.core.Either
 import arrow.core.left
 import arrow.core.right
+import com.sparetimedevs.ami.core.validation.NoValidationIdentifier
 import com.sparetimedevs.ami.core.validation.ValidationError
 import com.sparetimedevs.ami.core.validation.ValidationErrorFor
+import com.sparetimedevs.ami.core.validation.ValidationErrorForUnknown
+import com.sparetimedevs.ami.core.validation.ValidationIdentifier
 import kotlinx.serialization.Serializable
 
 @Serializable
@@ -47,7 +50,8 @@ public enum class NoteName {
 
         public fun validate(
             input: String,
-            validationErrorFor: ValidationErrorFor?
+            validationErrorFor: ValidationErrorFor = ValidationErrorForUnknown,
+            validationIdentifier: ValidationIdentifier = NoValidationIdentifier
         ): Either<ValidationError, NoteName> =
             when (input) {
                 A_FLAT.name -> A_FLAT.right()
@@ -68,7 +72,12 @@ public enum class NoteName {
                 G.name -> G.right()
                 G_SHARP.name -> G_SHARP.right()
                 else ->
-                    ValidationError("Note name can't be value $input", validationErrorFor).left()
+                    ValidationError(
+                            "Note name can't be value $input",
+                            validationErrorFor,
+                            validationIdentifier
+                        )
+                        .left()
             }
     }
 }

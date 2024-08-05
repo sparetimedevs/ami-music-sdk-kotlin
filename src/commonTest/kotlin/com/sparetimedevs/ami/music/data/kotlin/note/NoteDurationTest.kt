@@ -16,8 +16,12 @@
 
 package com.sparetimedevs.ami.music.data.kotlin.note
 
+import com.sparetimedevs.ami.core.validation.MeasureIndex
+import com.sparetimedevs.ami.core.validation.NoValidationIdentifier
+import com.sparetimedevs.ami.core.validation.NoteIndex
 import com.sparetimedevs.ami.core.validation.ValidationError
 import com.sparetimedevs.ami.core.validation.ValidationErrorForNote
+import com.sparetimedevs.ami.music.data.kotlin.part.PartId
 import io.kotest.assertions.arrow.core.shouldBeLeft
 import io.kotest.assertions.arrow.core.shouldBeRight
 import io.kotest.core.spec.style.StringSpec
@@ -27,9 +31,9 @@ class NoteDurationTest :
         val validationErrorFor =
             ValidationErrorForNote(
                 scoreId = "99d9",
-                partId = "gg25l3",
-                measureIndex = 23,
-                noteIndex = 12
+                partId = PartId.unsafeCreate("gg25l3"),
+                measureIndex = MeasureIndex.getValidOrNull(23),
+                noteIndex = NoteIndex.getValidOrNull(12)
             )
 
         "validate should work with valid input for dotted maxima" {
@@ -56,7 +60,8 @@ class NoteDurationTest :
             NoteDuration.validate(1.23456789, validationErrorFor) shouldBeLeft
                 ValidationError(
                     "Input for note duration is not a valid value, the value is: 1.23456789",
-                    validationErrorFor
+                    validationErrorFor,
+                    NoValidationIdentifier
                 )
         }
     })

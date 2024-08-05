@@ -19,8 +19,14 @@ package com.sparetimedevs.ami.music.input.validation
 import arrow.core.Either
 import com.sparetimedevs.ami.core.DomainError
 import com.sparetimedevs.ami.core.asEitherWithAccumulatedValidationErrors
+import com.sparetimedevs.ami.core.validation.NoValidationIdentifier
+import com.sparetimedevs.ami.core.validation.ValidationErrorForUnknown
 import com.sparetimedevs.ami.music.data.kotlin.score.Score
 
 public fun com.sparetimedevs.ami.music.input.Score.validateInput(): Either<DomainError, Score> =
-    this.validate(validationErrorFor = null /* null because it doesn't have a parent */)
+    this.validate(
+            validationErrorFor =
+                ValidationErrorForUnknown /* null because it doesn't have a parent */,
+            validationIdentifier = NoValidationIdentifier
+        )
         .asEitherWithAccumulatedValidationErrors()

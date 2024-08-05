@@ -19,8 +19,11 @@ package com.sparetimedevs.ami.music.data.kotlin.note
 import arrow.core.Either
 import arrow.core.raise.either
 import arrow.core.raise.ensure
+import com.sparetimedevs.ami.core.validation.NoValidationIdentifier
 import com.sparetimedevs.ami.core.validation.ValidationError
 import com.sparetimedevs.ami.core.validation.ValidationErrorFor
+import com.sparetimedevs.ami.core.validation.ValidationErrorForUnknown
+import com.sparetimedevs.ami.core.validation.ValidationIdentifier
 import com.sparetimedevs.ami.core.validation.getOrThrow
 import kotlin.jvm.JvmInline
 import kotlinx.serialization.Serializable
@@ -32,24 +35,28 @@ public value class Octave private constructor(public val value: Byte) {
 
         public fun validate(
             input: Byte,
-            validationErrorFor: ValidationErrorFor?
+            validationErrorFor: ValidationErrorFor = ValidationErrorForUnknown,
+            validationIdentifier: ValidationIdentifier = NoValidationIdentifier
         ): Either<ValidationError, Octave> = either {
             // Are these good minimums and maximums?
             ensure(input > -13f) {
                 ValidationError(
                     "Octave can't be lesser than -12, the input was $input",
-                    validationErrorFor
+                    validationErrorFor,
+                    validationIdentifier
                 )
             }
             ensure(input < 13) {
                 ValidationError(
                     "Octave can't be greater than 12, the input was $input",
-                    validationErrorFor
+                    validationErrorFor,
+                    validationIdentifier
                 )
             }
             Octave(input)
         }
 
-        public fun unsafeCreate(input: Byte): Octave = validate(input, null).getOrThrow()
+        public fun unsafeCreate(input: Byte): Octave =
+            validate(input, ValidationErrorForUnknown, NoValidationIdentifier).getOrThrow()
     }
 }

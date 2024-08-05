@@ -16,6 +16,7 @@
 
 package com.sparetimedevs.ami.music.data.kotlin.note
 
+import com.sparetimedevs.ami.core.validation.NoValidationIdentifier
 import com.sparetimedevs.ami.core.validation.ValidationError
 import com.sparetimedevs.ami.core.validation.ValidationErrorForNote
 import io.kotest.assertions.arrow.core.shouldBeLeft
@@ -26,10 +27,10 @@ class OctaveTest :
     StringSpec({
         val validationErrorFor =
             ValidationErrorForNote(
-                /* TODO this should be different, don't know any of this at this stage. */ "For unsafe create.",
-                "For unsafe create.",
-                0,
-                0
+                /* TODO this should be different, don't know any of this at this stage. probably just null values? */ "For unsafe create.",
+                null,
+                measureIndex = null,
+                noteIndex = null
             )
         "validate should return valid octave" {
             val input: Byte = 4
@@ -40,7 +41,8 @@ class OctaveTest :
             Octave.validate(input, validationErrorFor) shouldBeLeft
                 ValidationError(
                     "Octave can't be lesser than -12, the input was -13",
-                    validationErrorFor
+                    validationErrorFor,
+                    NoValidationIdentifier
                 )
         }
     })

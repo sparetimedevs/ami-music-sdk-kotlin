@@ -19,8 +19,11 @@ package com.sparetimedevs.ami.music.data.kotlin.note
 import arrow.core.Either
 import arrow.core.left
 import arrow.core.right
+import com.sparetimedevs.ami.core.validation.NoValidationIdentifier
 import com.sparetimedevs.ami.core.validation.ValidationError
 import com.sparetimedevs.ami.core.validation.ValidationErrorFor
+import com.sparetimedevs.ami.core.validation.ValidationErrorForUnknown
+import com.sparetimedevs.ami.core.validation.ValidationIdentifier
 import kotlinx.serialization.Serializable
 
 @Serializable
@@ -35,7 +38,8 @@ public data class NoteDuration(
 
         public fun validate(
             input: Double,
-            validationErrorFor: ValidationErrorFor?
+            validationErrorFor: ValidationErrorFor = ValidationErrorForUnknown,
+            validationIdentifier: ValidationIdentifier = NoValidationIdentifier
         ): Either<ValidationError, NoteDuration> =
             when (input) {
                 NoteValue.MAXIMA.value * NoteModifier.DOTTED.value ->
@@ -313,7 +317,8 @@ public data class NoteDuration(
                 else ->
                     ValidationError(
                             "Input for note duration is not a valid value, the value is: $input",
-                            validationErrorFor
+                            validationErrorFor,
+                            validationIdentifier
                         )
                         .left()
             }
@@ -342,7 +347,8 @@ public enum class NoteValue(public val value: Double) {
     public companion object {
         public fun validate(
             input: String,
-            validationErrorFor: ValidationErrorFor?
+            validationErrorFor: ValidationErrorFor = ValidationErrorForUnknown,
+            validationIdentifier: ValidationIdentifier = NoValidationIdentifier
         ): Either<ValidationError, NoteValue> =
             when (input) {
                 MAXIMA.name -> MAXIMA.right()
@@ -362,7 +368,12 @@ public enum class NoteValue(public val value: Double) {
                 _2048TH.name -> _2048TH.right()
                 _4096TH.name -> _4096TH.right()
                 else ->
-                    ValidationError("Note value can't be value $input", validationErrorFor).left()
+                    ValidationError(
+                            "Note value can't be value $input",
+                            validationErrorFor,
+                            validationIdentifier
+                        )
+                        .left()
             }
     }
 }
@@ -383,7 +394,8 @@ public enum class NoteModifier(public val value: Double) {
 
         public fun validate(
             input: String,
-            validationErrorFor: ValidationErrorFor?
+            validationErrorFor: ValidationErrorFor = ValidationErrorForUnknown,
+            validationIdentifier: ValidationIdentifier = NoValidationIdentifier
         ): Either<ValidationError, NoteModifier> =
             when (input) {
                 NONE.name -> NONE.right()
@@ -396,7 +408,11 @@ public enum class NoteModifier(public val value: Double) {
                 SEPTUPLE_DOTTED.name -> SEPTUPLE_DOTTED.right()
                 OCTUPLE_DOTTED.name -> OCTUPLE_DOTTED.right()
                 else ->
-                    ValidationError("Note modifier can't be value $input", validationErrorFor)
+                    ValidationError(
+                            "Note modifier can't be value $input",
+                            validationErrorFor,
+                            validationIdentifier
+                        )
                         .left()
             }
     }
