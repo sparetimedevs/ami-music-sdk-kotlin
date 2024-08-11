@@ -26,6 +26,7 @@ import com.sparetimedevs.ami.core.validation.ValidationErrorFor
 import com.sparetimedevs.ami.core.validation.ValidationErrorForUnknown
 import com.sparetimedevs.ami.core.validation.ValidationIdentifier
 import com.sparetimedevs.ami.core.validation.getOrThrow
+import com.sparetimedevs.ami.core.validation.validationErrorForProperty
 import com.sparetimedevs.ami.music.data.kotlin.part.Part
 import kotlin.jvm.JvmInline
 import kotlinx.serialization.Serializable
@@ -45,6 +46,7 @@ public value class ScoreId private constructor(public val value: String) {
             ensure(input.isNotEmpty()) {
                 ValidationError(
                     "Score ID can't be empty, the input was $input",
+                    validationErrorForProperty<ScoreId>(),
                     validationErrorFor,
                     validationIdentifier
                 )
@@ -52,6 +54,7 @@ public value class ScoreId private constructor(public val value: String) {
             ensure(input.length <= 128) {
                 ValidationError(
                     "Score ID can't be longer than 128 characters, the input was $input",
+                    validationErrorForProperty<ScoreId>(),
                     validationErrorFor,
                     validationIdentifier
                 )
@@ -77,6 +80,7 @@ public value class ScoreTitle private constructor(public val value: String) {
             ensure(input.isNotEmpty()) {
                 ValidationError(
                     "Score title can't be empty, the input was $input",
+                    validationErrorForProperty<ScoreTitle>(),
                     validationErrorFor,
                     validationIdentifier
                 )
@@ -84,6 +88,7 @@ public value class ScoreTitle private constructor(public val value: String) {
             ensure(input.length < 513) {
                 ValidationError(
                     "Score title can't be longer than 512 characters, the input was $input",
+                    validationErrorForProperty<ScoreTitle>(),
                     validationErrorFor,
                     validationIdentifier
                 )

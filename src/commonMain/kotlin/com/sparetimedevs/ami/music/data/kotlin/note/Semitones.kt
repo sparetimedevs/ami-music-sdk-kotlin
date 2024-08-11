@@ -25,6 +25,7 @@ import com.sparetimedevs.ami.core.validation.ValidationErrorFor
 import com.sparetimedevs.ami.core.validation.ValidationErrorForUnknown
 import com.sparetimedevs.ami.core.validation.ValidationIdentifier
 import com.sparetimedevs.ami.core.validation.getOrThrow
+import com.sparetimedevs.ami.core.validation.validationErrorForProperty
 import kotlin.jvm.JvmInline
 import kotlinx.serialization.Serializable
 
@@ -49,6 +50,7 @@ public value class Semitones private constructor(public val value: Float) {
             ensure(input > -10.0f) {
                 ValidationError(
                     "Semitones can't be lesser than -10.0, the input was $input",
+                    validationErrorForProperty<Semitones>(),
                     validationErrorFor,
                     validationIdentifier
                 )
@@ -56,6 +58,7 @@ public value class Semitones private constructor(public val value: Float) {
             ensure(input < 10.0f) {
                 ValidationError(
                     "Semitones can't be greater than 10.0, the input was $input",
+                    validationErrorForProperty<Semitones>(),
                     validationErrorFor,
                     validationIdentifier
                 )

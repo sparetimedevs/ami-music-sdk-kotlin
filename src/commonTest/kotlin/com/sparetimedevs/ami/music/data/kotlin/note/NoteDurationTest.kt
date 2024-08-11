@@ -21,6 +21,7 @@ import com.sparetimedevs.ami.core.validation.NoValidationIdentifier
 import com.sparetimedevs.ami.core.validation.NoteIndex
 import com.sparetimedevs.ami.core.validation.ValidationError
 import com.sparetimedevs.ami.core.validation.ValidationErrorForNote
+import com.sparetimedevs.ami.core.validation.validationErrorForProperty
 import com.sparetimedevs.ami.music.data.kotlin.part.PartId
 import io.kotest.assertions.arrow.core.shouldBeLeft
 import io.kotest.assertions.arrow.core.shouldBeRight
@@ -60,6 +61,7 @@ class NoteDurationTest :
             NoteDuration.validate(1.23456789, validationErrorFor) shouldBeLeft
                 ValidationError(
                     "Input for note duration is not a valid value, the value is: 1.23456789",
+                    validationErrorForProperty<NoteDuration>(),
                     validationErrorFor,
                     NoValidationIdentifier
                 )

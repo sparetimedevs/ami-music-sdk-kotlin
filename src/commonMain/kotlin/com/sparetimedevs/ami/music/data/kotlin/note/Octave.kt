@@ -25,6 +25,7 @@ import com.sparetimedevs.ami.core.validation.ValidationErrorFor
 import com.sparetimedevs.ami.core.validation.ValidationErrorForUnknown
 import com.sparetimedevs.ami.core.validation.ValidationIdentifier
 import com.sparetimedevs.ami.core.validation.getOrThrow
+import com.sparetimedevs.ami.core.validation.validationErrorForProperty
 import kotlin.jvm.JvmInline
 import kotlinx.serialization.Serializable
 
@@ -42,6 +43,7 @@ public value class Octave private constructor(public val value: Byte) {
             ensure(input > -13f) {
                 ValidationError(
                     "Octave can't be lesser than -12, the input was $input",
+                    validationErrorForProperty<Octave>(),
                     validationErrorFor,
                     validationIdentifier
                 )
@@ -49,6 +51,7 @@ public value class Octave private constructor(public val value: Byte) {
             ensure(input < 13) {
                 ValidationError(
                     "Octave can't be greater than 12, the input was $input",
+                    validationErrorForProperty<Octave>(),
                     validationErrorFor,
                     validationIdentifier
                 )

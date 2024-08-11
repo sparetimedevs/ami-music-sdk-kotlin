@@ -31,5 +31,6 @@ public fun <A> EitherNel<ValidationError, A>.asEitherWithAccumulatedValidationEr
                 ACCUMULATED_VALIDATION_ERRORS_MESSAGE_PREFIX +
                     it.map { validationError -> validationError.message }.joinToString(),
             validationErrors = it
+            // TODO we need to do something with the ValidationIdentifier(s)
         )
     }

@@ -25,6 +25,10 @@ import com.sparetimedevs.ami.core.validation.ValidationIdentifierForMeasure
 import com.sparetimedevs.ami.core.validation.ValidationIdentifierForNote
 import com.sparetimedevs.ami.core.validation.ValidationIdentifierForPart
 import com.sparetimedevs.ami.core.validation.ValidationIdentifierForScore
+import com.sparetimedevs.ami.core.validation.validationErrorForProperty
+import com.sparetimedevs.ami.music.data.kotlin.note.NoteDuration
+import com.sparetimedevs.ami.music.data.kotlin.note.NoteName
+import com.sparetimedevs.ami.music.data.kotlin.note.Octave
 import com.sparetimedevs.ami.music.data.kotlin.part.PartId
 import com.sparetimedevs.ami.music.data.kotlin.score.Score
 import com.sparetimedevs.ami.music.example.getExampleScore0
@@ -49,6 +53,7 @@ class ValidateScoreTest :
                 listOf(
                     ValidationError(
                         message = "Note value can't be value QUARTAAAR",
+                        validationErrorForProperty = validationErrorForProperty<NoteDuration>(),
                         validationErrorFor =
                             ValidationErrorForNote(
                                 "d737b4ae-fbaa-4b0d-9d36-d3651e30e93a",
@@ -78,6 +83,7 @@ class ValidateScoreTest :
                     ),
                     ValidationError(
                         message = "Octave can't be greater than 12, the input was 127",
+                        validationErrorForProperty = validationErrorForProperty<Octave>(),
                         validationErrorFor =
                             ValidationErrorForNote(
                                 "d737b4ae-fbaa-4b0d-9d36-d3651e30e93a",
@@ -107,6 +113,7 @@ class ValidateScoreTest :
                     ),
                     ValidationError(
                         message = "Note name can't be value L",
+                        validationErrorForProperty = validationErrorForProperty<NoteName>(),
                         validationErrorFor =
                             ValidationErrorForNote(
                                 "d737b4ae-fbaa-4b0d-9d36-d3651e30e93a",

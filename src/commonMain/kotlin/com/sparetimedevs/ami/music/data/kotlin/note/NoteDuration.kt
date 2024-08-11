@@ -24,6 +24,7 @@ import com.sparetimedevs.ami.core.validation.ValidationError
 import com.sparetimedevs.ami.core.validation.ValidationErrorFor
 import com.sparetimedevs.ami.core.validation.ValidationErrorForUnknown
 import com.sparetimedevs.ami.core.validation.ValidationIdentifier
+import com.sparetimedevs.ami.core.validation.validationErrorForProperty
 import kotlinx.serialization.Serializable
 
 @Serializable
@@ -317,6 +318,7 @@ public data class NoteDuration(
                 else ->
                     ValidationError(
                             "Input for note duration is not a valid value, the value is: $input",
+                            validationErrorForProperty<NoteDuration>(),
                             validationErrorFor,
                             validationIdentifier
                         )
@@ -370,6 +372,7 @@ public enum class NoteValue(public val value: Double) {
                 else ->
                     ValidationError(
                             "Note value can't be value $input",
+                            validationErrorForProperty<NoteDuration>(),
                             validationErrorFor,
                             validationIdentifier
                         )
@@ -410,6 +413,7 @@ public enum class NoteModifier(public val value: Double) {
                 else ->
                     ValidationError(
                             "Note modifier can't be value $input",
+                            validationErrorForProperty<NoteDuration>(),
                             validationErrorFor,
                             validationIdentifier
                         )

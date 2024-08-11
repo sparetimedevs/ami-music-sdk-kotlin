@@ -25,6 +25,7 @@ import com.sparetimedevs.ami.core.validation.ValidationErrorFor
 import com.sparetimedevs.ami.core.validation.ValidationErrorForUnknown
 import com.sparetimedevs.ami.core.validation.ValidationIdentifier
 import com.sparetimedevs.ami.core.validation.getOrThrow
+import com.sparetimedevs.ami.core.validation.validationErrorForProperty
 import kotlin.jvm.JvmInline
 import kotlinx.serialization.Serializable
 
@@ -40,6 +41,7 @@ public value class BeatType private constructor(public val value: Byte) {
             ensure(input > 0) {
                 ValidationError(
                     "BeatType can't be zero or negative, the input was $input",
+                    validationErrorForProperty<BeatType>(),
                     validationErrorFor,
                     validationIdentifier
                 )

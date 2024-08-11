@@ -25,6 +25,7 @@ import com.sparetimedevs.ami.core.validation.ValidationError
 import com.sparetimedevs.ami.core.validation.ValidationErrorFor
 import com.sparetimedevs.ami.core.validation.ValidationErrorForUnknown
 import com.sparetimedevs.ami.core.validation.ValidationIdentifier
+import com.sparetimedevs.ami.core.validation.validationErrorForProperty
 import com.sparetimedevs.ami.music.data.kotlin.note.Note
 import com.sparetimedevs.ami.music.data.kotlin.note.Note.Chord
 import com.sparetimedevs.ami.music.data.kotlin.note.Note.Pitched
@@ -51,6 +52,7 @@ public fun validateNote(
         else ->
             ValidationError(
                     "Note can't be of type ${input::class.simpleName}",
+                    validationErrorForProperty<Note>(),
                     validationErrorFor,
                     validationIdentifier
                 )

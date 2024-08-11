@@ -24,6 +24,7 @@ import com.sparetimedevs.ami.core.validation.ValidationError
 import com.sparetimedevs.ami.core.validation.ValidationErrorFor
 import com.sparetimedevs.ami.core.validation.ValidationErrorForUnknown
 import com.sparetimedevs.ami.core.validation.ValidationIdentifier
+import com.sparetimedevs.ami.core.validation.validationErrorForProperty
 import kotlinx.serialization.Serializable
 
 @Serializable
@@ -74,6 +75,7 @@ public enum class NoteName {
                 else ->
                     ValidationError(
                             "Note name can't be value $input",
+                            validationErrorForProperty<NoteName>(),
                             validationErrorFor,
                             validationIdentifier
                         )

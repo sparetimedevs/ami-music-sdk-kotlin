@@ -26,6 +26,7 @@ import com.sparetimedevs.ami.core.validation.ValidationErrorFor
 import com.sparetimedevs.ami.core.validation.ValidationErrorForUnknown
 import com.sparetimedevs.ami.core.validation.ValidationIdentifier
 import com.sparetimedevs.ami.core.validation.getOrThrow
+import com.sparetimedevs.ami.core.validation.validationErrorForProperty
 import com.sparetimedevs.ami.music.data.kotlin.measure.Measure
 import kotlin.jvm.JvmInline
 import kotlinx.serialization.Serializable
@@ -45,6 +46,7 @@ public value class PartId private constructor(public val value: String) {
             ensure(input.isNotEmpty()) {
                 ValidationError(
                     "Part ID can't be empty, the input was $input",
+                    validationErrorForProperty<PartId>(),
                     validationErrorFor,
                     validationIdentifier
                 )
@@ -52,6 +54,7 @@ public value class PartId private constructor(public val value: String) {
             ensure(input.length <= 128) {
                 ValidationError(
                     "Part ID can't be longer than 128 characters, the input was $input",
+                    validationErrorForProperty<PartId>(),
                     validationErrorFor,
                     validationIdentifier
                 )

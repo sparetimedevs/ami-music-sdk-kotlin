@@ -25,12 +25,22 @@ import kotlinx.serialization.Serializable
 
 public data class ValidationError(
     val message: String = "There was an error while validating the input.",
+    val validationErrorForProperty: ValidationErrorForProperty,
     // validationErrorFor is nullable because we do not always have a rich context (e.g. when
     // unsafeCreate is used).
     // TODO can become not nullable if we use special type. Not sure what the advantages are.
     val validationErrorFor: ValidationErrorFor?,
     val validationIdentifier: ValidationIdentifier
-)
+) {
+    public companion object {
+        public fun validate(): String = "aaa"
+    }
+}
+
+@Serializable @JvmInline public value class ValidationErrorForProperty(public val value: String)
+
+public inline fun <reified T : Any> validationErrorForProperty(): ValidationErrorForProperty =
+    ValidationErrorForProperty(T::class.simpleName ?: "unknown")
 
 // TODO try out this cool alternative
 public interface ValidationIdentifier {
@@ -189,6 +199,7 @@ public value class MeasureIndex private constructor(public val value: Int) {
             ensure(input >= 0) {
                 ValidationError(
                     "MeasureIndex can't be negative, the input was $input",
+                    validationErrorForProperty<MeasureIndex>(),
                     validationErrorFor,
                     validationIdentifier
                 )
@@ -275,6 +286,7 @@ public value class NoteIndex private constructor(public val value: Int) {
             ensure(input >= 0) {
                 ValidationError(
                     "NoteIndex can't be negative, the input was $input",
+                    validationErrorForProperty<NoteIndex>(),
                     validationErrorFor,
                     validationIdentifier
                 )
