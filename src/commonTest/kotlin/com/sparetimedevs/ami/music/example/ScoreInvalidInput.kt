@@ -29,6 +29,8 @@ fun getExampleScore0InvalidInput(): Score {
         listOf(
             Part(
                 id = "p-1",
+                name = null,
+                instrument = null,
                 measures =
                     listOf(
                         Measure(
@@ -134,6 +136,8 @@ fun getExampleScore0InvalidInput(): Score {
             ),
             Part(
                 id = "p-2",
+                name = null,
+                instrument = null,
                 measures =
                     listOf(
                         Measure(

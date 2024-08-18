@@ -20,6 +20,7 @@ import com.sparetimedevs.ami.music.input.Measure
 import com.sparetimedevs.ami.music.input.NoteAttributes
 import com.sparetimedevs.ami.music.input.NoteDuration
 import com.sparetimedevs.ami.music.input.Part
+import com.sparetimedevs.ami.music.input.PartInstrument
 import com.sparetimedevs.ami.music.input.Pitch
 import com.sparetimedevs.ami.music.input.Pitched
 import com.sparetimedevs.ami.music.input.Score
@@ -29,6 +30,8 @@ fun getExampleScore0Input(): Score {
         listOf(
             Part(
                 id = "p-1",
+                name = "Part one",
+                instrument = PartInstrument(name = "Grand Piano", midiChannel = 0, midiProgram = 1),
                 measures =
                     listOf(
                         Measure(
@@ -134,6 +137,9 @@ fun getExampleScore0Input(): Score {
             ),
             Part(
                 id = "p-2",
+                name = "Part two",
+                instrument =
+                    PartInstrument(name = "Overdriven Guitar", midiChannel = 1, midiProgram = 30),
                 measures =
                     listOf(
                         Measure(

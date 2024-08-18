@@ -38,6 +38,7 @@ import com.sparetimedevs.ami.music.data.kotlin.measure.Measure
 import com.sparetimedevs.ami.music.data.kotlin.measure.MeasureAttributes
 import com.sparetimedevs.ami.music.data.kotlin.part.Part
 import com.sparetimedevs.ami.music.data.kotlin.part.PartId
+import com.sparetimedevs.ami.music.data.kotlin.part.PartName
 import com.sparetimedevs.ami.music.data.kotlin.score.Score
 import com.sparetimedevs.ami.music.data.kotlin.score.ScoreId
 import com.sparetimedevs.ami.music.data.kotlin.score.ScoreTitle
@@ -79,7 +80,9 @@ public fun com.sparetimedevs.ami.music.input.Part.validate(
     validationIdentifier: ValidationIdentifier = NoValidationIdentifier
 ): EitherNel<ValidationError, Part> =
     Either.zipOrAccumulate(
-        PartId.validate(this.id, validationErrorFor).toEitherNel(),
+        PartId.validate(this.id, validationErrorFor, validationIdentifier).toEitherNel(),
+        PartName.validate(this.name, validationErrorFor, validationIdentifier).toEitherNel(),
+        this.instrument.validate(validationErrorFor, validationIdentifier),
         this.measures
             .withIndex()
             .map { (index, measure) ->
@@ -117,8 +120,8 @@ public fun com.sparetimedevs.ami.music.input.Part.validate(
                 )
             }
             .combineAllValidationErrors()
-    ) { id, measures ->
-        Part(id, measures)
+    ) { id, name, instrument, measures ->
+        Part(id, name, instrument, measures)
     }
 
 public tailrec fun getListOfValidationIdentifiers(

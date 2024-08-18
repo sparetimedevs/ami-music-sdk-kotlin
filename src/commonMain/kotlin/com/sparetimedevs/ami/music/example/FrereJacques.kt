@@ -16,11 +16,16 @@
 
 package com.sparetimedevs.ami.music.example
 
+import com.sparetimedevs.ami.music.data.kotlin.midi.MidiChannel
+import com.sparetimedevs.ami.music.data.kotlin.midi.MidiProgram
 import com.sparetimedevs.ami.music.data.kotlin.note.NoteName
 import com.sparetimedevs.ami.music.data.kotlin.note.NoteValue
 import com.sparetimedevs.ami.music.data.kotlin.note.Octave
 import com.sparetimedevs.ami.music.data.kotlin.part.Part
 import com.sparetimedevs.ami.music.data.kotlin.part.PartId
+import com.sparetimedevs.ami.music.data.kotlin.part.PartInstrument
+import com.sparetimedevs.ami.music.data.kotlin.part.PartInstrumentName
+import com.sparetimedevs.ami.music.data.kotlin.part.PartName
 import com.sparetimedevs.ami.music.data.kotlin.score.Score
 import com.sparetimedevs.ami.music.data.kotlin.score.ScoreId
 import com.sparetimedevs.ami.music.data.kotlin.score.ScoreTitle
@@ -29,73 +34,81 @@ public fun getExampleScoreFrereJacques(): Score {
     val parts =
         listOf(
             Part(
-                PartId.unsafeCreate("p-1"),
-                listOf(
-                    createMeasure(
-                        createNote(noteName = NoteName.C, duration = NoteValue.QUARTER),
-                        createNote(noteName = NoteName.D, duration = NoteValue.QUARTER),
-                        createNote(noteName = NoteName.E, duration = NoteValue.QUARTER),
-                        createNote(noteName = NoteName.C, duration = NoteValue.QUARTER)
+                id = PartId.unsafeCreate("p-1"),
+                name = PartName.unsafeCreate("Part one"),
+                instrument =
+                    PartInstrument(
+                        name = PartInstrumentName.unsafeCreate("Grand Piano"),
+                        midiChannel = MidiChannel.unsafeCreate(0),
+                        midiProgram = MidiProgram.unsafeCreate(1)
                     ),
-                    createMeasure(
-                        createNote(noteName = NoteName.C, duration = NoteValue.QUARTER),
-                        createNote(noteName = NoteName.D, duration = NoteValue.QUARTER),
-                        createNote(noteName = NoteName.E, duration = NoteValue.QUARTER),
-                        createNote(noteName = NoteName.C, duration = NoteValue.QUARTER)
-                    ),
-                    createMeasure(
-                        createNote(noteName = NoteName.E, duration = NoteValue.QUARTER),
-                        createNote(noteName = NoteName.F, duration = NoteValue.QUARTER),
-                        createNote(noteName = NoteName.G, duration = NoteValue.HALF)
-                    ),
-                    createMeasure(
-                        createNote(noteName = NoteName.E, duration = NoteValue.QUARTER),
-                        createNote(noteName = NoteName.F, duration = NoteValue.QUARTER),
-                        createNote(noteName = NoteName.G, duration = NoteValue.HALF)
-                    ),
-                    createMeasure(
-                        createNote(noteName = NoteName.G, duration = NoteValue._8TH),
-                        createNote(
-                            noteName = NoteName.A,
-                            octave = Octave.unsafeCreate(5),
-                            duration = NoteValue._8TH
+                measures =
+                    listOf(
+                        createMeasure(
+                            createNote(noteName = NoteName.C, duration = NoteValue.QUARTER),
+                            createNote(noteName = NoteName.D, duration = NoteValue.QUARTER),
+                            createNote(noteName = NoteName.E, duration = NoteValue.QUARTER),
+                            createNote(noteName = NoteName.C, duration = NoteValue.QUARTER)
                         ),
-                        createNote(noteName = NoteName.G, duration = NoteValue._8TH),
-                        createNote(noteName = NoteName.F, duration = NoteValue._8TH),
-                        createNote(noteName = NoteName.E, duration = NoteValue.QUARTER),
-                        createNote(noteName = NoteName.C, duration = NoteValue.QUARTER),
-                    ),
-                    createMeasure(
-                        createNote(noteName = NoteName.G, duration = NoteValue._8TH),
-                        createNote(
-                            noteName = NoteName.A,
-                            octave = Octave.unsafeCreate(5),
-                            duration = NoteValue._8TH
+                        createMeasure(
+                            createNote(noteName = NoteName.C, duration = NoteValue.QUARTER),
+                            createNote(noteName = NoteName.D, duration = NoteValue.QUARTER),
+                            createNote(noteName = NoteName.E, duration = NoteValue.QUARTER),
+                            createNote(noteName = NoteName.C, duration = NoteValue.QUARTER)
                         ),
-                        createNote(noteName = NoteName.G, duration = NoteValue._8TH),
-                        createNote(noteName = NoteName.F, duration = NoteValue._8TH),
-                        createNote(noteName = NoteName.E, duration = NoteValue.QUARTER),
-                        createNote(noteName = NoteName.C, duration = NoteValue.QUARTER),
-                    ),
-                    createMeasure(
-                        createNote(noteName = NoteName.C, duration = NoteValue.QUARTER),
-                        createNote(
-                            noteName = NoteName.G,
-                            octave = Octave.unsafeCreate(3),
-                            duration = NoteValue.QUARTER
+                        createMeasure(
+                            createNote(noteName = NoteName.E, duration = NoteValue.QUARTER),
+                            createNote(noteName = NoteName.F, duration = NoteValue.QUARTER),
+                            createNote(noteName = NoteName.G, duration = NoteValue.HALF)
                         ),
-                        createNote(noteName = NoteName.C, duration = NoteValue.HALF)
-                    ),
-                    createMeasure(
-                        createNote(noteName = NoteName.C, duration = NoteValue.QUARTER),
-                        createNote(
-                            noteName = NoteName.G,
-                            octave = Octave.unsafeCreate(3),
-                            duration = NoteValue.QUARTER
+                        createMeasure(
+                            createNote(noteName = NoteName.E, duration = NoteValue.QUARTER),
+                            createNote(noteName = NoteName.F, duration = NoteValue.QUARTER),
+                            createNote(noteName = NoteName.G, duration = NoteValue.HALF)
                         ),
-                        createNote(noteName = NoteName.C, duration = NoteValue.HALF)
+                        createMeasure(
+                            createNote(noteName = NoteName.G, duration = NoteValue._8TH),
+                            createNote(
+                                noteName = NoteName.A,
+                                octave = Octave.unsafeCreate(5),
+                                duration = NoteValue._8TH
+                            ),
+                            createNote(noteName = NoteName.G, duration = NoteValue._8TH),
+                            createNote(noteName = NoteName.F, duration = NoteValue._8TH),
+                            createNote(noteName = NoteName.E, duration = NoteValue.QUARTER),
+                            createNote(noteName = NoteName.C, duration = NoteValue.QUARTER),
+                        ),
+                        createMeasure(
+                            createNote(noteName = NoteName.G, duration = NoteValue._8TH),
+                            createNote(
+                                noteName = NoteName.A,
+                                octave = Octave.unsafeCreate(5),
+                                duration = NoteValue._8TH
+                            ),
+                            createNote(noteName = NoteName.G, duration = NoteValue._8TH),
+                            createNote(noteName = NoteName.F, duration = NoteValue._8TH),
+                            createNote(noteName = NoteName.E, duration = NoteValue.QUARTER),
+                            createNote(noteName = NoteName.C, duration = NoteValue.QUARTER),
+                        ),
+                        createMeasure(
+                            createNote(noteName = NoteName.C, duration = NoteValue.QUARTER),
+                            createNote(
+                                noteName = NoteName.G,
+                                octave = Octave.unsafeCreate(3),
+                                duration = NoteValue.QUARTER
+                            ),
+                            createNote(noteName = NoteName.C, duration = NoteValue.HALF)
+                        ),
+                        createMeasure(
+                            createNote(noteName = NoteName.C, duration = NoteValue.QUARTER),
+                            createNote(
+                                noteName = NoteName.G,
+                                octave = Octave.unsafeCreate(3),
+                                duration = NoteValue.QUARTER
+                            ),
+                            createNote(noteName = NoteName.C, duration = NoteValue.HALF)
+                        )
                     )
-                )
             )
         )
 
