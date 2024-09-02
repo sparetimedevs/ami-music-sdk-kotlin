@@ -1,7 +1,7 @@
 [versions]
 kotlin-version = "2.0.10"
 arrow-version = "1.2.4"
-kotlinx-serialization-json-version = "1.7.1"
+kotlinx-serialization-json-version = "1.7.2"
 kotest-version = "5.9.1"
 kotest-assertions-arrow-version = "1.4.0"
 okhttp-version = "4.12.0"
