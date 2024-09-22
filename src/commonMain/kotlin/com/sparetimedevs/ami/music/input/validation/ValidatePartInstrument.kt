@@ -21,8 +21,6 @@ import arrow.core.EitherNel
 import arrow.core.right
 import com.sparetimedevs.ami.core.validation.NoValidationIdentifier
 import com.sparetimedevs.ami.core.validation.ValidationError
-import com.sparetimedevs.ami.core.validation.ValidationErrorFor
-import com.sparetimedevs.ami.core.validation.ValidationErrorForUnknown
 import com.sparetimedevs.ami.core.validation.ValidationIdentifier
 import com.sparetimedevs.ami.music.data.kotlin.midi.MidiChannel
 import com.sparetimedevs.ami.music.data.kotlin.midi.MidiProgram
@@ -30,16 +28,15 @@ import com.sparetimedevs.ami.music.data.kotlin.part.PartInstrument
 import com.sparetimedevs.ami.music.data.kotlin.part.PartInstrumentName
 
 public fun com.sparetimedevs.ami.music.input.PartInstrument?.validate(
-    validationErrorFor: ValidationErrorFor = ValidationErrorForUnknown,
     validationIdentifier: ValidationIdentifier = NoValidationIdentifier
 ): EitherNel<ValidationError, PartInstrument?> =
     if (this == null) {
         null.right()
     } else {
         Either.zipOrAccumulate(
-            PartInstrumentName.validate(this.name, validationErrorFor, validationIdentifier),
-            MidiChannel.validate(this.midiChannel, validationErrorFor, validationIdentifier),
-            MidiProgram.validate(this.midiProgram, validationErrorFor, validationIdentifier),
+            PartInstrumentName.validate(this.name, validationIdentifier),
+            MidiChannel.validate(this.midiChannel, validationIdentifier),
+            MidiProgram.validate(this.midiProgram, validationIdentifier),
         ) { name, midiChannel, midiProgram ->
             PartInstrument(name, midiChannel, midiProgram)
         }

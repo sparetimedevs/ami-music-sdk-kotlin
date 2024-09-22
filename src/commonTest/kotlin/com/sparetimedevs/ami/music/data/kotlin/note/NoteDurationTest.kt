@@ -16,54 +16,39 @@
 
 package com.sparetimedevs.ami.music.data.kotlin.note
 
-import com.sparetimedevs.ami.core.validation.MeasureIndex
 import com.sparetimedevs.ami.core.validation.NoValidationIdentifier
-import com.sparetimedevs.ami.core.validation.NoteIndex
 import com.sparetimedevs.ami.core.validation.ValidationError
-import com.sparetimedevs.ami.core.validation.ValidationErrorForNote
 import com.sparetimedevs.ami.core.validation.validationErrorForProperty
-import com.sparetimedevs.ami.music.data.kotlin.part.PartId
 import io.kotest.assertions.arrow.core.shouldBeLeft
 import io.kotest.assertions.arrow.core.shouldBeRight
 import io.kotest.core.spec.style.StringSpec
 
 class NoteDurationTest :
     StringSpec({
-        val validationErrorFor =
-            ValidationErrorForNote(
-                scoreId = "99d9",
-                partId = PartId.unsafeCreate("gg25l3"),
-                measureIndex = MeasureIndex.getValidOrNull(23),
-                noteIndex = NoteIndex.getValidOrNull(12)
-            )
-
         "validate should work with valid input for dotted maxima" {
-            NoteDuration.validate(12.0, validationErrorFor) shouldBeRight
+            NoteDuration.validate(12.0) shouldBeRight
                 NoteDuration(NoteValue.MAXIMA, NoteModifier.DOTTED)
         }
 
         "validate should work with valid input for octuple dotted maxima" {
-            NoteDuration.validate(8.03125, validationErrorFor) shouldBeRight
+            NoteDuration.validate(8.03125) shouldBeRight
                 NoteDuration(NoteValue.MAXIMA, NoteModifier.OCTUPLE_DOTTED)
         }
 
         "validate should work with valid input for maxima" {
-            NoteDuration.validate(8.0, validationErrorFor) shouldBeRight
-                NoteDuration(NoteValue.MAXIMA)
+            NoteDuration.validate(8.0) shouldBeRight NoteDuration(NoteValue.MAXIMA)
         }
 
         "validate should work with valid input for 8th" {
-            NoteDuration.validate(0.125, validationErrorFor) shouldBeRight
-                NoteDuration(NoteValue._8TH)
+            NoteDuration.validate(0.125) shouldBeRight NoteDuration(NoteValue._8TH)
         }
 
         "validate should yield validation input for invalid input" {
-            NoteDuration.validate(1.23456789, validationErrorFor) shouldBeLeft
+            NoteDuration.validate(1.23456789) shouldBeLeft
                 ValidationError(
                     "Input for note duration is not a valid value, the value is: 1.23456789",
                     validationErrorForProperty<NoteDuration>(),
-                    validationErrorFor,
-                    NoValidationIdentifier
+                    NoValidationIdentifier,
                 )
         }
     })

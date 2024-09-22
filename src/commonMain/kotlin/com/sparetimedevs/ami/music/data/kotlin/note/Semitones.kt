@@ -21,8 +21,6 @@ import arrow.core.raise.either
 import arrow.core.raise.ensure
 import com.sparetimedevs.ami.core.validation.NoValidationIdentifier
 import com.sparetimedevs.ami.core.validation.ValidationError
-import com.sparetimedevs.ami.core.validation.ValidationErrorFor
-import com.sparetimedevs.ami.core.validation.ValidationErrorForUnknown
 import com.sparetimedevs.ami.core.validation.ValidationIdentifier
 import com.sparetimedevs.ami.core.validation.getOrThrow
 import com.sparetimedevs.ami.core.validation.validationErrorForProperty
@@ -43,7 +41,6 @@ public value class Semitones private constructor(public val value: Float) {
 
         public fun validate(
             input: Float,
-            validationErrorFor: ValidationErrorFor = ValidationErrorForUnknown,
             validationIdentifier: ValidationIdentifier = NoValidationIdentifier
         ): Either<ValidationError, Semitones> = either {
             // Are these good minimums and maximums?
@@ -51,7 +48,6 @@ public value class Semitones private constructor(public val value: Float) {
                 ValidationError(
                     "Semitones can't be lesser than -10.0, the input was $input",
                     validationErrorForProperty<Semitones>(),
-                    validationErrorFor,
                     validationIdentifier
                 )
             }
@@ -59,7 +55,6 @@ public value class Semitones private constructor(public val value: Float) {
                 ValidationError(
                     "Semitones can't be greater than 10.0, the input was $input",
                     validationErrorForProperty<Semitones>(),
-                    validationErrorFor,
                     validationIdentifier
                 )
             }
@@ -67,6 +62,6 @@ public value class Semitones private constructor(public val value: Float) {
         }
 
         public fun unsafeCreate(input: Float): Semitones =
-            validate(input, ValidationErrorForUnknown, NoValidationIdentifier).getOrThrow()
+            validate(input, NoValidationIdentifier).getOrThrow()
     }
 }

@@ -21,8 +21,6 @@ import arrow.core.left
 import arrow.core.right
 import com.sparetimedevs.ami.core.validation.NoValidationIdentifier
 import com.sparetimedevs.ami.core.validation.ValidationError
-import com.sparetimedevs.ami.core.validation.ValidationErrorFor
-import com.sparetimedevs.ami.core.validation.ValidationErrorForUnknown
 import com.sparetimedevs.ami.core.validation.ValidationIdentifier
 import com.sparetimedevs.ami.core.validation.validationErrorForProperty
 import kotlinx.serialization.Serializable
@@ -30,7 +28,7 @@ import kotlinx.serialization.Serializable
 @Serializable
 public data class NoteDuration(
     val noteValue: NoteValue,
-    val modifier: NoteModifier = NoteModifier.NONE
+    val modifier: NoteModifier = NoteModifier.NONE,
 ) {
 
     val value: Double = noteValue.value * modifier.value
@@ -39,8 +37,7 @@ public data class NoteDuration(
 
         public fun validate(
             input: Double,
-            validationErrorFor: ValidationErrorFor = ValidationErrorForUnknown,
-            validationIdentifier: ValidationIdentifier = NoValidationIdentifier
+            validationIdentifier: ValidationIdentifier = NoValidationIdentifier,
         ): Either<ValidationError, NoteDuration> =
             when (input) {
                 NoteValue.MAXIMA.value * NoteModifier.DOTTED.value ->
@@ -319,8 +316,7 @@ public data class NoteDuration(
                     ValidationError(
                             "Input for note duration is not a valid value, the value is: $input",
                             validationErrorForProperty<NoteDuration>(),
-                            validationErrorFor,
-                            validationIdentifier
+                            validationIdentifier,
                         )
                         .left()
             }
@@ -349,8 +345,7 @@ public enum class NoteValue(public val value: Double) {
     public companion object {
         public fun validate(
             input: String,
-            validationErrorFor: ValidationErrorFor = ValidationErrorForUnknown,
-            validationIdentifier: ValidationIdentifier = NoValidationIdentifier
+            validationIdentifier: ValidationIdentifier = NoValidationIdentifier,
         ): Either<ValidationError, NoteValue> =
             when (input) {
                 MAXIMA.name -> MAXIMA.right()
@@ -373,8 +368,7 @@ public enum class NoteValue(public val value: Double) {
                     ValidationError(
                             "Note value can't be value $input",
                             validationErrorForProperty<NoteDuration>(),
-                            validationErrorFor,
-                            validationIdentifier
+                            validationIdentifier,
                         )
                         .left()
             }
@@ -397,8 +391,7 @@ public enum class NoteModifier(public val value: Double) {
 
         public fun validate(
             input: String,
-            validationErrorFor: ValidationErrorFor = ValidationErrorForUnknown,
-            validationIdentifier: ValidationIdentifier = NoValidationIdentifier
+            validationIdentifier: ValidationIdentifier = NoValidationIdentifier,
         ): Either<ValidationError, NoteModifier> =
             when (input) {
                 NONE.name -> NONE.right()
@@ -414,8 +407,7 @@ public enum class NoteModifier(public val value: Double) {
                     ValidationError(
                             "Note modifier can't be value $input",
                             validationErrorForProperty<NoteDuration>(),
-                            validationErrorFor,
-                            validationIdentifier
+                            validationIdentifier,
                         )
                         .left()
             }

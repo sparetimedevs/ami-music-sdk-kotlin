@@ -18,7 +18,6 @@ package com.sparetimedevs.ami.music.data.kotlin.note
 
 import com.sparetimedevs.ami.core.validation.NoValidationIdentifier
 import com.sparetimedevs.ami.core.validation.ValidationError
-import com.sparetimedevs.ami.core.validation.ValidationErrorForNote
 import com.sparetimedevs.ami.core.validation.validationErrorForProperty
 import io.kotest.assertions.arrow.core.shouldBeLeft
 import io.kotest.assertions.arrow.core.shouldBeRight
@@ -26,25 +25,17 @@ import io.kotest.core.spec.style.StringSpec
 
 class OctaveTest :
     StringSpec({
-        val validationErrorFor =
-            ValidationErrorForNote(
-                /* TODO this should be different, don't know any of this at this stage. probably just null values? */ "For unsafe create.",
-                null,
-                measureIndex = null,
-                noteIndex = null
-            )
         "validate should return valid octave" {
             val input: Byte = 4
-            Octave.validate(input, validationErrorFor) shouldBeRight Octave.unsafeCreate(4)
+            Octave.validate(input) shouldBeRight Octave.unsafeCreate(4)
         }
         "validate should return invalid with error" {
             val input: Byte = -13
-            Octave.validate(input, validationErrorFor) shouldBeLeft
+            Octave.validate(input) shouldBeLeft
                 ValidationError(
                     "Octave can't be lesser than -12, the input was -13",
                     validationErrorForProperty<Octave>(),
-                    validationErrorFor,
-                    NoValidationIdentifier
+                    NoValidationIdentifier,
                 )
         }
     })

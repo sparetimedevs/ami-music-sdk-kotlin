@@ -23,12 +23,6 @@ import arrow.core.right
 import arrow.core.toEitherNel
 import com.sparetimedevs.ami.core.validation.NoValidationIdentifier
 import com.sparetimedevs.ami.core.validation.ValidationError
-import com.sparetimedevs.ami.core.validation.ValidationErrorFor
-import com.sparetimedevs.ami.core.validation.ValidationErrorForMeasure
-import com.sparetimedevs.ami.core.validation.ValidationErrorForNote
-import com.sparetimedevs.ami.core.validation.ValidationErrorForPart
-import com.sparetimedevs.ami.core.validation.ValidationErrorForScore
-import com.sparetimedevs.ami.core.validation.ValidationErrorForUnknown
 import com.sparetimedevs.ami.core.validation.ValidationIdentifier
 import com.sparetimedevs.ami.core.validation.ValidationIdentifierForMeasure
 import com.sparetimedevs.ami.core.validation.ValidationIdentifierForNote
@@ -44,13 +38,10 @@ import com.sparetimedevs.ami.music.data.kotlin.score.ScoreId
 import com.sparetimedevs.ami.music.data.kotlin.score.ScoreTitle
 
 public fun com.sparetimedevs.ami.music.input.Score.validate(
-    validationErrorFor: ValidationErrorFor = ValidationErrorForUnknown,
     validationIdentifier: ValidationIdentifier = NoValidationIdentifier
 ): EitherNel<ValidationError, Score> {
     val scoreId: Either<NonEmptyList<ValidationError>, ScoreId> =
-        ScoreId.validate(this.id, validationErrorFor).toEitherNel()
-    val validationErrorForScore =
-        ValidationErrorForScore(scoreId.fold({ "no-valid-score-id" }, { it.value }))
+        ScoreId.validate(this.id).toEitherNel()
     val validationIdentifierForScore =
         ValidationIdentifierForScore(
             scoreId.fold({ "no-valid-score-id" }, { it.value }),
@@ -59,15 +50,11 @@ public fun com.sparetimedevs.ami.music.input.Score.validate(
     return Either.zipOrAccumulate(
         scoreId,
         if (this.title != null)
-            ScoreTitle.validate(this.title, validationErrorForScore, validationIdentifierForScore)
-                .toEitherNel()
+            ScoreTitle.validate(this.title, validationIdentifierForScore).toEitherNel()
         else Either.Right(null),
         this.parts
             .map { part ->
-                part.validate(
-                    ValidationErrorForPart.fromParent(validationErrorForScore, part.id),
-                    ValidationIdentifierForPart(part.id, validationIdentifierForScore)
-                )
+                part.validate(ValidationIdentifierForPart(part.id, validationIdentifierForScore))
             }
             .combineAllValidationErrors()
     ) { id: ScoreId, title: ScoreTitle?, parts: List<Part> ->
@@ -76,48 +63,16 @@ public fun com.sparetimedevs.ami.music.input.Score.validate(
 }
 
 public fun com.sparetimedevs.ami.music.input.Part.validate(
-    validationErrorFor: ValidationErrorFor = ValidationErrorForUnknown,
     validationIdentifier: ValidationIdentifier = NoValidationIdentifier
 ): EitherNel<ValidationError, Part> =
     Either.zipOrAccumulate(
-        PartId.validate(this.id, validationErrorFor, validationIdentifier).toEitherNel(),
-        PartName.validate(this.name, validationErrorFor, validationIdentifier).toEitherNel(),
-        this.instrument.validate(validationErrorFor, validationIdentifier),
+        PartId.validate(this.id, validationIdentifier).toEitherNel(),
+        PartName.validate(this.name, validationIdentifier).toEitherNel(),
+        this.instrument.validate(validationIdentifier),
         this.measures
             .withIndex()
             .map { (index, measure) ->
-                //                println("NoValidationIdentifier: $NoValidationIdentifier")
-                //                val validationIdentifierForScore =
-                //                    ValidationIdentifierForScore(
-                //                        "superScore",
-                //                        NoValidationIdentifier) // TODO this is the one that would
-                // already be passed
-                //                // in to the function as a
-                //                // parameter.
-                //                println("ValidationIdentifierForScore:
-                // $validationIdentifierForScore")
-                //                val validationIdentifier =
-                //                    ValidationIdentifierForPart(
-                //                        "p-1",
-                //                        validationIdentifierForScore) // TODO this is the one that
-                // would already be
-                // passed in to the function as a
-                // parameter.
-                println("ValidationIdentifierForPart: $validationIdentifier")
-                val validationIdentifierForMeasure =
-                    ValidationIdentifierForMeasure(index, validationIdentifier)
-                println("ValidationIdentifierForMeasure: $validationIdentifierForMeasure")
-                println(
-                    "List of ValidationIdentifierForMeasure: ${getListOfValidationIdentifiers(validationIdentifier)}"
-                )
-                println(
-                    "First Score ValidationIdentifier: ${returnFirstScoreValidationIdentifier(validationIdentifierForMeasure).scoreId}"
-                )
-
-                measure.validate(
-                    ValidationErrorForMeasure.fromParent(validationErrorFor, index),
-                    validationIdentifierForMeasure
-                )
+                measure.validate(ValidationIdentifierForMeasure(index, validationIdentifier))
             }
             .combineAllValidationErrors()
     ) { id, name, instrument, measures ->
@@ -145,7 +100,6 @@ public tailrec fun returnFirstScoreValidationIdentifier(
     }
 
 public fun com.sparetimedevs.ami.music.input.Measure.validate(
-    validationErrorFor: ValidationErrorFor = ValidationErrorForUnknown,
     validationIdentifier: ValidationIdentifier = NoValidationIdentifier
 ): EitherNel<ValidationError, Measure> =
     Either.zipOrAccumulate(
@@ -153,11 +107,7 @@ public fun com.sparetimedevs.ami.music.input.Measure.validate(
         this.notes
             .withIndex()
             .map { (index, note) ->
-                validateNote(
-                    note,
-                    ValidationErrorForNote.fromParent(validationErrorFor, index),
-                    ValidationIdentifierForNote(index, validationIdentifier)
-                )
+                validateNote(note, ValidationIdentifierForNote(index, validationIdentifier))
             }
             .combineAllValidationErrors()
     ) { attributes, notes ->

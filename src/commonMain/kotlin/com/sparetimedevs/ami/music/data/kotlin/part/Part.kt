@@ -22,8 +22,6 @@ import arrow.core.raise.ensure
 import com.sparetimedevs.ami.core.util.randomUuidString
 import com.sparetimedevs.ami.core.validation.NoValidationIdentifier
 import com.sparetimedevs.ami.core.validation.ValidationError
-import com.sparetimedevs.ami.core.validation.ValidationErrorFor
-import com.sparetimedevs.ami.core.validation.ValidationErrorForUnknown
 import com.sparetimedevs.ami.core.validation.ValidationIdentifier
 import com.sparetimedevs.ami.core.validation.getOrThrow
 import com.sparetimedevs.ami.core.validation.validationErrorForProperty
@@ -40,14 +38,12 @@ public value class PartId private constructor(public val value: String) {
 
         public fun validate(
             input: String,
-            validationErrorFor: ValidationErrorFor = ValidationErrorForUnknown,
             validationIdentifier: ValidationIdentifier = NoValidationIdentifier
         ): Either<ValidationError, PartId> = either {
             ensure(input.isNotEmpty()) {
                 ValidationError(
                     "Part ID can't be empty, the input was $input",
                     validationErrorForProperty<PartId>(),
-                    validationErrorFor,
                     validationIdentifier
                 )
             }
@@ -55,7 +51,6 @@ public value class PartId private constructor(public val value: String) {
                 ValidationError(
                     "Part ID can't be longer than 128 characters, the input was $input",
                     validationErrorForProperty<PartId>(),
-                    validationErrorFor,
                     validationIdentifier
                 )
             }
@@ -63,7 +58,7 @@ public value class PartId private constructor(public val value: String) {
         }
 
         public fun unsafeCreate(input: String): PartId =
-            validate(input, ValidationErrorForUnknown, NoValidationIdentifier).getOrThrow()
+            validate(input, NoValidationIdentifier).getOrThrow()
     }
 }
 
@@ -74,7 +69,6 @@ public value class PartName private constructor(public val value: String) {
 
         public fun validate(
             input: String?,
-            validationErrorFor: ValidationErrorFor = ValidationErrorForUnknown,
             validationIdentifier: ValidationIdentifier = NoValidationIdentifier
         ): Either<ValidationError, PartName?> = either {
             if (input.isNullOrEmpty()) {
@@ -86,7 +80,6 @@ public value class PartName private constructor(public val value: String) {
                 ValidationError(
                     "Part name can't be empty, the input was $input",
                     validationErrorForProperty<PartName>(),
-                    validationErrorFor,
                     validationIdentifier
                 )
             }
@@ -94,7 +87,6 @@ public value class PartName private constructor(public val value: String) {
                 ValidationError(
                     "Part name can't be longer than 512 characters, the input was $input",
                     validationErrorForProperty<PartName>(),
-                    validationErrorFor,
                     validationIdentifier
                 )
             }
@@ -102,7 +94,7 @@ public value class PartName private constructor(public val value: String) {
         }
 
         public fun unsafeCreate(input: String): PartName =
-            validate(input, ValidationErrorForUnknown, NoValidationIdentifier).getOrThrow()!!
+            validate(input, NoValidationIdentifier).getOrThrow()!!
     }
 }
 

@@ -21,8 +21,6 @@ import arrow.core.left
 import arrow.core.right
 import com.sparetimedevs.ami.core.validation.NoValidationIdentifier
 import com.sparetimedevs.ami.core.validation.ValidationError
-import com.sparetimedevs.ami.core.validation.ValidationErrorFor
-import com.sparetimedevs.ami.core.validation.ValidationErrorForUnknown
 import com.sparetimedevs.ami.core.validation.ValidationIdentifier
 import com.sparetimedevs.ami.core.validation.validationErrorForProperty
 import kotlinx.serialization.Serializable
@@ -51,7 +49,6 @@ public enum class NoteName {
 
         public fun validate(
             input: String,
-            validationErrorFor: ValidationErrorFor = ValidationErrorForUnknown,
             validationIdentifier: ValidationIdentifier = NoValidationIdentifier
         ): Either<ValidationError, NoteName> =
             when (input) {
@@ -76,7 +73,6 @@ public enum class NoteName {
                     ValidationError(
                             "Note name can't be value $input",
                             validationErrorForProperty<NoteName>(),
-                            validationErrorFor,
                             validationIdentifier
                         )
                         .left()

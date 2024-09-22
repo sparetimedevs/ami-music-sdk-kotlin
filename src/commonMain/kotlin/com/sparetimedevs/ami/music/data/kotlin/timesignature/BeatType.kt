@@ -21,8 +21,6 @@ import arrow.core.raise.either
 import arrow.core.raise.ensure
 import com.sparetimedevs.ami.core.validation.NoValidationIdentifier
 import com.sparetimedevs.ami.core.validation.ValidationError
-import com.sparetimedevs.ami.core.validation.ValidationErrorFor
-import com.sparetimedevs.ami.core.validation.ValidationErrorForUnknown
 import com.sparetimedevs.ami.core.validation.ValidationIdentifier
 import com.sparetimedevs.ami.core.validation.getOrThrow
 import com.sparetimedevs.ami.core.validation.validationErrorForProperty
@@ -35,14 +33,12 @@ public value class BeatType private constructor(public val value: Byte) {
     public companion object {
         public fun validate(
             input: Byte,
-            validationErrorFor: ValidationErrorFor = ValidationErrorForUnknown,
             validationIdentifier: ValidationIdentifier = NoValidationIdentifier
         ): Either<ValidationError, BeatType> = either {
             ensure(input > 0) {
                 ValidationError(
                     "BeatType can't be zero or negative, the input was $input",
                     validationErrorForProperty<BeatType>(),
-                    validationErrorFor,
                     validationIdentifier
                 )
             }
@@ -50,6 +46,6 @@ public value class BeatType private constructor(public val value: Byte) {
         }
 
         public fun unsafeCreate(input: Byte): BeatType =
-            validate(input, ValidationErrorForUnknown, NoValidationIdentifier).getOrThrow()
+            validate(input, NoValidationIdentifier).getOrThrow()
     }
 }

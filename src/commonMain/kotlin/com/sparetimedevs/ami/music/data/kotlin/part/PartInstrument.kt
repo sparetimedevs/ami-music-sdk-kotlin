@@ -21,8 +21,6 @@ import arrow.core.raise.either
 import arrow.core.raise.ensure
 import com.sparetimedevs.ami.core.validation.NoValidationIdentifier
 import com.sparetimedevs.ami.core.validation.ValidationError
-import com.sparetimedevs.ami.core.validation.ValidationErrorFor
-import com.sparetimedevs.ami.core.validation.ValidationErrorForUnknown
 import com.sparetimedevs.ami.core.validation.ValidationIdentifier
 import com.sparetimedevs.ami.core.validation.getOrThrow
 import com.sparetimedevs.ami.core.validation.validationErrorForProperty
@@ -38,7 +36,6 @@ public value class PartInstrumentName private constructor(public val value: Stri
 
         public fun validate(
             input: String?,
-            validationErrorFor: ValidationErrorFor = ValidationErrorForUnknown,
             validationIdentifier: ValidationIdentifier = NoValidationIdentifier
         ): Either<ValidationError, PartInstrumentName?> = either {
             if (input.isNullOrEmpty()) {
@@ -50,7 +47,6 @@ public value class PartInstrumentName private constructor(public val value: Stri
                 ValidationError(
                     "Part instrument name can't be empty, the input was $input",
                     validationErrorForProperty<PartInstrumentName>(),
-                    validationErrorFor,
                     validationIdentifier
                 )
             }
@@ -58,7 +54,6 @@ public value class PartInstrumentName private constructor(public val value: Stri
                 ValidationError(
                     "Part instrument name can't be longer than 512 characters, the input was $input",
                     validationErrorForProperty<PartInstrumentName>(),
-                    validationErrorFor,
                     validationIdentifier
                 )
             }
@@ -66,7 +61,7 @@ public value class PartInstrumentName private constructor(public val value: Stri
         }
 
         public fun unsafeCreate(input: String): PartInstrumentName =
-            validate(input, ValidationErrorForUnknown, NoValidationIdentifier).getOrThrow()!!
+            validate(input, NoValidationIdentifier).getOrThrow()!!
     }
 }
 

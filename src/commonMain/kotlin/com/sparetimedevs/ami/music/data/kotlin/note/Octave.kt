@@ -21,8 +21,6 @@ import arrow.core.raise.either
 import arrow.core.raise.ensure
 import com.sparetimedevs.ami.core.validation.NoValidationIdentifier
 import com.sparetimedevs.ami.core.validation.ValidationError
-import com.sparetimedevs.ami.core.validation.ValidationErrorFor
-import com.sparetimedevs.ami.core.validation.ValidationErrorForUnknown
 import com.sparetimedevs.ami.core.validation.ValidationIdentifier
 import com.sparetimedevs.ami.core.validation.getOrThrow
 import com.sparetimedevs.ami.core.validation.validationErrorForProperty
@@ -36,7 +34,6 @@ public value class Octave private constructor(public val value: Byte) {
 
         public fun validate(
             input: Byte,
-            validationErrorFor: ValidationErrorFor = ValidationErrorForUnknown,
             validationIdentifier: ValidationIdentifier = NoValidationIdentifier
         ): Either<ValidationError, Octave> = either {
             // Are these good minimums and maximums?
@@ -44,7 +41,6 @@ public value class Octave private constructor(public val value: Byte) {
                 ValidationError(
                     "Octave can't be lesser than -12, the input was $input",
                     validationErrorForProperty<Octave>(),
-                    validationErrorFor,
                     validationIdentifier
                 )
             }
@@ -52,7 +48,6 @@ public value class Octave private constructor(public val value: Byte) {
                 ValidationError(
                     "Octave can't be greater than 12, the input was $input",
                     validationErrorForProperty<Octave>(),
-                    validationErrorFor,
                     validationIdentifier
                 )
             }
@@ -60,6 +55,6 @@ public value class Octave private constructor(public val value: Byte) {
         }
 
         public fun unsafeCreate(input: Byte): Octave =
-            validate(input, ValidationErrorForUnknown, NoValidationIdentifier).getOrThrow()
+            validate(input, NoValidationIdentifier).getOrThrow()
     }
 }
