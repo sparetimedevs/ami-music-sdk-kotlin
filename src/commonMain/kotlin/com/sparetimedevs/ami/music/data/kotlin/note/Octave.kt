@@ -38,7 +38,7 @@ public value class Octave private constructor(public val value: Byte) {
             validationIdentifier: ValidationIdentifier = NoValidationIdentifier,
         ): EitherNel<ValidationError, Octave> = either {
             // Are these good minimums and maximums?
-            ensure(input > -13f) {
+            ensure(input >= -12f) {
                 ValidationError(
                         "Octave can't be lesser than -12, the input was $input",
                         validationErrorForProperty<Octave>(),
@@ -46,7 +46,7 @@ public value class Octave private constructor(public val value: Byte) {
                     )
                     .nel()
             }
-            ensure(input < 13) {
+            ensure(input <= 12) {
                 ValidationError(
                         "Octave can't be greater than 12, the input was $input",
                         validationErrorForProperty<Octave>(),

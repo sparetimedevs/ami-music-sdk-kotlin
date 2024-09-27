@@ -82,7 +82,7 @@ public value class ScoreTitle private constructor(public val value: String) {
                     )
                     .nel()
             }
-            ensure(input.length < 513) {
+            ensure(input.length <= 512) {
                 ValidationError(
                         "Score title can't be longer than 512 characters, the input was $input",
                         validationErrorForProperty<ScoreTitle>(),

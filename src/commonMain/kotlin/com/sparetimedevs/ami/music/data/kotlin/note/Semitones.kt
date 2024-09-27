@@ -45,7 +45,7 @@ public value class Semitones private constructor(public val value: Float) {
             validationIdentifier: ValidationIdentifier = NoValidationIdentifier,
         ): EitherNel<ValidationError, Semitones> = either {
             // Are these good minimums and maximums?
-            ensure(input > -10.0f) {
+            ensure(input >= -10.0f) {
                 ValidationError(
                         "Semitones can't be lesser than -10.0, the input was $input",
                         validationErrorForProperty<Semitones>(),
@@ -53,7 +53,7 @@ public value class Semitones private constructor(public val value: Float) {
                     )
                     .nel()
             }
-            ensure(input < 10.0f) {
+            ensure(input <= 10.0f) {
                 ValidationError(
                         "Semitones can't be greater than 10.0, the input was $input",
                         validationErrorForProperty<Semitones>(),

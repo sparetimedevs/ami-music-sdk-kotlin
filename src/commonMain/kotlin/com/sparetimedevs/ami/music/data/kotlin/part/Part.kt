@@ -77,7 +77,7 @@ public value class PartName private constructor(public val value: String) {
             if (input.isNullOrEmpty()) {
                 return@either null
             }
-            ensure(input.length < 513) {
+            ensure(input.length <= 512) {
                 ValidationError(
                         "Part name can't be longer than 512 characters, the input was $input",
                         validationErrorForProperty<PartName>(),

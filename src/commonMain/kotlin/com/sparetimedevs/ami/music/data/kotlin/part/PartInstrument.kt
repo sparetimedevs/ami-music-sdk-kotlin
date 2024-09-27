@@ -42,7 +42,7 @@ public value class PartInstrumentName private constructor(public val value: Stri
             if (input.isNullOrEmpty()) {
                 return@either null
             }
-            ensure(input.length < 513) {
+            ensure(input.length <= 512) {
                 ValidationError(
                         "Part instrument name can't be longer than 512 characters, the input was $input",
                         validationErrorForProperty<PartInstrumentName>(),

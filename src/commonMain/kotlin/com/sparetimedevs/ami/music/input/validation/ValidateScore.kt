@@ -71,26 +71,6 @@ public fun com.sparetimedevs.ami.music.input.Part.validate(
         }
     }
 
-public tailrec fun getListOfValidationIdentifiers(
-    validationIdentifier: ValidationIdentifier,
-    acc: List<ValidationIdentifier> = emptyList()
-): List<ValidationIdentifier> =
-    if (validationIdentifier == NoValidationIdentifier) acc
-    else {
-        getListOfValidationIdentifiers(
-            validationIdentifier.validationIdentifierParent,
-            acc + validationIdentifier
-        )
-    }
-
-public tailrec fun returnFirstScoreValidationIdentifier(
-    validationIdentifier: ValidationIdentifier
-): ValidationIdentifierForScore =
-    if (validationIdentifier is ValidationIdentifierForScore) validationIdentifier
-    else {
-        returnFirstScoreValidationIdentifier(validationIdentifier.validationIdentifierParent)
-    }
-
 public fun com.sparetimedevs.ami.music.input.Measure.validate(
     index: Int,
     validationIdentifier: ValidationIdentifier = NoValidationIdentifier
