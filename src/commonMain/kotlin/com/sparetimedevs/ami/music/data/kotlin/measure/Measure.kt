@@ -57,8 +57,8 @@ public sealed interface Measure {
             notes: List<Note>,
             timeSignature: TimeSignature =
                 TimeSignature(
-                    Beats.validate(4).getOrNull()!!,
-                    BeatType.validate(4).getOrNull()!!
+                    Beats.unsafeCreate(4),
+                    BeatType.unsafeCreate(4)
                 ), // TODO remove this default, and change order.
         ): Measure =
             when {

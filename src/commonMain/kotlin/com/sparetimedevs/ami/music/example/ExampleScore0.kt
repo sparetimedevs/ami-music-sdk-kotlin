@@ -17,6 +17,8 @@
 package com.sparetimedevs.ami.music.example
 
 import com.sparetimedevs.ami.music.data.kotlin.measure.Measure
+import com.sparetimedevs.ami.music.data.kotlin.midi.MidiChannel
+import com.sparetimedevs.ami.music.data.kotlin.midi.MidiProgram
 import com.sparetimedevs.ami.music.data.kotlin.note.Note.Pitched
 import com.sparetimedevs.ami.music.data.kotlin.note.NoteAttributes
 import com.sparetimedevs.ami.music.data.kotlin.note.NoteDuration
@@ -27,6 +29,9 @@ import com.sparetimedevs.ami.music.data.kotlin.note.Pitch
 import com.sparetimedevs.ami.music.data.kotlin.note.Semitones
 import com.sparetimedevs.ami.music.data.kotlin.part.Part
 import com.sparetimedevs.ami.music.data.kotlin.part.PartId
+import com.sparetimedevs.ami.music.data.kotlin.part.PartInstrument
+import com.sparetimedevs.ami.music.data.kotlin.part.PartInstrumentName
+import com.sparetimedevs.ami.music.data.kotlin.part.PartName
 import com.sparetimedevs.ami.music.data.kotlin.score.Score
 import com.sparetimedevs.ami.music.data.kotlin.score.ScoreId
 
@@ -35,6 +40,13 @@ public fun getExampleScore0(): Score {
         listOf(
             Part(
                 id = PartId.unsafeCreate("p-1"),
+                name = PartName.unsafeCreate("Part one"),
+                instrument =
+                    PartInstrument(
+                        name = PartInstrumentName.unsafeCreate("Grand Piano"),
+                        midiChannel = MidiChannel.unsafeCreate(0),
+                        midiProgram = MidiProgram.unsafeCreate(1)
+                    ),
                 measures =
                     listOf(
                         Measure(
@@ -180,6 +192,13 @@ public fun getExampleScore0(): Score {
             ),
             Part(
                 id = PartId.unsafeCreate("p-2"),
+                name = PartName.unsafeCreate("Part two"),
+                instrument =
+                    PartInstrument(
+                        name = PartInstrumentName.unsafeCreate("Overdriven Guitar"),
+                        midiChannel = MidiChannel.unsafeCreate(1),
+                        midiProgram = MidiProgram.unsafeCreate(30)
+                    ),
                 measures =
                     listOf(
                         Measure(

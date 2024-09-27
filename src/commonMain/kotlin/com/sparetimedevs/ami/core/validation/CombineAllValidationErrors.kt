@@ -14,14 +14,22 @@
  * limitations under the License.
  */
 
-package com.sparetimedevs.ami.music.input.validation
+package com.sparetimedevs.ami.core.validation
 
 import arrow.core.Either
-import com.sparetimedevs.ami.core.DomainError
-import com.sparetimedevs.ami.core.asEitherWithAccumulatedValidationErrors
-import com.sparetimedevs.ami.core.validation.NoValidationIdentifier
-import com.sparetimedevs.ami.music.data.kotlin.score.Score
+import arrow.core.EitherNel
+import arrow.core.NonEmptyList
+import arrow.core.right
 
-public fun com.sparetimedevs.ami.music.input.Score.validateInput(): Either<DomainError, Score> =
-    this.validate(validationIdentifier = NoValidationIdentifier)
-        .asEitherWithAccumulatedValidationErrors()
+public fun <T> Iterable<EitherNel<ValidationError, T>>.combineAllValidationErrors():
+    EitherNel<ValidationError, List<T>> =
+    this.fold(emptyList<T>().right()) {
+        acc: Either<NonEmptyList<ValidationError>, List<T>>,
+        el: Either<NonEmptyList<ValidationError>, T> ->
+        Either.zipOrAccumulate(
+            { e1: NonEmptyList<ValidationError>, e2: NonEmptyList<ValidationError> -> e1 + e2 },
+            acc,
+            el,
+            { b1: List<T>, b2: T -> b1 + b2 }
+        )
+    }

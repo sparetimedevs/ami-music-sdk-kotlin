@@ -17,6 +17,8 @@
 package com.sparetimedevs.ami.music.example
 
 import com.sparetimedevs.ami.music.data.kotlin.measure.Measure
+import com.sparetimedevs.ami.music.data.kotlin.midi.MidiChannel
+import com.sparetimedevs.ami.music.data.kotlin.midi.MidiProgram
 import com.sparetimedevs.ami.music.data.kotlin.note.Note
 import com.sparetimedevs.ami.music.data.kotlin.note.NoteAttributes
 import com.sparetimedevs.ami.music.data.kotlin.note.NoteDuration
@@ -26,6 +28,9 @@ import com.sparetimedevs.ami.music.data.kotlin.note.Octave
 import com.sparetimedevs.ami.music.data.kotlin.note.Pitch
 import com.sparetimedevs.ami.music.data.kotlin.part.Part
 import com.sparetimedevs.ami.music.data.kotlin.part.PartId
+import com.sparetimedevs.ami.music.data.kotlin.part.PartInstrument
+import com.sparetimedevs.ami.music.data.kotlin.part.PartInstrumentName
+import com.sparetimedevs.ami.music.data.kotlin.part.PartName
 import com.sparetimedevs.ami.music.data.kotlin.score.Score
 import com.sparetimedevs.ami.music.data.kotlin.score.ScoreId
 
@@ -34,6 +39,13 @@ public fun getExampleScore1(): Score {
         listOf(
             Part(
                 PartId.unsafeCreate("p-1"),
+                name = PartName.unsafeCreate("Part one"),
+                instrument =
+                    PartInstrument(
+                        name = PartInstrumentName.unsafeCreate("Grand Piano"),
+                        midiChannel = MidiChannel.unsafeCreate(0),
+                        midiProgram = MidiProgram.unsafeCreate(1)
+                    ),
                 listOf(
                     Measure(
                         null,

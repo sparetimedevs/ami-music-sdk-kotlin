@@ -14,14 +14,12 @@
  * limitations under the License.
  */
 
-package com.sparetimedevs.ami.music.input.validation
+package com.sparetimedevs.ami.core
 
-import arrow.core.Either
-import com.sparetimedevs.ami.core.DomainError
-import com.sparetimedevs.ami.core.asEitherWithAccumulatedValidationErrors
-import com.sparetimedevs.ami.core.validation.NoValidationIdentifier
-import com.sparetimedevs.ami.music.data.kotlin.score.Score
+import kotlin.jvm.JvmInline
 
-public fun com.sparetimedevs.ami.music.input.Score.validateInput(): Either<DomainError, Score> =
-    this.validate(validationIdentifier = NoValidationIdentifier)
-        .asEitherWithAccumulatedValidationErrors()
+public sealed interface IdOrIndex
+
+public interface Id : IdOrIndex
+
+@JvmInline public value class Index(public val value: Int) : IdOrIndex

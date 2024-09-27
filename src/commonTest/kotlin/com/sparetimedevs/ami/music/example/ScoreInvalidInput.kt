@@ -20,25 +20,24 @@ import com.sparetimedevs.ami.music.input.Measure
 import com.sparetimedevs.ami.music.input.NoteAttributes
 import com.sparetimedevs.ami.music.input.NoteDuration
 import com.sparetimedevs.ami.music.input.Part
-import com.sparetimedevs.ami.music.input.PartInstrument
 import com.sparetimedevs.ami.music.input.Pitch
 import com.sparetimedevs.ami.music.input.Pitched
 import com.sparetimedevs.ami.music.input.Score
 
-fun getExampleScore0Input(): Score {
+fun getExampleScore0InvalidInput(): Score {
     val parts =
         listOf(
             Part(
                 id = "p-1",
-                name = "Part one",
-                instrument = PartInstrument(name = "Grand Piano", midiChannel = 0, midiProgram = 1),
+                name = null,
+                instrument = null,
                 measures =
                     listOf(
                         Measure(
                             null,
                             listOf(
                                 Pitched(
-                                    duration = NoteDuration("QUARTER", "NONE"),
+                                    duration = NoteDuration("QUARTAAAR", "NONE"),
                                     noteAttributes =
                                         NoteAttributes(
                                             attack = null,
@@ -57,7 +56,7 @@ fun getExampleScore0Input(): Score {
                                             endDynamics = null,
                                             release = null
                                         ),
-                                    pitch = Pitch(alter = 0.0f, noteName = "G", octave = 4)
+                                    pitch = Pitch(alter = 0.0f, noteName = "G", octave = 127)
                                 ),
                                 Pitched(
                                     duration = NoteDuration("QUARTER", "NONE"),
@@ -79,7 +78,7 @@ fun getExampleScore0Input(): Score {
                                             endDynamics = null,
                                             release = null
                                         ),
-                                    pitch = Pitch(alter = 0.0f, noteName = "E", octave = 4)
+                                    pitch = Pitch(alter = 0.0f, noteName = "L", octave = 4)
                                 )
                             )
                         ),
@@ -137,9 +136,8 @@ fun getExampleScore0Input(): Score {
             ),
             Part(
                 id = "p-2",
-                name = "Part two",
-                instrument =
-                    PartInstrument(name = "Overdriven Guitar", midiChannel = 1, midiProgram = 30),
+                name = null,
+                instrument = null,
                 measures =
                     listOf(
                         Measure(

@@ -16,6 +16,31 @@
 
 package com.sparetimedevs.ami.core.validation
 
+import com.sparetimedevs.ami.core.Id
+import com.sparetimedevs.ami.core.IdOrIndex
+import kotlin.jvm.JvmInline
+import kotlinx.serialization.Serializable
+
+@Serializable
 public data class ValidationError(
-    val message: String = "There was an error while validating the input."
+    val message: String = "There was an error while validating the input.",
+    val validationErrorForProperty: ValidationErrorForProperty,
+    val validationIdentifier: ValidationIdentifier
 )
+
+@Serializable @JvmInline public value class ValidationErrorForProperty(public val value: String)
+
+public inline fun <reified T : Any> validationErrorForProperty(): ValidationErrorForProperty =
+    ValidationErrorForProperty(T::class.simpleName ?: "unknown")
+
+public interface ValidationIdentifier {
+    public val identifier: IdOrIndex
+    public val validationIdentifierParent: ValidationIdentifier
+}
+
+public object NoValidationIdentifier : ValidationIdentifier {
+    public override val identifier: IdOrIndex = NoId
+    public override val validationIdentifierParent: ValidationIdentifier = this
+}
+
+public data object NoId : Id

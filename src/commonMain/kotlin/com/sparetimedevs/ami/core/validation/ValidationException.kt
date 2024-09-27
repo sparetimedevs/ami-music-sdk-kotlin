@@ -16,12 +16,12 @@
 
 package com.sparetimedevs.ami.core.validation
 
-import arrow.core.Either
+import arrow.core.EitherNel
 import arrow.core.getOrElse
 
 public class ValidationException(override val message: String) : RuntimeException()
 
 public fun ValidationError.asException(): ValidationException = ValidationException(this.message)
 
-public fun <A> Either<ValidationError, A>.getOrThrow(): A =
-    this.getOrElse { throw it.asException() }
+public fun <A> EitherNel<ValidationError, A>.getOrThrowFirstValidationError(): A =
+    this.getOrElse { throw it.head.asException() }

@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.sparetimedevs.ami.music.data.kotlin.note
+package com.sparetimedevs.ami.music.data.kotlin.midi
 
 import arrow.core.EitherNel
 import arrow.core.nel
@@ -28,43 +28,56 @@ import com.sparetimedevs.ami.core.validation.validationErrorForProperty
 import kotlin.jvm.JvmInline
 import kotlinx.serialization.Serializable
 
-/**
- * The semitones type is a number representing semitones, used for chromatic alteration. A value of
- * -1 corresponds to a flat and a value of 1 to a sharp. Decimal values like 0.5 (quarter tone
- * sharp) are used for microtones.
- */
 @Serializable
 @JvmInline
-public value class Semitones private constructor(public val value: Float) {
+public value class MidiChannel private constructor(public val value: Byte) {
     public companion object {
-
-        public val DefaultSemitones: Semitones = Semitones(0.0f)
-
         public fun validate(
-            input: Float,
+            input: Byte?,
             validationIdentifier: ValidationIdentifier = NoValidationIdentifier,
-        ): EitherNel<ValidationError, Semitones> = either {
-            // Are these good minimums and maximums?
-            ensure(input >= -10.0f) {
+        ): EitherNel<ValidationError, MidiChannel?> = either {
+            if (input == null) {
+                return@either null
+            }
+            ensure(input >= 0) {
                 ValidationError(
-                        "Semitones can't be lesser than -10.0, the input was $input",
-                        validationErrorForProperty<Semitones>(),
+                        "Midi channel can't be negative, the input was $input",
+                        validationErrorForProperty<MidiChannel>(),
                         validationIdentifier,
                     )
                     .nel()
             }
-            ensure(input <= 10.0f) {
-                ValidationError(
-                        "Semitones can't be greater than 10.0, the input was $input",
-                        validationErrorForProperty<Semitones>(),
-                        validationIdentifier,
-                    )
-                    .nel()
-            }
-            Semitones(input)
+            MidiChannel(input)
         }
 
-        public fun unsafeCreate(input: Float): Semitones =
-            validate(input, NoValidationIdentifier).getOrThrowFirstValidationError()
+        public fun unsafeCreate(input: Byte): MidiChannel =
+            validate(input, NoValidationIdentifier).getOrThrowFirstValidationError()!!
+    }
+}
+
+@Serializable
+@JvmInline
+public value class MidiProgram private constructor(public val value: Byte) {
+    public companion object {
+        public fun validate(
+            input: Byte?,
+            validationIdentifier: ValidationIdentifier = NoValidationIdentifier,
+        ): EitherNel<ValidationError, MidiProgram?> = either {
+            if (input == null) {
+                return@either null
+            }
+            ensure(input >= 0) {
+                ValidationError(
+                        "Midi program can't be negative, the input was $input",
+                        validationErrorForProperty<MidiProgram>(),
+                        validationIdentifier,
+                    )
+                    .nel()
+            }
+            MidiProgram(input)
+        }
+
+        public fun unsafeCreate(input: Byte): MidiProgram =
+            validate(input, NoValidationIdentifier).getOrThrowFirstValidationError()!!
     }
 }

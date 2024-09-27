@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.sparetimedevs.ami.music.data.kotlin.note
+package com.sparetimedevs.ami.music.data.kotlin.part
 
 import arrow.core.EitherNel
 import arrow.core.nel
@@ -25,46 +25,42 @@ import com.sparetimedevs.ami.core.validation.ValidationError
 import com.sparetimedevs.ami.core.validation.ValidationIdentifier
 import com.sparetimedevs.ami.core.validation.getOrThrowFirstValidationError
 import com.sparetimedevs.ami.core.validation.validationErrorForProperty
+import com.sparetimedevs.ami.music.data.kotlin.midi.MidiChannel
+import com.sparetimedevs.ami.music.data.kotlin.midi.MidiProgram
 import kotlin.jvm.JvmInline
 import kotlinx.serialization.Serializable
 
-/**
- * The semitones type is a number representing semitones, used for chromatic alteration. A value of
- * -1 corresponds to a flat and a value of 1 to a sharp. Decimal values like 0.5 (quarter tone
- * sharp) are used for microtones.
- */
 @Serializable
 @JvmInline
-public value class Semitones private constructor(public val value: Float) {
+public value class PartInstrumentName private constructor(public val value: String) {
     public companion object {
 
-        public val DefaultSemitones: Semitones = Semitones(0.0f)
-
         public fun validate(
-            input: Float,
+            input: String?,
             validationIdentifier: ValidationIdentifier = NoValidationIdentifier,
-        ): EitherNel<ValidationError, Semitones> = either {
-            // Are these good minimums and maximums?
-            ensure(input >= -10.0f) {
+        ): EitherNel<ValidationError, PartInstrumentName?> = either {
+            if (input.isNullOrEmpty()) {
+                return@either null
+            }
+            ensure(input.length <= 512) {
                 ValidationError(
-                        "Semitones can't be lesser than -10.0, the input was $input",
-                        validationErrorForProperty<Semitones>(),
-                        validationIdentifier,
+                        "Part instrument name can't be longer than 512 characters, the input was $input",
+                        validationErrorForProperty<PartInstrumentName>(),
+                        validationIdentifier
                     )
                     .nel()
             }
-            ensure(input <= 10.0f) {
-                ValidationError(
-                        "Semitones can't be greater than 10.0, the input was $input",
-                        validationErrorForProperty<Semitones>(),
-                        validationIdentifier,
-                    )
-                    .nel()
-            }
-            Semitones(input)
+            PartInstrumentName(input)
         }
 
-        public fun unsafeCreate(input: Float): Semitones =
-            validate(input, NoValidationIdentifier).getOrThrowFirstValidationError()
+        public fun unsafeCreate(input: String): PartInstrumentName =
+            validate(input, NoValidationIdentifier).getOrThrowFirstValidationError()!!
     }
 }
+
+@Serializable
+public data class PartInstrument(
+    val name: PartInstrumentName? = null,
+    val midiChannel: MidiChannel? = null,
+    val midiProgram: MidiProgram? = null
+)

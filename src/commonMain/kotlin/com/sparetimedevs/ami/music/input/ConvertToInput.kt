@@ -34,7 +34,19 @@ public fun com.sparetimedevs.ami.music.data.kotlin.score.Score.toInput(): Score 
     )
 
 public fun com.sparetimedevs.ami.music.data.kotlin.part.Part.toInput(): Part =
-    Part(id = this.id.value, measures = this.measures.map { it.toInput() })
+    Part(
+        id = this.id.value,
+        name = this.name?.value,
+        instrument = this.instrument?.toInput(),
+        measures = this.measures.map { it.toInput() }
+    )
+
+public fun com.sparetimedevs.ami.music.data.kotlin.part.PartInstrument.toInput(): PartInstrument =
+    PartInstrument(
+        name = this.name?.value,
+        midiChannel = this.midiChannel?.value,
+        midiProgram = this.midiProgram?.value
+    )
 
 public fun com.sparetimedevs.ami.music.data.kotlin.measure.Measure.toInput(): Measure =
     Measure(attributes = this.attributes.toInput(), notes = this.notes.map { it.toInput() })

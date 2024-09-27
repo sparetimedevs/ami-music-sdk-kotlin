@@ -16,23 +16,30 @@
 
 package com.sparetimedevs.ami.music.data.kotlin.note
 
-import arrow.core.Either
+import arrow.core.EitherNel
 import arrow.core.left
+import arrow.core.nel
 import arrow.core.right
+import com.sparetimedevs.ami.core.validation.NoValidationIdentifier
 import com.sparetimedevs.ami.core.validation.ValidationError
+import com.sparetimedevs.ami.core.validation.ValidationIdentifier
+import com.sparetimedevs.ami.core.validation.validationErrorForProperty
 import kotlinx.serialization.Serializable
 
 @Serializable
 public data class NoteDuration(
     val noteValue: NoteValue,
-    val modifier: NoteModifier = NoteModifier.NONE
+    val modifier: NoteModifier = NoteModifier.NONE,
 ) {
 
     val value: Double = noteValue.value * modifier.value
 
     public companion object {
 
-        public fun validate(input: Double): Either<ValidationError, NoteDuration> =
+        public fun validate(
+            input: Double,
+            validationIdentifier: ValidationIdentifier = NoValidationIdentifier,
+        ): EitherNel<ValidationError, NoteDuration> =
             when (input) {
                 NoteValue.MAXIMA.value * NoteModifier.DOTTED.value ->
                     NoteDuration(NoteValue.MAXIMA, NoteModifier.DOTTED).right()
@@ -308,8 +315,11 @@ public data class NoteDuration(
                 NoteValue._4096TH.value -> NoteDuration(NoteValue._4096TH).right()
                 else ->
                     ValidationError(
-                            "Input for note duration is not a valid value, the value is: $input"
+                            "Input for note duration is not a valid value, the value is: $input",
+                            validationErrorForProperty<NoteDuration>(),
+                            validationIdentifier,
                         )
+                        .nel()
                         .left()
             }
     }
@@ -335,7 +345,10 @@ public enum class NoteValue(public val value: Double) {
     _4096TH(0.000244140625);
 
     public companion object {
-        public fun validate(input: String): Either<ValidationError, NoteValue> =
+        public fun validate(
+            input: String,
+            validationIdentifier: ValidationIdentifier = NoValidationIdentifier,
+        ): EitherNel<ValidationError, NoteValue> =
             when (input) {
                 MAXIMA.name -> MAXIMA.right()
                 LONG.name -> LONG.right()
@@ -353,7 +366,14 @@ public enum class NoteValue(public val value: Double) {
                 _1024TH.name -> _1024TH.right()
                 _2048TH.name -> _2048TH.right()
                 _4096TH.name -> _4096TH.right()
-                else -> ValidationError("Note value can't be value $input").left()
+                else ->
+                    ValidationError(
+                            "Note value can't be value $input",
+                            validationErrorForProperty<NoteDuration>(),
+                            validationIdentifier,
+                        )
+                        .nel()
+                        .left()
             }
     }
 }
@@ -372,7 +392,10 @@ public enum class NoteModifier(public val value: Double) {
 
     public companion object {
 
-        public fun validate(input: String): Either<ValidationError, NoteModifier> =
+        public fun validate(
+            input: String,
+            validationIdentifier: ValidationIdentifier = NoValidationIdentifier,
+        ): EitherNel<ValidationError, NoteModifier> =
             when (input) {
                 NONE.name -> NONE.right()
                 DOTTED.name -> DOTTED.right()
@@ -383,7 +406,14 @@ public enum class NoteModifier(public val value: Double) {
                 SEXTUPLE_DOTTED.name -> SEXTUPLE_DOTTED.right()
                 SEPTUPLE_DOTTED.name -> SEPTUPLE_DOTTED.right()
                 OCTUPLE_DOTTED.name -> OCTUPLE_DOTTED.right()
-                else -> ValidationError("Note modifier can't be value $input").left()
+                else ->
+                    ValidationError(
+                            "Note modifier can't be value $input",
+                            validationErrorForProperty<NoteDuration>(),
+                            validationIdentifier,
+                        )
+                        .nel()
+                        .left()
             }
     }
 }

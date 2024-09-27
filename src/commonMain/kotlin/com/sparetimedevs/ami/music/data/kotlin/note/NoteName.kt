@@ -16,10 +16,14 @@
 
 package com.sparetimedevs.ami.music.data.kotlin.note
 
-import arrow.core.Either
+import arrow.core.EitherNel
 import arrow.core.left
+import arrow.core.nel
 import arrow.core.right
+import com.sparetimedevs.ami.core.validation.NoValidationIdentifier
 import com.sparetimedevs.ami.core.validation.ValidationError
+import com.sparetimedevs.ami.core.validation.ValidationIdentifier
+import com.sparetimedevs.ami.core.validation.validationErrorForProperty
 import kotlinx.serialization.Serializable
 
 @Serializable
@@ -44,7 +48,10 @@ public enum class NoteName {
 
     public companion object {
 
-        public fun validate(input: String): Either<ValidationError, NoteName> =
+        public fun validate(
+            input: String,
+            validationIdentifier: ValidationIdentifier = NoValidationIdentifier,
+        ): EitherNel<ValidationError, NoteName> =
             when (input) {
                 A_FLAT.name -> A_FLAT.right()
                 A.name -> A.right()
@@ -63,7 +70,14 @@ public enum class NoteName {
                 G_FLAT.name -> G_FLAT.right()
                 G.name -> G.right()
                 G_SHARP.name -> G_SHARP.right()
-                else -> ValidationError("Note name can't be value $input").left()
+                else ->
+                    ValidationError(
+                            "Note name can't be value $input",
+                            validationErrorForProperty<NoteName>(),
+                            validationIdentifier,
+                        )
+                        .nel()
+                        .left()
             }
     }
 }

@@ -16,11 +16,15 @@
 
 package com.sparetimedevs.ami.music.data.kotlin.timesignature
 
-import arrow.core.Either
+import arrow.core.EitherNel
+import arrow.core.nel
 import arrow.core.raise.either
 import arrow.core.raise.ensure
+import com.sparetimedevs.ami.core.validation.NoValidationIdentifier
 import com.sparetimedevs.ami.core.validation.ValidationError
-import com.sparetimedevs.ami.core.validation.getOrThrow
+import com.sparetimedevs.ami.core.validation.ValidationIdentifier
+import com.sparetimedevs.ami.core.validation.getOrThrowFirstValidationError
+import com.sparetimedevs.ami.core.validation.validationErrorForProperty
 import kotlin.jvm.JvmInline
 import kotlinx.serialization.Serializable
 
@@ -28,13 +32,22 @@ import kotlinx.serialization.Serializable
 @JvmInline
 public value class Beats private constructor(public val value: Byte) {
     public companion object {
-        public fun validate(input: Byte): Either<ValidationError, Beats> = either {
+        public fun validate(
+            input: Byte,
+            validationIdentifier: ValidationIdentifier = NoValidationIdentifier,
+        ): EitherNel<ValidationError, Beats> = either {
             ensure(input > 0) {
-                ValidationError("Beats can't be zero or negative, the input was $input ")
+                ValidationError(
+                        "Beats can't be zero or negative, the input was $input",
+                        validationErrorForProperty<Beats>(),
+                        validationIdentifier,
+                    )
+                    .nel()
             }
             Beats(input)
         }
 
-        public fun unsafeCreate(input: Byte): Beats = validate(input).getOrThrow()
+        public fun unsafeCreate(input: Byte): Beats =
+            validate(input, NoValidationIdentifier).getOrThrowFirstValidationError()
     }
 }
