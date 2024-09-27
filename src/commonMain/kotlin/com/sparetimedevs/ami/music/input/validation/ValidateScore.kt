@@ -18,7 +18,6 @@ package com.sparetimedevs.ami.music.input.validation
 
 import arrow.core.Either
 import arrow.core.EitherNel
-import arrow.core.NonEmptyList
 import com.sparetimedevs.ami.core.validation.NoValidationIdentifier
 import com.sparetimedevs.ami.core.validation.ValidationError
 import com.sparetimedevs.ami.core.validation.ValidationIdentifier
@@ -39,7 +38,7 @@ import com.sparetimedevs.ami.music.data.kotlin.score.ScoreTitle
 public fun com.sparetimedevs.ami.music.input.Score.validate(
     validationIdentifier: ValidationIdentifier = NoValidationIdentifier
 ): EitherNel<ValidationError, Score> {
-    val scoreId: Either<NonEmptyList<ValidationError>, ScoreId> = ScoreId.validate(this.id)
+    val scoreId: EitherNel<ValidationError, ScoreId> = ScoreId.validate(this.id)
     val validationIdentifierForScore =
         ValidationIdentifierForScore(
             scoreId.fold({ "no-valid-score-id" }, { it.value }),
