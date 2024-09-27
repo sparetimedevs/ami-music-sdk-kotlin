@@ -28,15 +28,15 @@ class OctaveTest :
     StringSpec({
         "validate should return valid octave" {
             val input: Byte = 4
-            Octave.validate(input) shouldBeRight Octave.unsafeCreate(4)
+            Octave.validate(input) shouldBeRight Octave.unsafeCreate(input)
         }
-        "validate should return invalid with error" {
+        "validate should yield validation error for negative number" {
             val input: Byte = -13
             Octave.validate(input) shouldBeLeft
                 ValidationError(
                         "Octave can't be lesser than -12, the input was -13",
                         validationErrorForProperty<Octave>(),
-                        NoValidationIdentifier,
+                        NoValidationIdentifier
                     )
                     .nel()
         }

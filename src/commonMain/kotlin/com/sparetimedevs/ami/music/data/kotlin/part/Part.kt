@@ -77,16 +77,6 @@ public value class PartName private constructor(public val value: String) {
             if (input.isNullOrEmpty()) {
                 return@either null
             }
-            ensure(
-                input.isNotEmpty()
-            ) { // TODO, this is should be changed now that we have the check above.
-                ValidationError(
-                        "Part name can't be empty, the input was $input",
-                        validationErrorForProperty<PartName>(),
-                        validationIdentifier,
-                    )
-                    .nel()
-            }
             ensure(input.length < 513) {
                 ValidationError(
                         "Part name can't be longer than 512 characters, the input was $input",

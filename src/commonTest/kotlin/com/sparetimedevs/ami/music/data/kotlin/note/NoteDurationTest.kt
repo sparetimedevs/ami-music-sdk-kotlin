@@ -44,12 +44,12 @@ class NoteDurationTest :
             NoteDuration.validate(0.125) shouldBeRight NoteDuration(NoteValue._8TH)
         }
 
-        "validate should yield validation input for invalid input" {
+        "validate should yield validation error for invalid value" {
             NoteDuration.validate(1.23456789) shouldBeLeft
                 ValidationError(
                         "Input for note duration is not a valid value, the value is: 1.23456789",
                         validationErrorForProperty<NoteDuration>(),
-                        NoValidationIdentifier,
+                        NoValidationIdentifier
                     )
                     .nel()
         }

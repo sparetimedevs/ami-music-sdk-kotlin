@@ -42,21 +42,11 @@ public value class PartInstrumentName private constructor(public val value: Stri
             if (input.isNullOrEmpty()) {
                 return@either null
             }
-            ensure(
-                input.isNotEmpty()
-            ) { // TODO, this is should be changed now that we have the check above.
-                ValidationError(
-                        "Part instrument name can't be empty, the input was $input",
-                        validationErrorForProperty<PartInstrumentName>(),
-                        validationIdentifier,
-                    )
-                    .nel()
-            }
             ensure(input.length < 513) {
                 ValidationError(
                         "Part instrument name can't be longer than 512 characters, the input was $input",
                         validationErrorForProperty<PartInstrumentName>(),
-                        validationIdentifier,
+                        validationIdentifier
                     )
                     .nel()
             }
