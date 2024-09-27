@@ -22,12 +22,12 @@ import com.sparetimedevs.ami.core.AccumulatedValidationErrors
 import com.sparetimedevs.ami.core.validation.NoValidationIdentifier
 import com.sparetimedevs.ami.core.validation.ValidationError
 import com.sparetimedevs.ami.core.validation.ValidationErrorForProperty
-import com.sparetimedevs.ami.core.validation.ValidationIdentifierForPart
-import com.sparetimedevs.ami.core.validation.ValidationIdentifierForScore
 import com.sparetimedevs.ami.music.data.kotlin.part.PartId
 import com.sparetimedevs.ami.music.data.kotlin.score.Score
 import com.sparetimedevs.ami.music.data.kotlin.score.ScoreId
 import com.sparetimedevs.ami.music.example.getExampleScore0
+import com.sparetimedevs.ami.music.input.validation.ValidationIdentifierForPart
+import com.sparetimedevs.ami.music.input.validation.ValidationIdentifierForScore
 import io.kotest.assertions.arrow.core.shouldBeLeft
 import io.kotest.assertions.arrow.core.shouldBeRight
 import io.kotest.assertions.json.shouldEqualJson
@@ -61,10 +61,10 @@ class JsonTest :
                                         ValidationErrorForProperty(value = "MidiChannel"),
                                     validationIdentifier =
                                         ValidationIdentifierForPart(
-                                            partId = PartId.unsafeCreate("p-1"),
+                                            identifier = PartId.unsafeCreate("p-1"),
                                             validationIdentifierParent =
                                                 ValidationIdentifierForScore(
-                                                    scoreId =
+                                                    identifier =
                                                         ScoreId.unsafeCreate(
                                                             "d737b4ae-fbaa-4b0d-9d36-d3651e30e93a"
                                                         ),
@@ -82,7 +82,7 @@ class JsonTest :
                                             ValidationErrorForProperty(value = "PartId"),
                                         validationIdentifier =
                                             ValidationIdentifierForScore(
-                                                scoreId =
+                                                identifier =
                                                     ScoreId.unsafeCreate(
                                                         "d737b4ae-fbaa-4b0d-9d36-d3651e30e93a"
                                                     ),

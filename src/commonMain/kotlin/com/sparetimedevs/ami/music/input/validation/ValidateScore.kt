@@ -22,9 +22,6 @@ import arrow.core.flatMap
 import com.sparetimedevs.ami.core.validation.NoValidationIdentifier
 import com.sparetimedevs.ami.core.validation.ValidationError
 import com.sparetimedevs.ami.core.validation.ValidationIdentifier
-import com.sparetimedevs.ami.core.validation.ValidationIdentifierForMeasure
-import com.sparetimedevs.ami.core.validation.ValidationIdentifierForPart
-import com.sparetimedevs.ami.core.validation.ValidationIdentifierForScore
 import com.sparetimedevs.ami.core.validation.combineAllValidationErrors
 import com.sparetimedevs.ami.music.data.kotlin.measure.Measure
 import com.sparetimedevs.ami.music.data.kotlin.measure.MeasureAttributes

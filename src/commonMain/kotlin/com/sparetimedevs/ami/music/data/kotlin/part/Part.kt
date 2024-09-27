@@ -20,6 +20,7 @@ import arrow.core.EitherNel
 import arrow.core.nel
 import arrow.core.raise.either
 import arrow.core.raise.ensure
+import com.sparetimedevs.ami.core.Id
 import com.sparetimedevs.ami.core.util.randomUuidString
 import com.sparetimedevs.ami.core.validation.NoValidationIdentifier
 import com.sparetimedevs.ami.core.validation.ValidationError
@@ -32,7 +33,7 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 @JvmInline
-public value class PartId private constructor(public val value: String) {
+public value class PartId private constructor(public val value: String) : Id {
     public companion object {
 
         public operator fun invoke(): PartId = PartId(randomUuidString())

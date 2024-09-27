@@ -16,8 +16,8 @@
 
 package com.sparetimedevs.ami.core.validation
 
-import com.sparetimedevs.ami.music.data.kotlin.part.PartId
-import com.sparetimedevs.ami.music.data.kotlin.score.ScoreId
+import com.sparetimedevs.ami.core.Id
+import com.sparetimedevs.ami.core.IdOrIndex
 import kotlin.jvm.JvmInline
 import kotlinx.serialization.Serializable
 
@@ -34,34 +34,13 @@ public inline fun <reified T : Any> validationErrorForProperty(): ValidationErro
     ValidationErrorForProperty(T::class.simpleName ?: "unknown")
 
 public interface ValidationIdentifier {
+    public val identifier: IdOrIndex
     public val validationIdentifierParent: ValidationIdentifier
 }
 
 public object NoValidationIdentifier : ValidationIdentifier {
+    public override val identifier: IdOrIndex = NoId
     public override val validationIdentifierParent: ValidationIdentifier = this
 }
 
-public data class ValidationIdentifierForScore(
-    public val scoreId: ScoreId,
-    public override val validationIdentifierParent: ValidationIdentifier
-) : ValidationIdentifier
-
-public data class ValidationIdentifierForPart(
-    public val partId: PartId,
-    public override val validationIdentifierParent: ValidationIdentifier
-) : ValidationIdentifier
-
-public data class ValidationIdentifierForMeasure(
-    public val measureIndex: Int,
-    public override val validationIdentifierParent: ValidationIdentifier
-) : ValidationIdentifier
-
-public data class ValidationIdentifierForNote(
-    public val noteIndex: Int,
-    public override val validationIdentifierParent: ValidationIdentifier
-) : ValidationIdentifier
-
-public data class ValidationIdentifierForPitchOfChord(
-    public val pitchIndex: Int,
-    public override val validationIdentifierParent: ValidationIdentifier
-) : ValidationIdentifier
+public data object NoId : Id
