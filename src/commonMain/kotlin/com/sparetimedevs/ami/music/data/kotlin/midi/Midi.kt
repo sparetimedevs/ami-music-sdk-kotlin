@@ -16,13 +16,14 @@
 
 package com.sparetimedevs.ami.music.data.kotlin.midi
 
-import arrow.core.Either
+import arrow.core.EitherNel
+import arrow.core.nel
 import arrow.core.raise.either
 import arrow.core.raise.ensure
 import com.sparetimedevs.ami.core.validation.NoValidationIdentifier
 import com.sparetimedevs.ami.core.validation.ValidationError
 import com.sparetimedevs.ami.core.validation.ValidationIdentifier
-import com.sparetimedevs.ami.core.validation.getOrThrow
+import com.sparetimedevs.ami.core.validation.getOrThrowFirstValidationError
 import com.sparetimedevs.ami.core.validation.validationErrorForProperty
 import kotlin.jvm.JvmInline
 import kotlinx.serialization.Serializable
@@ -33,23 +34,24 @@ public value class MidiChannel private constructor(public val value: Byte) {
     public companion object {
         public fun validate(
             input: Byte?,
-            validationIdentifier: ValidationIdentifier = NoValidationIdentifier
-        ): Either<ValidationError, MidiChannel?> = either {
+            validationIdentifier: ValidationIdentifier = NoValidationIdentifier,
+        ): EitherNel<ValidationError, MidiChannel?> = either {
             if (input == null) {
                 return@either null
             }
             ensure(input >= 0) {
                 ValidationError(
-                    "Midi channel can't be negative, the input was $input",
-                    validationErrorForProperty<MidiChannel>(),
-                    validationIdentifier
-                )
+                        "Midi channel can't be negative, the input was $input",
+                        validationErrorForProperty<MidiChannel>(),
+                        validationIdentifier,
+                    )
+                    .nel()
             }
             MidiChannel(input)
         }
 
         public fun unsafeCreate(input: Byte): MidiChannel =
-            validate(input, NoValidationIdentifier).getOrThrow()!!
+            validate(input, NoValidationIdentifier).getOrThrowFirstValidationError()!!
     }
 }
 
@@ -59,22 +61,23 @@ public value class MidiProgram private constructor(public val value: Byte) {
     public companion object {
         public fun validate(
             input: Byte?,
-            validationIdentifier: ValidationIdentifier = NoValidationIdentifier
-        ): Either<ValidationError, MidiProgram?> = either {
+            validationIdentifier: ValidationIdentifier = NoValidationIdentifier,
+        ): EitherNel<ValidationError, MidiProgram?> = either {
             if (input == null) {
                 return@either null
             }
             ensure(input >= 0) {
                 ValidationError(
-                    "Midi program can't be negative, the input was $input",
-                    validationErrorForProperty<MidiProgram>(),
-                    validationIdentifier
-                )
+                        "Midi program can't be negative, the input was $input",
+                        validationErrorForProperty<MidiProgram>(),
+                        validationIdentifier,
+                    )
+                    .nel()
             }
             MidiProgram(input)
         }
 
         public fun unsafeCreate(input: Byte): MidiProgram =
-            validate(input, NoValidationIdentifier).getOrThrow()!!
+            validate(input, NoValidationIdentifier).getOrThrowFirstValidationError()!!
     }
 }

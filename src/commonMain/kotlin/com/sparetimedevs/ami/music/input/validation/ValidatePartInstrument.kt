@@ -36,7 +36,7 @@ public fun com.sparetimedevs.ami.music.input.PartInstrument?.validate(
         Either.zipOrAccumulate(
             PartInstrumentName.validate(this.name, validationIdentifier),
             MidiChannel.validate(this.midiChannel, validationIdentifier),
-            MidiProgram.validate(this.midiProgram, validationIdentifier),
+            MidiProgram.validate(this.midiProgram, validationIdentifier)
         ) { name, midiChannel, midiProgram ->
             PartInstrument(name, midiChannel, midiProgram)
         }

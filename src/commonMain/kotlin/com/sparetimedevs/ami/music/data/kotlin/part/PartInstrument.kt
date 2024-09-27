@@ -16,13 +16,14 @@
 
 package com.sparetimedevs.ami.music.data.kotlin.part
 
-import arrow.core.Either
+import arrow.core.EitherNel
+import arrow.core.nel
 import arrow.core.raise.either
 import arrow.core.raise.ensure
 import com.sparetimedevs.ami.core.validation.NoValidationIdentifier
 import com.sparetimedevs.ami.core.validation.ValidationError
 import com.sparetimedevs.ami.core.validation.ValidationIdentifier
-import com.sparetimedevs.ami.core.validation.getOrThrow
+import com.sparetimedevs.ami.core.validation.getOrThrowFirstValidationError
 import com.sparetimedevs.ami.core.validation.validationErrorForProperty
 import com.sparetimedevs.ami.music.data.kotlin.midi.MidiChannel
 import com.sparetimedevs.ami.music.data.kotlin.midi.MidiProgram
@@ -36,8 +37,8 @@ public value class PartInstrumentName private constructor(public val value: Stri
 
         public fun validate(
             input: String?,
-            validationIdentifier: ValidationIdentifier = NoValidationIdentifier
-        ): Either<ValidationError, PartInstrumentName?> = either {
+            validationIdentifier: ValidationIdentifier = NoValidationIdentifier,
+        ): EitherNel<ValidationError, PartInstrumentName?> = either {
             if (input.isNullOrEmpty()) {
                 return@either null
             }
@@ -45,23 +46,25 @@ public value class PartInstrumentName private constructor(public val value: Stri
                 input.isNotEmpty()
             ) { // TODO, this is should be changed now that we have the check above.
                 ValidationError(
-                    "Part instrument name can't be empty, the input was $input",
-                    validationErrorForProperty<PartInstrumentName>(),
-                    validationIdentifier
-                )
+                        "Part instrument name can't be empty, the input was $input",
+                        validationErrorForProperty<PartInstrumentName>(),
+                        validationIdentifier,
+                    )
+                    .nel()
             }
             ensure(input.length < 513) {
                 ValidationError(
-                    "Part instrument name can't be longer than 512 characters, the input was $input",
-                    validationErrorForProperty<PartInstrumentName>(),
-                    validationIdentifier
-                )
+                        "Part instrument name can't be longer than 512 characters, the input was $input",
+                        validationErrorForProperty<PartInstrumentName>(),
+                        validationIdentifier,
+                    )
+                    .nel()
             }
             PartInstrumentName(input)
         }
 
         public fun unsafeCreate(input: String): PartInstrumentName =
-            validate(input, NoValidationIdentifier).getOrThrow()!!
+            validate(input, NoValidationIdentifier).getOrThrowFirstValidationError()!!
     }
 }
 
@@ -69,5 +72,5 @@ public value class PartInstrumentName private constructor(public val value: Stri
 public data class PartInstrument(
     val name: PartInstrumentName?,
     val midiChannel: MidiChannel?,
-    val midiProgram: MidiProgram?
+    val midiProgram: MidiProgram?,
 )

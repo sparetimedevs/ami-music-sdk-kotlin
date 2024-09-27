@@ -16,8 +16,9 @@
 
 package com.sparetimedevs.ami.music.data.kotlin.note
 
-import arrow.core.Either
+import arrow.core.EitherNel
 import arrow.core.left
+import arrow.core.nel
 import arrow.core.right
 import com.sparetimedevs.ami.core.validation.NoValidationIdentifier
 import com.sparetimedevs.ami.core.validation.ValidationError
@@ -49,8 +50,8 @@ public enum class NoteName {
 
         public fun validate(
             input: String,
-            validationIdentifier: ValidationIdentifier = NoValidationIdentifier
-        ): Either<ValidationError, NoteName> =
+            validationIdentifier: ValidationIdentifier = NoValidationIdentifier,
+        ): EitherNel<ValidationError, NoteName> =
             when (input) {
                 A_FLAT.name -> A_FLAT.right()
                 A.name -> A.right()
@@ -73,8 +74,9 @@ public enum class NoteName {
                     ValidationError(
                             "Note name can't be value $input",
                             validationErrorForProperty<NoteName>(),
-                            validationIdentifier
+                            validationIdentifier,
                         )
+                        .nel()
                         .left()
             }
     }

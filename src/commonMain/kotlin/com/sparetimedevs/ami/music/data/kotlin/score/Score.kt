@@ -16,14 +16,15 @@
 
 package com.sparetimedevs.ami.music.data.kotlin.score
 
-import arrow.core.Either
+import arrow.core.EitherNel
+import arrow.core.nel
 import arrow.core.raise.either
 import arrow.core.raise.ensure
 import com.sparetimedevs.ami.core.util.randomUuidString
 import com.sparetimedevs.ami.core.validation.NoValidationIdentifier
 import com.sparetimedevs.ami.core.validation.ValidationError
 import com.sparetimedevs.ami.core.validation.ValidationIdentifier
-import com.sparetimedevs.ami.core.validation.getOrThrow
+import com.sparetimedevs.ami.core.validation.getOrThrowFirstValidationError
 import com.sparetimedevs.ami.core.validation.validationErrorForProperty
 import com.sparetimedevs.ami.music.data.kotlin.part.Part
 import kotlin.jvm.JvmInline
@@ -38,27 +39,29 @@ public value class ScoreId private constructor(public val value: String) {
 
         public fun validate(
             input: String,
-            validationIdentifier: ValidationIdentifier = NoValidationIdentifier
-        ): Either<ValidationError, ScoreId> = either {
+            validationIdentifier: ValidationIdentifier = NoValidationIdentifier,
+        ): EitherNel<ValidationError, ScoreId> = either {
             ensure(input.isNotEmpty()) {
                 ValidationError(
-                    "Score ID can't be empty, the input was $input",
-                    validationErrorForProperty<ScoreId>(),
-                    validationIdentifier
-                )
+                        "Score ID can't be empty, the input was $input",
+                        validationErrorForProperty<ScoreId>(),
+                        validationIdentifier,
+                    )
+                    .nel()
             }
             ensure(input.length <= 128) {
                 ValidationError(
-                    "Score ID can't be longer than 128 characters, the input was $input",
-                    validationErrorForProperty<ScoreId>(),
-                    validationIdentifier
-                )
+                        "Score ID can't be longer than 128 characters, the input was $input",
+                        validationErrorForProperty<ScoreId>(),
+                        validationIdentifier,
+                    )
+                    .nel()
             }
             ScoreId(input)
         }
 
         public fun unsafeCreate(input: String): ScoreId =
-            validate(input, NoValidationIdentifier).getOrThrow()
+            validate(input, NoValidationIdentifier).getOrThrowFirstValidationError()
     }
 }
 
@@ -69,27 +72,29 @@ public value class ScoreTitle private constructor(public val value: String) {
 
         public fun validate(
             input: String,
-            validationIdentifier: ValidationIdentifier = NoValidationIdentifier
-        ): Either<ValidationError, ScoreTitle> = either {
+            validationIdentifier: ValidationIdentifier = NoValidationIdentifier,
+        ): EitherNel<ValidationError, ScoreTitle> = either {
             ensure(input.isNotEmpty()) {
                 ValidationError(
-                    "Score title can't be empty, the input was $input",
-                    validationErrorForProperty<ScoreTitle>(),
-                    validationIdentifier
-                )
+                        "Score title can't be empty, the input was $input",
+                        validationErrorForProperty<ScoreTitle>(),
+                        validationIdentifier,
+                    )
+                    .nel()
             }
             ensure(input.length < 513) {
                 ValidationError(
-                    "Score title can't be longer than 512 characters, the input was $input",
-                    validationErrorForProperty<ScoreTitle>(),
-                    validationIdentifier
-                )
+                        "Score title can't be longer than 512 characters, the input was $input",
+                        validationErrorForProperty<ScoreTitle>(),
+                        validationIdentifier,
+                    )
+                    .nel()
             }
             ScoreTitle(input)
         }
 
         public fun unsafeCreate(input: String): ScoreTitle =
-            validate(input, NoValidationIdentifier).getOrThrow()
+            validate(input, NoValidationIdentifier).getOrThrowFirstValidationError()
     }
 }
 

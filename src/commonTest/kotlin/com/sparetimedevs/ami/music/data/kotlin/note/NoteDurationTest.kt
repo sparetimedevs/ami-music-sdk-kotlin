@@ -16,6 +16,7 @@
 
 package com.sparetimedevs.ami.music.data.kotlin.note
 
+import arrow.core.nel
 import com.sparetimedevs.ami.core.validation.NoValidationIdentifier
 import com.sparetimedevs.ami.core.validation.ValidationError
 import com.sparetimedevs.ami.core.validation.validationErrorForProperty
@@ -46,9 +47,10 @@ class NoteDurationTest :
         "validate should yield validation input for invalid input" {
             NoteDuration.validate(1.23456789) shouldBeLeft
                 ValidationError(
-                    "Input for note duration is not a valid value, the value is: 1.23456789",
-                    validationErrorForProperty<NoteDuration>(),
-                    NoValidationIdentifier,
-                )
+                        "Input for note duration is not a valid value, the value is: 1.23456789",
+                        validationErrorForProperty<NoteDuration>(),
+                        NoValidationIdentifier,
+                    )
+                    .nel()
         }
     })

@@ -16,8 +16,9 @@
 
 package com.sparetimedevs.ami.music.data.kotlin.note
 
-import arrow.core.Either
+import arrow.core.EitherNel
 import arrow.core.left
+import arrow.core.nel
 import arrow.core.right
 import com.sparetimedevs.ami.core.validation.NoValidationIdentifier
 import com.sparetimedevs.ami.core.validation.ValidationError
@@ -38,7 +39,7 @@ public data class NoteDuration(
         public fun validate(
             input: Double,
             validationIdentifier: ValidationIdentifier = NoValidationIdentifier,
-        ): Either<ValidationError, NoteDuration> =
+        ): EitherNel<ValidationError, NoteDuration> =
             when (input) {
                 NoteValue.MAXIMA.value * NoteModifier.DOTTED.value ->
                     NoteDuration(NoteValue.MAXIMA, NoteModifier.DOTTED).right()
@@ -318,6 +319,7 @@ public data class NoteDuration(
                             validationErrorForProperty<NoteDuration>(),
                             validationIdentifier,
                         )
+                        .nel()
                         .left()
             }
     }
@@ -346,7 +348,7 @@ public enum class NoteValue(public val value: Double) {
         public fun validate(
             input: String,
             validationIdentifier: ValidationIdentifier = NoValidationIdentifier,
-        ): Either<ValidationError, NoteValue> =
+        ): EitherNel<ValidationError, NoteValue> =
             when (input) {
                 MAXIMA.name -> MAXIMA.right()
                 LONG.name -> LONG.right()
@@ -370,6 +372,7 @@ public enum class NoteValue(public val value: Double) {
                             validationErrorForProperty<NoteDuration>(),
                             validationIdentifier,
                         )
+                        .nel()
                         .left()
             }
     }
@@ -392,7 +395,7 @@ public enum class NoteModifier(public val value: Double) {
         public fun validate(
             input: String,
             validationIdentifier: ValidationIdentifier = NoValidationIdentifier,
-        ): Either<ValidationError, NoteModifier> =
+        ): EitherNel<ValidationError, NoteModifier> =
             when (input) {
                 NONE.name -> NONE.right()
                 DOTTED.name -> DOTTED.right()
@@ -409,6 +412,7 @@ public enum class NoteModifier(public val value: Double) {
                             validationErrorForProperty<NoteDuration>(),
                             validationIdentifier,
                         )
+                        .nel()
                         .left()
             }
     }

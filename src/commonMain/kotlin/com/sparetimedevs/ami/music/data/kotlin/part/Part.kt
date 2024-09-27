@@ -16,14 +16,15 @@
 
 package com.sparetimedevs.ami.music.data.kotlin.part
 
-import arrow.core.Either
+import arrow.core.EitherNel
+import arrow.core.nel
 import arrow.core.raise.either
 import arrow.core.raise.ensure
 import com.sparetimedevs.ami.core.util.randomUuidString
 import com.sparetimedevs.ami.core.validation.NoValidationIdentifier
 import com.sparetimedevs.ami.core.validation.ValidationError
 import com.sparetimedevs.ami.core.validation.ValidationIdentifier
-import com.sparetimedevs.ami.core.validation.getOrThrow
+import com.sparetimedevs.ami.core.validation.getOrThrowFirstValidationError
 import com.sparetimedevs.ami.core.validation.validationErrorForProperty
 import com.sparetimedevs.ami.music.data.kotlin.measure.Measure
 import kotlin.jvm.JvmInline
@@ -38,27 +39,29 @@ public value class PartId private constructor(public val value: String) {
 
         public fun validate(
             input: String,
-            validationIdentifier: ValidationIdentifier = NoValidationIdentifier
-        ): Either<ValidationError, PartId> = either {
+            validationIdentifier: ValidationIdentifier = NoValidationIdentifier,
+        ): EitherNel<ValidationError, PartId> = either {
             ensure(input.isNotEmpty()) {
                 ValidationError(
-                    "Part ID can't be empty, the input was $input",
-                    validationErrorForProperty<PartId>(),
-                    validationIdentifier
-                )
+                        "Part ID can't be empty, the input was $input",
+                        validationErrorForProperty<PartId>(),
+                        validationIdentifier,
+                    )
+                    .nel()
             }
             ensure(input.length <= 128) {
                 ValidationError(
-                    "Part ID can't be longer than 128 characters, the input was $input",
-                    validationErrorForProperty<PartId>(),
-                    validationIdentifier
-                )
+                        "Part ID can't be longer than 128 characters, the input was $input",
+                        validationErrorForProperty<PartId>(),
+                        validationIdentifier,
+                    )
+                    .nel()
             }
             PartId(input)
         }
 
         public fun unsafeCreate(input: String): PartId =
-            validate(input, NoValidationIdentifier).getOrThrow()
+            validate(input, NoValidationIdentifier).getOrThrowFirstValidationError()
     }
 }
 
@@ -69,8 +72,8 @@ public value class PartName private constructor(public val value: String) {
 
         public fun validate(
             input: String?,
-            validationIdentifier: ValidationIdentifier = NoValidationIdentifier
-        ): Either<ValidationError, PartName?> = either {
+            validationIdentifier: ValidationIdentifier = NoValidationIdentifier,
+        ): EitherNel<ValidationError, PartName?> = either {
             if (input.isNullOrEmpty()) {
                 return@either null
             }
@@ -78,23 +81,25 @@ public value class PartName private constructor(public val value: String) {
                 input.isNotEmpty()
             ) { // TODO, this is should be changed now that we have the check above.
                 ValidationError(
-                    "Part name can't be empty, the input was $input",
-                    validationErrorForProperty<PartName>(),
-                    validationIdentifier
-                )
+                        "Part name can't be empty, the input was $input",
+                        validationErrorForProperty<PartName>(),
+                        validationIdentifier,
+                    )
+                    .nel()
             }
             ensure(input.length < 513) {
                 ValidationError(
-                    "Part name can't be longer than 512 characters, the input was $input",
-                    validationErrorForProperty<PartName>(),
-                    validationIdentifier
-                )
+                        "Part name can't be longer than 512 characters, the input was $input",
+                        validationErrorForProperty<PartName>(),
+                        validationIdentifier,
+                    )
+                    .nel()
             }
             PartName(input)
         }
 
         public fun unsafeCreate(input: String): PartName =
-            validate(input, NoValidationIdentifier).getOrThrow()!!
+            validate(input, NoValidationIdentifier).getOrThrowFirstValidationError()!!
     }
 }
 
@@ -103,5 +108,5 @@ public data class Part(
     val id: PartId,
     val name: PartName?,
     val instrument: PartInstrument?,
-    val measures: List<Measure>
+    val measures: List<Measure>,
 )

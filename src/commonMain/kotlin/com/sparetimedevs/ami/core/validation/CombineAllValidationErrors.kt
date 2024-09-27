@@ -16,12 +16,20 @@
 
 package com.sparetimedevs.ami.core.validation
 
+import arrow.core.Either
 import arrow.core.EitherNel
-import arrow.core.getOrElse
+import arrow.core.NonEmptyList
+import arrow.core.right
 
-public class ValidationException(override val message: String) : RuntimeException()
-
-public fun ValidationError.asException(): ValidationException = ValidationException(this.message)
-
-public fun <A> EitherNel<ValidationError, A>.getOrThrowFirstValidationError(): A =
-    this.getOrElse { throw it.head.asException() }
+public fun <T> Iterable<EitherNel<ValidationError, T>>.combineAllValidationErrors():
+    EitherNel<ValidationError, List<T>> =
+    this.fold(emptyList<T>().right()) {
+        acc: Either<NonEmptyList<ValidationError>, List<T>>,
+        el: Either<NonEmptyList<ValidationError>, T> ->
+        Either.zipOrAccumulate(
+            { e1: NonEmptyList<ValidationError>, e2: NonEmptyList<ValidationError> -> e1 + e2 },
+            acc,
+            el,
+            { b1: List<T>, b2: T -> b1 + b2 }
+        )
+    }
