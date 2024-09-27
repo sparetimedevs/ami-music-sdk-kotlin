@@ -26,7 +26,9 @@ import com.sparetimedevs.ami.core.validation.validationErrorForProperty
 import com.sparetimedevs.ami.music.data.kotlin.note.NoteDuration
 import com.sparetimedevs.ami.music.data.kotlin.note.NoteName
 import com.sparetimedevs.ami.music.data.kotlin.note.Octave
+import com.sparetimedevs.ami.music.data.kotlin.part.PartId
 import com.sparetimedevs.ami.music.data.kotlin.score.Score
+import com.sparetimedevs.ami.music.data.kotlin.score.ScoreId
 import com.sparetimedevs.ami.music.example.getExampleScore0
 import com.sparetimedevs.ami.music.example.getExampleScore0Input
 import com.sparetimedevs.ami.music.example.getExampleScore0InvalidInput
@@ -58,11 +60,13 @@ class ValidateScoreTest :
                                         measureIndex = 0,
                                         validationIdentifierParent =
                                             ValidationIdentifierForPart(
-                                                partId = "p-1",
+                                                partId = PartId.unsafeCreate("p-1"),
                                                 validationIdentifierParent =
                                                     ValidationIdentifierForScore(
                                                         scoreId =
-                                                            "d737b4ae-fbaa-4b0d-9d36-d3651e30e93a",
+                                                            ScoreId.unsafeCreate(
+                                                                "d737b4ae-fbaa-4b0d-9d36-d3651e30e93a"
+                                                            ),
                                                         validationIdentifierParent =
                                                             NoValidationIdentifier
                                                     )
@@ -81,11 +85,13 @@ class ValidateScoreTest :
                                         measureIndex = 0,
                                         validationIdentifierParent =
                                             ValidationIdentifierForPart(
-                                                partId = "p-1",
+                                                partId = PartId.unsafeCreate("p-1"),
                                                 validationIdentifierParent =
                                                     ValidationIdentifierForScore(
                                                         scoreId =
-                                                            "d737b4ae-fbaa-4b0d-9d36-d3651e30e93a",
+                                                            ScoreId.unsafeCreate(
+                                                                "d737b4ae-fbaa-4b0d-9d36-d3651e30e93a"
+                                                            ),
                                                         validationIdentifierParent =
                                                             NoValidationIdentifier
                                                     )
@@ -104,11 +110,13 @@ class ValidateScoreTest :
                                         measureIndex = 0,
                                         validationIdentifierParent =
                                             ValidationIdentifierForPart(
-                                                partId = "p-1",
+                                                partId = PartId.unsafeCreate("p-1"),
                                                 validationIdentifierParent =
                                                     ValidationIdentifierForScore(
                                                         scoreId =
-                                                            "d737b4ae-fbaa-4b0d-9d36-d3651e30e93a",
+                                                            ScoreId.unsafeCreate(
+                                                                "d737b4ae-fbaa-4b0d-9d36-d3651e30e93a"
+                                                            ),
                                                         validationIdentifierParent =
                                                             NoValidationIdentifier
                                                     )

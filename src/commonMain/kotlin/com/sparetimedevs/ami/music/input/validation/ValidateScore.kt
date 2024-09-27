@@ -18,11 +18,11 @@ package com.sparetimedevs.ami.music.input.validation
 
 import arrow.core.Either
 import arrow.core.EitherNel
+import arrow.core.flatMap
 import com.sparetimedevs.ami.core.validation.NoValidationIdentifier
 import com.sparetimedevs.ami.core.validation.ValidationError
 import com.sparetimedevs.ami.core.validation.ValidationIdentifier
 import com.sparetimedevs.ami.core.validation.ValidationIdentifierForMeasure
-import com.sparetimedevs.ami.core.validation.ValidationIdentifierForNote
 import com.sparetimedevs.ami.core.validation.ValidationIdentifierForPart
 import com.sparetimedevs.ami.core.validation.ValidationIdentifierForScore
 import com.sparetimedevs.ami.core.validation.combineAllValidationErrors
@@ -37,42 +37,38 @@ import com.sparetimedevs.ami.music.data.kotlin.score.ScoreTitle
 
 public fun com.sparetimedevs.ami.music.input.Score.validate(
     validationIdentifier: ValidationIdentifier = NoValidationIdentifier
-): EitherNel<ValidationError, Score> {
-    val scoreId: EitherNel<ValidationError, ScoreId> = ScoreId.validate(this.id)
-    val validationIdentifierForScore =
-        ValidationIdentifierForScore(
-            scoreId.fold({ "no-valid-score-id" }, { it.value }),
-            validationIdentifier
-        )
-    return Either.zipOrAccumulate(
-        scoreId,
-        if (this.title != null) ScoreTitle.validate(this.title, validationIdentifierForScore)
-        else Either.Right(null),
-        this.parts
-            .map { part ->
-                part.validate(ValidationIdentifierForPart(part.id, validationIdentifierForScore))
-            }
-            .combineAllValidationErrors()
-    ) { id: ScoreId, title: ScoreTitle?, parts: List<Part> ->
-        Score(id, title, parts)
+): EitherNel<ValidationError, Score> =
+    ScoreId.validate(this.id, validationIdentifier).flatMap { scoreId ->
+        val validationIdentifierForScore =
+            ValidationIdentifierForScore(scoreId, validationIdentifier)
+
+        Either.zipOrAccumulate(
+            if (this.title != null) ScoreTitle.validate(this.title, validationIdentifierForScore)
+            else Either.Right(null),
+            this.parts
+                .map { part -> part.validate(validationIdentifierForScore) }
+                .combineAllValidationErrors()
+        ) { title, parts ->
+            Score(scoreId, title, parts)
+        }
     }
-}
 
 public fun com.sparetimedevs.ami.music.input.Part.validate(
     validationIdentifier: ValidationIdentifier = NoValidationIdentifier
 ): EitherNel<ValidationError, Part> =
-    Either.zipOrAccumulate(
-        PartId.validate(this.id, validationIdentifier),
-        PartName.validate(this.name, validationIdentifier),
-        this.instrument.validate(validationIdentifier),
-        this.measures
-            .withIndex()
-            .map { (index, measure) ->
-                measure.validate(ValidationIdentifierForMeasure(index, validationIdentifier))
-            }
-            .combineAllValidationErrors()
-    ) { id, name, instrument, measures ->
-        Part(id, name, instrument, measures)
+    PartId.validate(this.id, validationIdentifier).flatMap { partId ->
+        val validationIdentifierForPart = ValidationIdentifierForPart(partId, validationIdentifier)
+
+        Either.zipOrAccumulate(
+            PartName.validate(this.name, validationIdentifierForPart),
+            this.instrument.validate(validationIdentifierForPart),
+            this.measures
+                .withIndex()
+                .map { (index, measure) -> measure.validate(index, validationIdentifierForPart) }
+                .combineAllValidationErrors()
+        ) { name, instrument, measures ->
+            Part(partId, name, instrument, measures)
+        }
     }
 
 public tailrec fun getListOfValidationIdentifiers(
@@ -96,22 +92,25 @@ public tailrec fun returnFirstScoreValidationIdentifier(
     }
 
 public fun com.sparetimedevs.ami.music.input.Measure.validate(
+    index: Int,
     validationIdentifier: ValidationIdentifier = NoValidationIdentifier
 ): EitherNel<ValidationError, Measure> =
-    Either.zipOrAccumulate(
-        this.attributes.validate(),
-        this.notes
-            .withIndex()
-            .map { (index, note) ->
-                validateNote(note, ValidationIdentifierForNote(index, validationIdentifier))
-            }
-            .combineAllValidationErrors()
-    ) { attributes, notes ->
-        Measure(attributes, notes)
+    ValidationIdentifierForMeasure(index, validationIdentifier).let { validationIdentifierForMeasure
+        ->
+        Either.zipOrAccumulate(
+            this.attributes.validate(validationIdentifierForMeasure),
+            this.notes
+                .withIndex()
+                .map { (index, note) -> validateNote(index, note, validationIdentifierForMeasure) }
+                .combineAllValidationErrors()
+        ) { attributes, notes ->
+            Measure(attributes, notes)
+        }
     }
 
-public fun com.sparetimedevs.ami.music.input.MeasureAttributes?.validate():
-    EitherNel<ValidationError, MeasureAttributes?> {
+public fun com.sparetimedevs.ami.music.input.MeasureAttributes?.validate(
+    validationIdentifier: ValidationIdentifier = NoValidationIdentifier
+): EitherNel<ValidationError, MeasureAttributes?> {
     // TODO use, and validate "this" provided attributes.
     return Either.Right(null)
 }

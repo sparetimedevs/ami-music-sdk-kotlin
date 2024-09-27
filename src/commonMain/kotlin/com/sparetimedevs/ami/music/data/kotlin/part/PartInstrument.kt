@@ -60,7 +60,7 @@ public value class PartInstrumentName private constructor(public val value: Stri
 
 @Serializable
 public data class PartInstrument(
-    val name: PartInstrumentName?,
-    val midiChannel: MidiChannel?,
-    val midiProgram: MidiProgram?,
+    val name: PartInstrumentName? = null,
+    val midiChannel: MidiChannel? = null,
+    val midiProgram: MidiProgram? = null
 )

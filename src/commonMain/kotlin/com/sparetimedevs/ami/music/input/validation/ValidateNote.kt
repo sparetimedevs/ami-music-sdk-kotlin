@@ -23,6 +23,8 @@ import arrow.core.right
 import com.sparetimedevs.ami.core.validation.NoValidationIdentifier
 import com.sparetimedevs.ami.core.validation.ValidationError
 import com.sparetimedevs.ami.core.validation.ValidationIdentifier
+import com.sparetimedevs.ami.core.validation.ValidationIdentifierForNote
+import com.sparetimedevs.ami.core.validation.ValidationIdentifierForPitchOfChord
 import com.sparetimedevs.ami.core.validation.combineAllValidationErrors
 import com.sparetimedevs.ami.core.validation.validationErrorForProperty
 import com.sparetimedevs.ami.music.data.kotlin.note.Note
@@ -38,20 +40,25 @@ import com.sparetimedevs.ami.music.data.kotlin.note.Pitch
 import com.sparetimedevs.ami.music.data.kotlin.note.Semitones
 
 public fun validateNote(
+    index: Int,
     input: Any,
     validationIdentifier: ValidationIdentifier = NoValidationIdentifier
 ): EitherNel<ValidationError, Note> =
-    when (input) {
-        is com.sparetimedevs.ami.music.input.Pitched -> input.validate(validationIdentifier)
-        is com.sparetimedevs.ami.music.input.Chord -> input.validate(validationIdentifier)
-        // TODO add Unpitched, Rest
-        else ->
-            ValidationError(
-                    "Note can't be of type ${input::class.simpleName}",
-                    validationErrorForProperty<Note>(),
-                    validationIdentifier
-                )
-                .leftNel()
+    ValidationIdentifierForNote(index, validationIdentifier).let { validationIdentifierForNote ->
+        when (input) {
+            is com.sparetimedevs.ami.music.input.Pitched ->
+                input.validate(validationIdentifierForNote)
+            is com.sparetimedevs.ami.music.input.Chord ->
+                input.validate(validationIdentifierForNote)
+            // TODO add Unpitched, Rest
+            else ->
+                ValidationError(
+                        "Note can't be of type ${input::class.simpleName}",
+                        validationErrorForProperty<Note>(),
+                        validationIdentifierForNote
+                    )
+                    .leftNel()
+        }
     }
 
 public fun com.sparetimedevs.ami.music.input.Pitched.validate(
@@ -59,7 +66,7 @@ public fun com.sparetimedevs.ami.music.input.Pitched.validate(
 ): EitherNel<ValidationError, Pitched> =
     Either.zipOrAccumulate(
         this.duration.validate(validationIdentifier),
-        this.noteAttributes.validate(),
+        this.noteAttributes.validate(validationIdentifier),
         this.pitch.validate(validationIdentifier)
     ) { duration, noteAttributes, pitch ->
         Pitched(duration, noteAttributes, pitch)
@@ -70,10 +77,11 @@ public fun com.sparetimedevs.ami.music.input.Chord.validate(
 ): EitherNel<ValidationError, Chord> =
     Either.zipOrAccumulate(
         this.duration.validate(validationIdentifier),
-        this.noteAttributes.validate(),
+        this.noteAttributes.validate(validationIdentifier),
         this.rootNote.validate(validationIdentifier),
         this.pitches
-            .map { pitch -> pitch.validate(validationIdentifier) }
+            .withIndex()
+            .map { (index, pitch) -> pitch.validate(index, validationIdentifier) }
             .combineAllValidationErrors()
     ) { duration, noteAttributes, rootNote, pitches ->
         Chord(duration, noteAttributes, rootNote, pitches)
@@ -89,8 +97,9 @@ public fun com.sparetimedevs.ami.music.input.NoteDuration.validate(
         NoteDuration(noteValue, modifier)
     }
 
-public fun com.sparetimedevs.ami.music.input.NoteAttributes.validate():
-    EitherNel<ValidationError, NoteAttributes> {
+public fun com.sparetimedevs.ami.music.input.NoteAttributes.validate(
+    validationIdentifier: ValidationIdentifier = NoValidationIdentifier
+): EitherNel<ValidationError, NoteAttributes> {
     // TODO implement
     return NoteAttributes(null, null, null, null).right()
 }
@@ -104,4 +113,19 @@ public fun com.sparetimedevs.ami.music.input.Pitch.validate(
         Semitones.validate(this.alter, validationIdentifier)
     ) { noteName, octave, alter ->
         Pitch(noteName, octave, alter)
+    }
+
+public fun com.sparetimedevs.ami.music.input.Pitch.validate(
+    index: Int,
+    validationIdentifier: ValidationIdentifier = NoValidationIdentifier
+): EitherNel<ValidationError, Pitch> =
+    ValidationIdentifierForPitchOfChord(index, validationIdentifier).let {
+        validationIdentifierForPitchOfChord ->
+        Either.zipOrAccumulate(
+            NoteName.validate(this.noteName, validationIdentifierForPitchOfChord),
+            Octave.validate(this.octave, validationIdentifierForPitchOfChord),
+            Semitones.validate(this.alter, validationIdentifierForPitchOfChord)
+        ) { noteName, octave, alter ->
+            Pitch(noteName, octave, alter)
+        }
     }

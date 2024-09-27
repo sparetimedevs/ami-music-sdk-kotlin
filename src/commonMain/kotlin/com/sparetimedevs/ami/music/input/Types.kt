@@ -44,13 +44,17 @@ public data class NoteAttributes(
 @Serializable
 public data class Part(
     val id: String,
-    val name: String?,
-    val instrument: PartInstrument?,
+    val name: String? = null,
+    val instrument: PartInstrument? = null,
     val measures: List<Measure>
 )
 
 @Serializable
-public data class PartInstrument(val name: String?, val midiChannel: Byte?, val midiProgram: Byte?)
+public data class PartInstrument(
+    val name: String? = null,
+    val midiChannel: Byte? = null,
+    val midiProgram: Byte? = null
+)
 
 @Serializable public data class Pitch(val alter: Float, val noteName: String, val octave: Byte)
 

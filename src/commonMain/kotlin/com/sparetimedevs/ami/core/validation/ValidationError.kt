@@ -16,6 +16,8 @@
 
 package com.sparetimedevs.ami.core.validation
 
+import com.sparetimedevs.ami.music.data.kotlin.part.PartId
+import com.sparetimedevs.ami.music.data.kotlin.score.ScoreId
 import kotlin.jvm.JvmInline
 import kotlinx.serialization.Serializable
 
@@ -24,11 +26,7 @@ public data class ValidationError(
     val message: String = "There was an error while validating the input.",
     val validationErrorForProperty: ValidationErrorForProperty,
     val validationIdentifier: ValidationIdentifier
-) {
-    public companion object {
-        public fun validate(): String = "aaa"
-    }
-}
+)
 
 @Serializable @JvmInline public value class ValidationErrorForProperty(public val value: String)
 
@@ -44,12 +42,12 @@ public object NoValidationIdentifier : ValidationIdentifier {
 }
 
 public data class ValidationIdentifierForScore(
-    public val scoreId: String,
+    public val scoreId: ScoreId,
     public override val validationIdentifierParent: ValidationIdentifier
 ) : ValidationIdentifier
 
 public data class ValidationIdentifierForPart(
-    public val partId: String,
+    public val partId: PartId,
     public override val validationIdentifierParent: ValidationIdentifier
 ) : ValidationIdentifier
 
@@ -60,5 +58,10 @@ public data class ValidationIdentifierForMeasure(
 
 public data class ValidationIdentifierForNote(
     public val noteIndex: Int,
+    public override val validationIdentifierParent: ValidationIdentifier
+) : ValidationIdentifier
+
+public data class ValidationIdentifierForPitchOfChord(
+    public val pitchIndex: Int,
     public override val validationIdentifierParent: ValidationIdentifier
 ) : ValidationIdentifier

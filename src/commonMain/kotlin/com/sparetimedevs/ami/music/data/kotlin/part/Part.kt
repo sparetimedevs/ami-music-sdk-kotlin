@@ -96,7 +96,7 @@ public value class PartName private constructor(public val value: String) {
 @Serializable
 public data class Part(
     val id: PartId,
-    val name: PartName?,
-    val instrument: PartInstrument?,
+    val name: PartName? = null,
+    val instrument: PartInstrument? = null,
     val measures: List<Measure>,
 )
