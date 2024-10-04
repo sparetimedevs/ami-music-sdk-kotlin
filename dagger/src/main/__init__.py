@@ -56,9 +56,13 @@ class AmiMusicSdkKotlin:
             .stdout()
         )
 
+    # Run command: dagger call --progress plain git-log-bot --directory-arg=.
     @function
     async def git_log_bot(self, directory_arg: dagger.Directory) -> str:
         """Returns result of git log for bot"""
-        a = await self.git_log(directory_arg)
-        bot_count=a.count('[bot]')
+        last_10_commits = await self.git_log(directory_arg)
+        print("THE BEGINNING OF THE last_10_commits")
+        print(last_10_commits)
+        print("THE END OF THE last_10_commits")
+        bot_count = last_10_commits.count('[bot]')
         return "the amount of [bot] commits in last 10 commits is: " + str(bot_count)
