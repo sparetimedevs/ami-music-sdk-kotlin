@@ -1,5 +1,5 @@
 {
-  "name": "ami-music-sdk-kotlin",
+  "name": "ami-music-sdk-kotlin-pipelines",
   "sdk": "python",
   "source": "dagger",
   "engineVersion": "v0.13.3"

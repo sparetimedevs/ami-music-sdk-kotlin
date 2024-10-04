@@ -1,5 +1,5 @@
 [project]
-name = "lol234"
+name = "main"
 version = "0.1.0"
 requires-python = ">=3.12"
 dependencies = ["dagger-io"]
@@ -23,4 +23,4 @@ testpaths = [
 pythonpath = [
     "src"
 ]
-asyncio_default_fixture_loop_scope = "function" # Need to get rid of: PytestDeprecationWarning: The configuration option "asyncio_default_fixture_loop_scope" is unset.
+asyncio_default_fixture_loop_scope = "function" # Needed to get rid of: PytestDeprecationWarning: The configuration option "asyncio_default_fixture_loop_scope" is unset.
