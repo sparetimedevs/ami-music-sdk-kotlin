@@ -1,0 +1,6 @@
+{
+  "name": "ami-music-sdk-kotlin",
+  "sdk": "python",
+  "source": "dagger",
+  "engineVersion": "v0.13.3"
+}
