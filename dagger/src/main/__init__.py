@@ -24,12 +24,18 @@ if appropriate. All modules should have a short description.
 import dagger
 from dagger import dag, function, object_type
 
+from main.build import Build
 from main.git_utils import GitClient
 from main.something_git import SomethingGit
 
 
 @object_type
 class AmiMusicSdkKotlinPipelines:
+    @function
+    async def build(self, src: dagger.Directory) -> str:
+        """Build and publish Docker container"""
+        return await Build().build(src)
+
     @function
     def container_echo(self, string_arg: str) -> dagger.Container:
         """Returns a container that echoes whatever string argument is provided"""
