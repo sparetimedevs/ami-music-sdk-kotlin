@@ -57,8 +57,7 @@ public fun com.sparetimedevs.ami.music.data.kotlin.measure.MeasureAttributes?.to
         key = null // TODO
     )
 
-// TODO this should yield either Pitched, Unpitched, Chord, or Rest.
-public fun Note.toInput(): Pitched =
+public fun Note.toInput(): Any =
     when (this) {
         is Note.Pitched -> {
             Pitched(
@@ -67,9 +66,26 @@ public fun Note.toInput(): Pitched =
                 pitch = this.pitch.toInput()
             )
         }
-        is Note.Chord -> TODO()
-        is Note.Rest -> TODO()
-        is Note.Unpitched -> TODO()
+        is Note.Chord -> {
+            Chord(
+                duration = this.duration.toInput(),
+                noteAttributes = this.noteAttributes.toInput(),
+                rootNote = this.rootNote.toInput(),
+                pitches = this.pitches.map { it.toInput() }
+            )
+        }
+        is Note.Rest -> {
+            Rest(
+                duration = this.duration.toInput(),
+                noteAttributes = this.noteAttributes.toInput()
+            )
+        }
+        is Note.Unpitched -> {
+            Unpitched(
+                duration = this.duration.toInput(),
+                noteAttributes = this.noteAttributes.toInput()
+            )
+        }
     }
 
 public fun com.sparetimedevs.ami.music.data.kotlin.note.NoteDuration.toInput(): NoteDuration =

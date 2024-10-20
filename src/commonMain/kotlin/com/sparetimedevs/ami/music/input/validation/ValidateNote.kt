@@ -28,6 +28,8 @@ import com.sparetimedevs.ami.core.validation.validationErrorForProperty
 import com.sparetimedevs.ami.music.data.kotlin.note.Note
 import com.sparetimedevs.ami.music.data.kotlin.note.Note.Chord
 import com.sparetimedevs.ami.music.data.kotlin.note.Note.Pitched
+import com.sparetimedevs.ami.music.data.kotlin.note.Note.Rest
+import com.sparetimedevs.ami.music.data.kotlin.note.Note.Unpitched
 import com.sparetimedevs.ami.music.data.kotlin.note.NoteAttributes
 import com.sparetimedevs.ami.music.data.kotlin.note.NoteDuration
 import com.sparetimedevs.ami.music.data.kotlin.note.NoteModifier
@@ -48,7 +50,10 @@ public fun validateNote(
                 input.validate(validationIdentifierForNote)
             is com.sparetimedevs.ami.music.input.Chord ->
                 input.validate(validationIdentifierForNote)
-            // TODO add Unpitched, Rest
+            is com.sparetimedevs.ami.music.input.Rest ->
+                input.validate(validationIdentifierForNote)
+            is com.sparetimedevs.ami.music.input.Unpitched ->
+                input.validate(validationIdentifierForNote)
             else ->
                 ValidationError(
                         "Note can't be of type ${input::class.simpleName}",
@@ -83,6 +88,26 @@ public fun com.sparetimedevs.ami.music.input.Chord.validate(
             .combineAllValidationErrors()
     ) { duration, noteAttributes, rootNote, pitches ->
         Chord(duration, noteAttributes, rootNote, pitches)
+    }
+
+public fun com.sparetimedevs.ami.music.input.Rest.validate(
+    validationIdentifier: ValidationIdentifier = NoValidationIdentifier
+): EitherNel<ValidationError, Rest> =
+    Either.zipOrAccumulate(
+        this.duration.validate(validationIdentifier),
+        this.noteAttributes.validate(validationIdentifier)
+    ) { duration, noteAttributes ->
+        Rest(duration, noteAttributes)
+    }
+
+public fun com.sparetimedevs.ami.music.input.Unpitched.validate(
+    validationIdentifier: ValidationIdentifier = NoValidationIdentifier
+): EitherNel<ValidationError, Unpitched> =
+    Either.zipOrAccumulate(
+        this.duration.validate(validationIdentifier),
+        this.noteAttributes.validate(validationIdentifier)
+    ) { duration, noteAttributes ->
+        Unpitched(duration, noteAttributes)
     }
 
 public fun com.sparetimedevs.ami.music.input.NoteDuration.validate(
