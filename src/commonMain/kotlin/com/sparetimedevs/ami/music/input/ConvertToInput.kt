@@ -16,8 +16,6 @@
 
 package com.sparetimedevs.ami.music.input
 
-import com.sparetimedevs.ami.music.data.kotlin.note.Note
-
 /**
  * `score.toInput()` why do we need this? Because even if you have the possibility to use common
  * data models, when making a request from client to service. The common data models need to be
@@ -57,19 +55,44 @@ public fun com.sparetimedevs.ami.music.data.kotlin.measure.MeasureAttributes?.to
         key = null // TODO
     )
 
-// TODO this should yield either Pitched, Unpitched, Chord, or Rest.
-public fun Note.toInput(): Pitched =
+public fun com.sparetimedevs.ami.music.data.kotlin.note.Note.toInput(): Note =
     when (this) {
-        is Note.Pitched -> {
-            Pitched(
+        is com.sparetimedevs.ami.music.data.kotlin.note.Note.Pitched -> {
+            Note(
+                type = "pitched",
                 duration = this.duration.toInput(),
                 noteAttributes = this.noteAttributes.toInput(),
-                pitch = this.pitch.toInput()
+                pitch = this.pitch.toInput(),
+                pitches = emptyList()
             )
         }
-        is Note.Chord -> TODO()
-        is Note.Rest -> TODO()
-        is Note.Unpitched -> TODO()
+        is com.sparetimedevs.ami.music.data.kotlin.note.Note.Chord -> {
+            Note(
+                type = "chord",
+                duration = this.duration.toInput(),
+                noteAttributes = this.noteAttributes.toInput(),
+                pitch = this.rootNote.toInput(),
+                pitches = this.pitches.map { it.toInput() }
+            )
+        }
+        is com.sparetimedevs.ami.music.data.kotlin.note.Note.Rest -> {
+            Note(
+                type = "rest",
+                duration = this.duration.toInput(),
+                noteAttributes = this.noteAttributes.toInput(),
+                pitch = null,
+                pitches = emptyList()
+            )
+        }
+        is com.sparetimedevs.ami.music.data.kotlin.note.Note.Unpitched -> {
+            Note(
+                type = "unpitched",
+                duration = this.duration.toInput(),
+                noteAttributes = this.noteAttributes.toInput(),
+                pitch = null,
+                pitches = emptyList()
+            )
+        }
     }
 
 public fun com.sparetimedevs.ami.music.data.kotlin.note.NoteDuration.toInput(): NoteDuration =
