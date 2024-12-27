@@ -19,7 +19,6 @@ package backwardscompat
 import arrow.core.flatMap
 import com.sparetimedevs.ami.music.data.kotlin.score.Score
 import com.sparetimedevs.ami.music.example.getExampleScore0
-import com.sparetimedevs.ami.music.input.Score as InputScore
 import com.sparetimedevs.ami.music.input.toInput
 import com.sparetimedevs.ami.music.input.validation.validateInput
 import io.kotest.assertions.arrow.core.shouldBeRight
@@ -27,6 +26,7 @@ import io.kotest.core.spec.style.StringSpec
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.json.Json
 import okhttp3.OkHttpClient
+import com.sparetimedevs.ami.music.input.Score as InputScore
 
 class PingPongTest :
     StringSpec({
@@ -38,11 +38,11 @@ class PingPongTest :
             val input = expectedScore.toInput()
 
             postJsonRequest<InputScore, ResponseInputScore>(
-                    "http://localhost:8080/score",
-                    httpClient,
-                    jsonParser,
-                    input
-                )
+                "http://localhost:8080/score",
+                httpClient,
+                jsonParser,
+                input,
+            )
                 .flatMap { response -> response.inputScore.validateInput() }
                 .shouldBeRight(expectedScore)
         }

@@ -44,10 +44,10 @@ public enum class NoteName {
     F_SHARP,
     G_FLAT,
     G,
-    G_SHARP;
+    G_SHARP,
+    ;
 
     public companion object {
-
         public fun validate(
             input: String,
             validationIdentifier: ValidationIdentifier = NoValidationIdentifier,
@@ -72,10 +72,10 @@ public enum class NoteName {
                 G_SHARP.name -> G_SHARP.right()
                 else ->
                     ValidationError(
-                            "Note name can't be value $input",
-                            validationErrorForProperty<NoteName>(),
-                            validationIdentifier,
-                        )
+                        "Note name can't be value $input",
+                        validationErrorForProperty<NoteName>(),
+                        validationIdentifier,
+                    )
                         .nel()
                         .left()
             }

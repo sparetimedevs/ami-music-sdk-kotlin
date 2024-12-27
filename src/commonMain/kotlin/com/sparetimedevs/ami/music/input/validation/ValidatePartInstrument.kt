@@ -28,7 +28,7 @@ import com.sparetimedevs.ami.music.data.kotlin.part.PartInstrument
 import com.sparetimedevs.ami.music.data.kotlin.part.PartInstrumentName
 
 public fun com.sparetimedevs.ami.music.input.PartInstrument?.validate(
-    validationIdentifier: ValidationIdentifier = NoValidationIdentifier
+    validationIdentifier: ValidationIdentifier = NoValidationIdentifier,
 ): EitherNel<ValidationError, PartInstrument?> =
     if (this == null) {
         null.right()
@@ -36,7 +36,7 @@ public fun com.sparetimedevs.ami.music.input.PartInstrument?.validate(
         Either.zipOrAccumulate(
             PartInstrumentName.validate(this.name, validationIdentifier),
             MidiChannel.validate(this.midiChannel, validationIdentifier),
-            MidiProgram.validate(this.midiProgram, validationIdentifier)
+            MidiProgram.validate(this.midiProgram, validationIdentifier),
         ) { name, midiChannel, midiProgram ->
             PartInstrument(name, midiChannel, midiProgram)
         }

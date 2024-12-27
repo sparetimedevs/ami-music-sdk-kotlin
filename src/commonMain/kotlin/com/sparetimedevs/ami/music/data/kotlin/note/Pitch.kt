@@ -22,5 +22,5 @@ import kotlinx.serialization.Serializable
 public data class Pitch(
     val noteName: NoteName,
     val octave: Octave,
-    val alter: Semitones = Semitones.DefaultSemitones
+    val alter: Semitones = Semitones.DefaultSemitones,
 )

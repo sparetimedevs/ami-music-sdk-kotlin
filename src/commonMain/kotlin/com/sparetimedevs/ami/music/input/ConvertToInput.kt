@@ -30,7 +30,7 @@ public fun com.sparetimedevs.ami.music.data.kotlin.score.Score.toInput(): Score 
     Score(
         id = this.id.value,
         title = this.title?.value,
-        parts = this.parts.map { part -> part.toInput() }
+        parts = this.parts.map { part -> part.toInput() },
     )
 
 public fun com.sparetimedevs.ami.music.data.kotlin.part.Part.toInput(): Part =
@@ -38,23 +38,22 @@ public fun com.sparetimedevs.ami.music.data.kotlin.part.Part.toInput(): Part =
         id = this.id.value,
         name = this.name?.value,
         instrument = this.instrument?.toInput(),
-        measures = this.measures.map { it.toInput() }
+        measures = this.measures.map { it.toInput() },
     )
 
 public fun com.sparetimedevs.ami.music.data.kotlin.part.PartInstrument.toInput(): PartInstrument =
     PartInstrument(
         name = this.name?.value,
         midiChannel = this.midiChannel?.value,
-        midiProgram = this.midiProgram?.value
+        midiProgram = this.midiProgram?.value,
     )
 
 public fun com.sparetimedevs.ami.music.data.kotlin.measure.Measure.toInput(): Measure =
     Measure(attributes = this.attributes.toInput(), notes = this.notes.map { it.toInput() })
 
-public fun com.sparetimedevs.ami.music.data.kotlin.measure.MeasureAttributes?.toInput():
-    MeasureAttributes =
+public fun com.sparetimedevs.ami.music.data.kotlin.measure.MeasureAttributes?.toInput(): MeasureAttributes =
     MeasureAttributes(
-        key = null // TODO
+        key = null, // TODO
     )
 
 // TODO this should yield either Pitched, Unpitched, Chord, or Rest.
@@ -64,9 +63,10 @@ public fun Note.toInput(): Pitched =
             Pitched(
                 duration = this.duration.toInput(),
                 noteAttributes = this.noteAttributes.toInput(),
-                pitch = this.pitch.toInput()
+                pitch = this.pitch.toInput(),
             )
         }
+
         is Note.Chord -> TODO()
         is Note.Rest -> TODO()
         is Note.Unpitched -> TODO()
@@ -80,7 +80,7 @@ public fun com.sparetimedevs.ami.music.data.kotlin.note.NoteAttributes.toInput()
         attack = this.attack,
         dynamics = this.dynamics,
         endDynamics = this.endDynamics,
-        release = this.release
+        release = this.release,
     )
 
 public fun com.sparetimedevs.ami.music.data.kotlin.note.Pitch.toInput(): Pitch =

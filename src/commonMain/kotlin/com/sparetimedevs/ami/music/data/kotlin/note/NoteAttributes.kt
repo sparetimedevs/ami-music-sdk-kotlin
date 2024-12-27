@@ -23,5 +23,5 @@ public data class NoteAttributes(
     val attack: Float?,
     val dynamics: Float?,
     val endDynamics: Float?,
-    val release: Float?
+    val release: Float?,
 )

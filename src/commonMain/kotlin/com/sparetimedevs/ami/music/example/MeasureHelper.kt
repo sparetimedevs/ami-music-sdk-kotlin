@@ -26,6 +26,5 @@ import com.sparetimedevs.ami.music.data.kotlin.timesignature.TimeSignature
 internal fun createMeasure(
     vararg notes: Note,
     attributes: MeasureAttributes? = null,
-    timeSignature: TimeSignature = TimeSignature(Beats.unsafeCreate(4), BeatType.unsafeCreate(4))
-): Measure =
-    Measure(attributes, if (notes.isNotEmpty()) notes.asList() else emptyList(), timeSignature)
+    timeSignature: TimeSignature = TimeSignature(Beats.unsafeCreate(4), BeatType.unsafeCreate(4)),
+): Measure = Measure(attributes, if (notes.isNotEmpty()) notes.asList() else emptyList(), timeSignature)

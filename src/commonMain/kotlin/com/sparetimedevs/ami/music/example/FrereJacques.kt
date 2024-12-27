@@ -40,7 +40,7 @@ public fun getExampleScoreFrereJacques(): Score {
                     PartInstrument(
                         name = PartInstrumentName.unsafeCreate("Grand Piano"),
                         midiChannel = MidiChannel.unsafeCreate(0),
-                        midiProgram = MidiProgram.unsafeCreate(1)
+                        midiProgram = MidiProgram.unsafeCreate(1),
                     ),
                 measures =
                     listOf(
@@ -48,30 +48,30 @@ public fun getExampleScoreFrereJacques(): Score {
                             createNote(noteName = NoteName.C, duration = NoteValue.QUARTER),
                             createNote(noteName = NoteName.D, duration = NoteValue.QUARTER),
                             createNote(noteName = NoteName.E, duration = NoteValue.QUARTER),
-                            createNote(noteName = NoteName.C, duration = NoteValue.QUARTER)
+                            createNote(noteName = NoteName.C, duration = NoteValue.QUARTER),
                         ),
                         createMeasure(
                             createNote(noteName = NoteName.C, duration = NoteValue.QUARTER),
                             createNote(noteName = NoteName.D, duration = NoteValue.QUARTER),
                             createNote(noteName = NoteName.E, duration = NoteValue.QUARTER),
-                            createNote(noteName = NoteName.C, duration = NoteValue.QUARTER)
+                            createNote(noteName = NoteName.C, duration = NoteValue.QUARTER),
                         ),
                         createMeasure(
                             createNote(noteName = NoteName.E, duration = NoteValue.QUARTER),
                             createNote(noteName = NoteName.F, duration = NoteValue.QUARTER),
-                            createNote(noteName = NoteName.G, duration = NoteValue.HALF)
+                            createNote(noteName = NoteName.G, duration = NoteValue.HALF),
                         ),
                         createMeasure(
                             createNote(noteName = NoteName.E, duration = NoteValue.QUARTER),
                             createNote(noteName = NoteName.F, duration = NoteValue.QUARTER),
-                            createNote(noteName = NoteName.G, duration = NoteValue.HALF)
+                            createNote(noteName = NoteName.G, duration = NoteValue.HALF),
                         ),
                         createMeasure(
                             createNote(noteName = NoteName.G, duration = NoteValue._8TH),
                             createNote(
                                 noteName = NoteName.A,
                                 octave = Octave.unsafeCreate(5),
-                                duration = NoteValue._8TH
+                                duration = NoteValue._8TH,
                             ),
                             createNote(noteName = NoteName.G, duration = NoteValue._8TH),
                             createNote(noteName = NoteName.F, duration = NoteValue._8TH),
@@ -83,7 +83,7 @@ public fun getExampleScoreFrereJacques(): Score {
                             createNote(
                                 noteName = NoteName.A,
                                 octave = Octave.unsafeCreate(5),
-                                duration = NoteValue._8TH
+                                duration = NoteValue._8TH,
                             ),
                             createNote(noteName = NoteName.G, duration = NoteValue._8TH),
                             createNote(noteName = NoteName.F, duration = NoteValue._8TH),
@@ -95,26 +95,26 @@ public fun getExampleScoreFrereJacques(): Score {
                             createNote(
                                 noteName = NoteName.G,
                                 octave = Octave.unsafeCreate(3),
-                                duration = NoteValue.QUARTER
+                                duration = NoteValue.QUARTER,
                             ),
-                            createNote(noteName = NoteName.C, duration = NoteValue.HALF)
+                            createNote(noteName = NoteName.C, duration = NoteValue.HALF),
                         ),
                         createMeasure(
                             createNote(noteName = NoteName.C, duration = NoteValue.QUARTER),
                             createNote(
                                 noteName = NoteName.G,
                                 octave = Octave.unsafeCreate(3),
-                                duration = NoteValue.QUARTER
+                                duration = NoteValue.QUARTER,
                             ),
-                            createNote(noteName = NoteName.C, duration = NoteValue.HALF)
-                        )
-                    )
-            )
+                            createNote(noteName = NoteName.C, duration = NoteValue.HALF),
+                        ),
+                    ),
+            ),
         )
 
     return Score(
         ScoreId.unsafeCreate("ef23c062-90e9-4cfd-af60-41d6e453064a"),
         ScoreTitle.unsafeCreate("Frère Jacques"),
-        parts
+        parts,
     )
 }

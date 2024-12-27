@@ -27,24 +27,28 @@ import com.sparetimedevs.ami.music.data.kotlin.note.Pitch
 internal fun createNote(
     noteName: NoteName,
     octave: Octave = Octave.unsafeCreate(4),
-    duration: NoteValue
+    duration: NoteValue,
 ): Note.Pitched =
     Note.Pitched(
         duration = NoteDuration(duration),
         noteAttributes = NoteAttributes(null, null, null, null),
-        pitch = Pitch(noteName = noteName, octave = octave)
+        pitch = Pitch(noteName = noteName, octave = octave),
     )
 
-internal fun createChord(rootNote: Pitch, pitches: List<Pitch>, duration: NoteValue): Note.Chord =
+internal fun createChord(
+    rootNote: Pitch,
+    pitches: List<Pitch>,
+    duration: NoteValue,
+): Note.Chord =
     Note.Chord(
         duration = NoteDuration(duration),
         noteAttributes = NoteAttributes(null, null, null, null),
         rootNote = rootNote,
-        pitches = pitches
+        pitches = pitches,
     )
 
 internal fun createRestNote(duration: NoteValue): Note.Rest =
     Note.Rest(
         duration = NoteDuration(duration),
-        noteAttributes = NoteAttributes(null, null, null, null)
+        noteAttributes = NoteAttributes(null, null, null, null),
     )

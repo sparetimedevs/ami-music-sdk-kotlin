@@ -20,7 +20,6 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 public sealed interface Note {
-
     public val duration: NoteDuration
     public val noteAttributes: NoteAttributes
 
@@ -28,7 +27,7 @@ public sealed interface Note {
     public data class Pitched(
         override val duration: NoteDuration,
         override val noteAttributes: NoteAttributes,
-        val pitch: Pitch
+        val pitch: Pitch,
     ) : Note
 
     @Serializable
@@ -36,18 +35,18 @@ public sealed interface Note {
         override val duration: NoteDuration,
         override val noteAttributes: NoteAttributes,
         val rootNote: Pitch,
-        val pitches: List<Pitch>
+        val pitches: List<Pitch>,
     ) : Note
 
     @Serializable
     public data class Rest(
         override val duration: NoteDuration,
-        override val noteAttributes: NoteAttributes
+        override val noteAttributes: NoteAttributes,
     ) : Note
 
     @Serializable
     public data class Unpitched(
         override val duration: NoteDuration,
-        override val noteAttributes: NoteAttributes
+        override val noteAttributes: NoteAttributes,
     ) : Note
 }

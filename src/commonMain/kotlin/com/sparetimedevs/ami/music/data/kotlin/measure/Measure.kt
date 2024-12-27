@@ -24,7 +24,6 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 public sealed interface Measure {
-
     public val timeSignature: TimeSignature
     public val attributes: MeasureAttributes?
     public val notes: List<Note>
@@ -33,14 +32,14 @@ public sealed interface Measure {
     public data class CompleteMeasure(
         override val timeSignature: TimeSignature,
         override val attributes: MeasureAttributes?,
-        override val notes: List<Note>
+        override val notes: List<Note>,
     ) : Measure
 
     @Serializable
     public data class IncompleteMeasure(
         override val timeSignature: TimeSignature,
         override val attributes: MeasureAttributes?,
-        override val notes: List<Note>
+        override val notes: List<Note>,
     ) : Measure
 
     @Serializable
@@ -48,7 +47,7 @@ public sealed interface Measure {
         override val timeSignature: TimeSignature,
         override val attributes: MeasureAttributes?,
         override val notes: List<Note>,
-        val overfloodedNotes: List<Note> // TODO or should this be its own type? OverfloodedNotes.
+        val overfloodedNotes: List<Note>, // TODO or should this be its own type? OverfloodedNotes.
     ) : Measure
 
     public companion object {
@@ -58,7 +57,7 @@ public sealed interface Measure {
             timeSignature: TimeSignature =
                 TimeSignature(
                     Beats.unsafeCreate(4),
-                    BeatType.unsafeCreate(4)
+                    BeatType.unsafeCreate(4),
                 ), // TODO remove this default, and change order.
         ): Measure =
             when {
@@ -69,19 +68,19 @@ public sealed interface Measure {
                         timeSignature,
                         attributes,
                         notes /* TODO split notes */,
-                        notes
+                        notes,
                     )
                 else -> IncompleteMeasure(timeSignature, attributes, notes)
             }
 
         private fun notesShouldBeInAccordanceWithTimeSignature(
             notes: List<Note>,
-            timeSignature: TimeSignature
-        ): Boolean = true /* TODO implement*/
+            timeSignature: TimeSignature,
+        ): Boolean = true // TODO implement
 
         private fun notesAreTooManyForTimeSignature(
             notes: List<Note>,
-            timeSignature: TimeSignature
-        ): Boolean = false /* TODO implement*/
+            timeSignature: TimeSignature,
+        ): Boolean = false // TODO implement
     }
 }

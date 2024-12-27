@@ -74,10 +74,10 @@ class PartNameTest :
                     .trimMargin()
             PartName.validate(input) shouldBeLeft
                 ValidationError(
-                        "Part name can't be longer than 512 characters, the input was $input",
-                        validationErrorForProperty<PartName>(),
-                        NoValidationIdentifier
-                    )
+                    "Part name can't be longer than 512 characters, the input was $input",
+                    validationErrorForProperty<PartName>(),
+                    NoValidationIdentifier,
+                )
                     .nel()
         }
     })
