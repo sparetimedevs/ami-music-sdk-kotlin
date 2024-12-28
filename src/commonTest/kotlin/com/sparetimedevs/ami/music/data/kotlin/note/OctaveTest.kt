@@ -34,10 +34,10 @@ class OctaveTest :
             val input: Byte = -13
             Octave.validate(input) shouldBeLeft
                 ValidationError(
-                        "Octave can't be lesser than -12, the input was -13",
-                        validationErrorForProperty<Octave>(),
-                        NoValidationIdentifier
-                    )
+                    "Octave can't be lesser than -12, the input was -13",
+                    validationErrorForProperty<Octave>(),
+                    NoValidationIdentifier,
+                )
                     .nel()
         }
     })

@@ -32,5 +32,5 @@ public data class ParseError(override val message: String) : DomainError
 //   .mapLeft { AccumulatedValidationErrors(validationErrors = it) }
 public data class AccumulatedValidationErrors(
     override val message: String,
-    val validationErrors: NonEmptyList<ValidationError>
+    val validationErrors: NonEmptyList<ValidationError>,
 ) : DomainError

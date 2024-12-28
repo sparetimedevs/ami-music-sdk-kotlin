@@ -44,9 +44,9 @@ fun getExampleScore0Input(): Score {
                                             attack = null,
                                             dynamics = null,
                                             endDynamics = null,
-                                            release = null
+                                            release = null,
                                         ),
-                                    pitch = Pitch(alter = 0.0f, noteName = "C", octave = 4)
+                                    pitch = Pitch(alter = 0.0f, noteName = "C", octave = 4),
                                 ),
                                 Pitched(
                                     duration = NoteDuration("QUARTER", "NONE"),
@@ -55,9 +55,9 @@ fun getExampleScore0Input(): Score {
                                             attack = null,
                                             dynamics = null,
                                             endDynamics = null,
-                                            release = null
+                                            release = null,
                                         ),
-                                    pitch = Pitch(alter = 0.0f, noteName = "G", octave = 4)
+                                    pitch = Pitch(alter = 0.0f, noteName = "G", octave = 4),
                                 ),
                                 Pitched(
                                     duration = NoteDuration("QUARTER", "NONE"),
@@ -66,9 +66,9 @@ fun getExampleScore0Input(): Score {
                                             attack = null,
                                             dynamics = null,
                                             endDynamics = null,
-                                            release = null
+                                            release = null,
                                         ),
-                                    pitch = Pitch(alter = 0.0f, noteName = "A", octave = 4)
+                                    pitch = Pitch(alter = 0.0f, noteName = "A", octave = 4),
                                 ),
                                 Pitched(
                                     duration = NoteDuration("QUARTER", "NONE"),
@@ -77,11 +77,11 @@ fun getExampleScore0Input(): Score {
                                             attack = null,
                                             dynamics = null,
                                             endDynamics = null,
-                                            release = null
+                                            release = null,
                                         ),
-                                    pitch = Pitch(alter = 0.0f, noteName = "E", octave = 4)
-                                )
-                            )
+                                    pitch = Pitch(alter = 0.0f, noteName = "E", octave = 4),
+                                ),
+                            ),
                         ),
                         Measure(
                             attributes = null,
@@ -94,9 +94,9 @@ fun getExampleScore0Input(): Score {
                                                 attack = null,
                                                 dynamics = null,
                                                 endDynamics = null,
-                                                release = null
+                                                release = null,
                                             ),
-                                        pitch = Pitch(alter = 0.0f, noteName = "C", octave = 4)
+                                        pitch = Pitch(alter = 0.0f, noteName = "C", octave = 4),
                                     ),
                                     Pitched(
                                         duration = NoteDuration("QUARTER", "NONE"),
@@ -105,9 +105,9 @@ fun getExampleScore0Input(): Score {
                                                 attack = null,
                                                 dynamics = null,
                                                 endDynamics = null,
-                                                release = null
+                                                release = null,
                                             ),
-                                        pitch = Pitch(alter = 0.0f, noteName = "C", octave = 4)
+                                        pitch = Pitch(alter = 0.0f, noteName = "C", octave = 4),
                                     ),
                                     Pitched(
                                         duration = NoteDuration("QUARTER", "NONE"),
@@ -116,9 +116,9 @@ fun getExampleScore0Input(): Score {
                                                 attack = null,
                                                 dynamics = null,
                                                 endDynamics = null,
-                                                release = null
+                                                release = null,
                                             ),
-                                        pitch = Pitch(alter = 0.0f, noteName = "A", octave = 4)
+                                        pitch = Pitch(alter = 0.0f, noteName = "A", octave = 4),
                                     ),
                                     Pitched(
                                         duration = NoteDuration("QUARTER", "NONE"),
@@ -127,13 +127,13 @@ fun getExampleScore0Input(): Score {
                                                 attack = null,
                                                 dynamics = null,
                                                 endDynamics = null,
-                                                release = null
+                                                release = null,
                                             ),
-                                        pitch = Pitch(alter = 0.0f, noteName = "A", octave = 4)
-                                    )
-                                )
+                                        pitch = Pitch(alter = 0.0f, noteName = "A", octave = 4),
+                                    ),
+                                ),
                         ),
-                    )
+                    ),
             ),
             Part(
                 id = "p-2",
@@ -153,9 +153,9 @@ fun getExampleScore0Input(): Score {
                                                 attack = null,
                                                 dynamics = null,
                                                 endDynamics = null,
-                                                release = null
+                                                release = null,
                                             ),
-                                        pitch = Pitch(alter = 0.0f, noteName = "C", octave = 4)
+                                        pitch = Pitch(alter = 0.0f, noteName = "C", octave = 4),
                                     ),
                                     Pitched(
                                         duration = NoteDuration("QUARTER", "NONE"),
@@ -164,9 +164,9 @@ fun getExampleScore0Input(): Score {
                                                 attack = null,
                                                 dynamics = null,
                                                 endDynamics = null,
-                                                release = null
+                                                release = null,
                                             ),
-                                        pitch = Pitch(alter = 0.0f, noteName = "G", octave = 4)
+                                        pitch = Pitch(alter = 0.0f, noteName = "G", octave = 4),
                                     ),
                                     Pitched(
                                         duration = NoteDuration("QUARTER", "NONE"),
@@ -175,9 +175,9 @@ fun getExampleScore0Input(): Score {
                                                 attack = null,
                                                 dynamics = null,
                                                 endDynamics = null,
-                                                release = null
+                                                release = null,
                                             ),
-                                        pitch = Pitch(alter = 0.0f, noteName = "A", octave = 4)
+                                        pitch = Pitch(alter = 0.0f, noteName = "A", octave = 4),
                                     ),
                                     Pitched(
                                         duration = NoteDuration("QUARTER", "NONE"),
@@ -186,11 +186,11 @@ fun getExampleScore0Input(): Score {
                                                 attack = null,
                                                 dynamics = null,
                                                 endDynamics = null,
-                                                release = null
+                                                release = null,
                                             ),
-                                        pitch = Pitch(alter = 0.0f, noteName = "E", octave = 4)
-                                    )
-                                )
+                                        pitch = Pitch(alter = 0.0f, noteName = "E", octave = 4),
+                                    ),
+                                ),
                         ),
                         Measure(
                             attributes = null,
@@ -203,9 +203,9 @@ fun getExampleScore0Input(): Score {
                                                 attack = null,
                                                 dynamics = null,
                                                 endDynamics = null,
-                                                release = null
+                                                release = null,
                                             ),
-                                        pitch = Pitch(alter = 0.0f, noteName = "C", octave = 4)
+                                        pitch = Pitch(alter = 0.0f, noteName = "C", octave = 4),
                                     ),
                                     Pitched(
                                         duration = NoteDuration("QUARTER", "NONE"),
@@ -214,9 +214,9 @@ fun getExampleScore0Input(): Score {
                                                 attack = null,
                                                 dynamics = null,
                                                 endDynamics = null,
-                                                release = null
+                                                release = null,
                                             ),
-                                        pitch = Pitch(alter = 0.0f, noteName = "C", octave = 4)
+                                        pitch = Pitch(alter = 0.0f, noteName = "C", octave = 4),
                                     ),
                                     Pitched(
                                         duration = NoteDuration("QUARTER", "NONE"),
@@ -225,9 +225,9 @@ fun getExampleScore0Input(): Score {
                                                 attack = null,
                                                 dynamics = null,
                                                 endDynamics = null,
-                                                release = null
+                                                release = null,
                                             ),
-                                        pitch = Pitch(alter = 0.0f, noteName = "A", octave = 4)
+                                        pitch = Pitch(alter = 0.0f, noteName = "A", octave = 4),
                                     ),
                                     Pitched(
                                         duration = NoteDuration("QUARTER", "NONE"),
@@ -236,14 +236,14 @@ fun getExampleScore0Input(): Score {
                                                 attack = null,
                                                 dynamics = null,
                                                 endDynamics = null,
-                                                release = null
+                                                release = null,
                                             ),
-                                        pitch = Pitch(alter = 0.0f, noteName = "A", octave = 4)
-                                    )
-                                )
-                        )
-                    )
-            )
+                                        pitch = Pitch(alter = 0.0f, noteName = "A", octave = 4),
+                                    ),
+                                ),
+                        ),
+                    ),
+            ),
         )
 
     return Score("d737b4ae-fbaa-4b0d-9d36-d3651e30e93a", null, parts)

@@ -25,8 +25,8 @@ import com.sparetimedevs.ami.core.validation.ValidationError
 import com.sparetimedevs.ami.core.validation.ValidationIdentifier
 import com.sparetimedevs.ami.core.validation.getOrThrowFirstValidationError
 import com.sparetimedevs.ami.core.validation.validationErrorForProperty
-import kotlin.jvm.JvmInline
 import kotlinx.serialization.Serializable
+import kotlin.jvm.JvmInline
 
 @Serializable
 @JvmInline
@@ -35,19 +35,23 @@ public value class Beats private constructor(public val value: Byte) {
         public fun validate(
             input: Byte,
             validationIdentifier: ValidationIdentifier = NoValidationIdentifier,
-        ): EitherNel<ValidationError, Beats> = either {
-            ensure(input > 0) {
-                ValidationError(
+        ): EitherNel<ValidationError, Beats> =
+            either {
+                ensure(input > 0) {
+                    ValidationError(
                         "Beats can't be zero or negative, the input was $input",
                         validationErrorForProperty<Beats>(),
                         validationIdentifier,
                     )
-                    .nel()
+                        .nel()
+                }
+                Beats(input)
             }
-            Beats(input)
-        }
 
         public fun unsafeCreate(input: Byte): Beats =
-            validate(input, NoValidationIdentifier).getOrThrowFirstValidationError()
+            validate(
+                input,
+                NoValidationIdentifier,
+            ).getOrThrowFirstValidationError()
     }
 }

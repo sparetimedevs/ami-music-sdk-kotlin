@@ -79,12 +79,12 @@ configure<SpotlessExtension> {
     kotlin {
         target("**/kotlin/**/*.kt")
         targetExclude("**/build/**/*.*")
-        ktfmt().kotlinlangStyle()
+        ktlint()
         licenseHeaderFile("$rootDir/LICENSE.header.template")
     }
     kotlinGradle {
         target("*.gradle.kts")
-        ktfmt().kotlinlangStyle()
+        ktlint()
     }
 }
 
@@ -99,7 +99,7 @@ val compatibilityTest by
         group = "verification"
 
         javaLauncher.set(
-            javaToolchains.launcherFor { languageVersion.set(JavaLanguageVersion.of(11)) }
+            javaToolchains.launcherFor { languageVersion.set(JavaLanguageVersion.of(11)) },
         )
 
         useJUnitPlatform()

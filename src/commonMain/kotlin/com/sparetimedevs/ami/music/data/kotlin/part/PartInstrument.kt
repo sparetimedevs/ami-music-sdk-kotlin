@@ -27,31 +27,31 @@ import com.sparetimedevs.ami.core.validation.getOrThrowFirstValidationError
 import com.sparetimedevs.ami.core.validation.validationErrorForProperty
 import com.sparetimedevs.ami.music.data.kotlin.midi.MidiChannel
 import com.sparetimedevs.ami.music.data.kotlin.midi.MidiProgram
-import kotlin.jvm.JvmInline
 import kotlinx.serialization.Serializable
+import kotlin.jvm.JvmInline
 
 @Serializable
 @JvmInline
 public value class PartInstrumentName private constructor(public val value: String) {
     public companion object {
-
         public fun validate(
             input: String?,
             validationIdentifier: ValidationIdentifier = NoValidationIdentifier,
-        ): EitherNel<ValidationError, PartInstrumentName?> = either {
-            if (input.isNullOrEmpty()) {
-                return@either null
-            }
-            ensure(input.length <= 512) {
-                ValidationError(
+        ): EitherNel<ValidationError, PartInstrumentName?> =
+            either {
+                if (input.isNullOrEmpty()) {
+                    return@either null
+                }
+                ensure(input.length <= 512) {
+                    ValidationError(
                         "Part instrument name can't be longer than 512 characters, the input was $input",
                         validationErrorForProperty<PartInstrumentName>(),
-                        validationIdentifier
+                        validationIdentifier,
                     )
-                    .nel()
+                        .nel()
+                }
+                PartInstrumentName(input)
             }
-            PartInstrumentName(input)
-        }
 
         public fun unsafeCreate(input: String): PartInstrumentName =
             validate(input, NoValidationIdentifier).getOrThrowFirstValidationError()!!
@@ -62,5 +62,5 @@ public value class PartInstrumentName private constructor(public val value: Stri
 public data class PartInstrument(
     val name: PartInstrumentName? = null,
     val midiChannel: MidiChannel? = null,
-    val midiProgram: MidiProgram? = null
+    val midiProgram: MidiProgram? = null,
 )

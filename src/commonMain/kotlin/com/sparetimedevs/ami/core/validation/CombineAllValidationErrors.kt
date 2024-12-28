@@ -24,12 +24,13 @@ import arrow.core.right
 public fun <T> Iterable<EitherNel<ValidationError, T>>.combineAllValidationErrors():
     EitherNel<ValidationError, List<T>> =
     this.fold(emptyList<T>().right()) {
-        acc: Either<NonEmptyList<ValidationError>, List<T>>,
-        el: Either<NonEmptyList<ValidationError>, T> ->
+            acc: Either<NonEmptyList<ValidationError>, List<T>>,
+            el: Either<NonEmptyList<ValidationError>, T>,
+        ->
         Either.zipOrAccumulate(
             { e1: NonEmptyList<ValidationError>, e2: NonEmptyList<ValidationError> -> e1 + e2 },
             acc,
             el,
-            { b1: List<T>, b2: T -> b1 + b2 }
+            { b1: List<T>, b2: T -> b1 + b2 },
         )
     }

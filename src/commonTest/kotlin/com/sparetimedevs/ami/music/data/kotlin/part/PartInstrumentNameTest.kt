@@ -74,10 +74,10 @@ class PartInstrumentNameTest :
                     .trimMargin()
             PartInstrumentName.validate(input) shouldBeLeft
                 ValidationError(
-                        "Part instrument name can't be longer than 512 characters, the input was $input",
-                        validationErrorForProperty<PartInstrumentName>(),
-                        NoValidationIdentifier
-                    )
+                    "Part instrument name can't be longer than 512 characters, the input was $input",
+                    validationErrorForProperty<PartInstrumentName>(),
+                    NoValidationIdentifier,
+                )
                     .nel()
         }
     })

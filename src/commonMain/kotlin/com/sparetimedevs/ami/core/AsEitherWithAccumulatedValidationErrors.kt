@@ -30,6 +30,6 @@ public fun <A> EitherNel<ValidationError, A>.asEitherWithAccumulatedValidationEr
             message =
                 ACCUMULATED_VALIDATION_ERRORS_MESSAGE_PREFIX +
                     it.map { validationError -> validationError.message }.joinToString(),
-            validationErrors = it
+            validationErrors = it,
         )
     }

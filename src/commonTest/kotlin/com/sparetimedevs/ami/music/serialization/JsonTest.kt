@@ -34,6 +34,7 @@ import io.kotest.assertions.json.shouldEqualJson
 import io.kotest.core.spec.style.StringSpec
 import kotlinx.serialization.json.Json
 
+@Suppress("ktlint:standard:max-line-length")
 class JsonTest :
     StringSpec({
         val jsonParser = Json
@@ -66,12 +67,12 @@ class JsonTest :
                                                 ValidationIdentifierForScore(
                                                     identifier =
                                                         ScoreId.unsafeCreate(
-                                                            "d737b4ae-fbaa-4b0d-9d36-d3651e30e93a"
+                                                            "d737b4ae-fbaa-4b0d-9d36-d3651e30e93a",
                                                         ),
                                                     validationIdentifierParent =
-                                                        NoValidationIdentifier
-                                                )
-                                        )
+                                                    NoValidationIdentifier,
+                                                ),
+                                        ),
                                 ),
                             tail =
                                 listOf(
@@ -84,13 +85,13 @@ class JsonTest :
                                             ValidationIdentifierForScore(
                                                 identifier =
                                                     ScoreId.unsafeCreate(
-                                                        "d737b4ae-fbaa-4b0d-9d36-d3651e30e93a"
+                                                        "d737b4ae-fbaa-4b0d-9d36-d3651e30e93a",
                                                     ),
-                                                validationIdentifierParent = NoValidationIdentifier
-                                            )
-                                    )
-                                )
-                        )
+                                                validationIdentifierParent = NoValidationIdentifier,
+                                            ),
+                                    ),
+                                ),
+                        ),
                 )
             val input =
                 """{"id":"d737b4ae-fbaa-4b0d-9d36-d3651e30e93a","parts":[{"id":"p-1","name":"Part one","instrument":{"name":"Grand Piano","midiChannel":-13,"midiProgram":1},"measures":[{"notes":[{"duration":{"noteValue":"QUARTER","modifier":"NONE"},"pitch":{"noteName":"C","alter":0,"octave":4},"noteAttributes":{}},{"duration":{"noteValue":"QUARTER","modifier":"NONE"},"pitch":{"noteName":"G","alter":0,"octave":4},"noteAttributes":{}},{"duration":{"noteValue":"QUARTER","modifier":"NONE"},"pitch":{"noteName":"A","alter":0,"octave":4},"noteAttributes":{}},{"duration":{"noteValue":"QUARTER","modifier":"NONE"},"pitch":{"noteName":"E","alter":0,"octave":4},"noteAttributes":{}}]},{"notes":[{"duration":{"noteValue":"QUARTER","modifier":"NONE"},"pitch":{"noteName":"C","alter":0,"octave":4},"noteAttributes":{}},{"duration":{"noteValue":"QUARTER","modifier":"NONE"},"pitch":{"noteName":"C","alter":0,"octave":4},"noteAttributes":{}},{"duration":{"noteValue":"QUARTER","modifier":"NONE"},"pitch":{"noteName":"A","alter":0,"octave":4},"noteAttributes":{}},{"duration":{"noteValue":"QUARTER","modifier":"NONE"},"pitch":{"noteName":"A","alter":0,"octave":4},"noteAttributes":{}}]}]},{"id":"p-2-super-long-with-al-lot-of-characters-and-it-is-actually-too-long-for-an-identifier-or-should-such-long-identifiers-be-allowed","instrument":{"midiChannel":1,"midiProgram":30},"measures":[{"notes":[{"duration":{"noteValue":"QUARTER","modifier":"NONE"},"pitch":{"noteName":"C","alter":0,"octave":4},"noteAttributes":{}},{"duration":{"noteValue":"QUARTER","modifier":"NONE"},"pitch":{"noteName":"G","alter":0,"octave":4},"noteAttributes":{}},{"duration":{"noteValue":"QUARTER","modifier":"NONE"},"pitch":{"noteName":"A","alter":0,"octave":4},"noteAttributes":{}},{"duration":{"noteValue":"QUARTER","modifier":"NONE"},"pitch":{"noteName":"E","alter":0,"octave":4},"noteAttributes":{}}]},{"notes":[{"duration":{"noteValue":"QUARTER","modifier":"NONE"},"pitch":{"noteName":"C","alter":0,"octave":4},"noteAttributes":{}},{"duration":{"noteValue":"QUARTER","modifier":"NONE"},"pitch":{"noteName":"C","alter":0,"octave":4},"noteAttributes":{}},{"duration":{"noteValue":"QUARTER","modifier":"NONE"},"pitch":{"noteName":"A","alter":0,"octave":4},"noteAttributes":{}},{"duration":{"noteValue":"QUARTER","modifier":"NONE"},"pitch":{"noteName":"A","alter":0,"octave":4},"noteAttributes":{}}]}]}]}"""

@@ -25,8 +25,8 @@ import com.sparetimedevs.ami.core.validation.ValidationError
 import com.sparetimedevs.ami.core.validation.ValidationIdentifier
 import com.sparetimedevs.ami.core.validation.getOrThrowFirstValidationError
 import com.sparetimedevs.ami.core.validation.validationErrorForProperty
-import kotlin.jvm.JvmInline
 import kotlinx.serialization.Serializable
+import kotlin.jvm.JvmInline
 
 /**
  * The semitones type is a number representing semitones, used for chromatic alteration. A value of
@@ -37,34 +37,37 @@ import kotlinx.serialization.Serializable
 @JvmInline
 public value class Semitones private constructor(public val value: Float) {
     public companion object {
-
         public val DefaultSemitones: Semitones = Semitones(0.0f)
 
         public fun validate(
             input: Float,
             validationIdentifier: ValidationIdentifier = NoValidationIdentifier,
-        ): EitherNel<ValidationError, Semitones> = either {
-            // Are these good minimums and maximums?
-            ensure(input >= -10.0f) {
-                ValidationError(
+        ): EitherNel<ValidationError, Semitones> =
+            either {
+                // Are these good minimums and maximums?
+                ensure(input >= -10.0f) {
+                    ValidationError(
                         "Semitones can't be lesser than -10.0, the input was $input",
                         validationErrorForProperty<Semitones>(),
                         validationIdentifier,
                     )
-                    .nel()
-            }
-            ensure(input <= 10.0f) {
-                ValidationError(
+                        .nel()
+                }
+                ensure(input <= 10.0f) {
+                    ValidationError(
                         "Semitones can't be greater than 10.0, the input was $input",
                         validationErrorForProperty<Semitones>(),
                         validationIdentifier,
                     )
-                    .nel()
+                        .nel()
+                }
+                Semitones(input)
             }
-            Semitones(input)
-        }
 
         public fun unsafeCreate(input: Float): Semitones =
-            validate(input, NoValidationIdentifier).getOrThrowFirstValidationError()
+            validate(
+                input,
+                NoValidationIdentifier,
+            ).getOrThrowFirstValidationError()
     }
 }

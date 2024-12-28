@@ -61,14 +61,14 @@ class ValidateScoreTest :
                                                     ValidationIdentifierForScore(
                                                         identifier =
                                                             ScoreId.unsafeCreate(
-                                                                "d737b4ae-fbaa-4b0d-9d36-d3651e30e93a"
+                                                                "d737b4ae-fbaa-4b0d-9d36-d3651e30e93a",
                                                             ),
                                                         validationIdentifierParent =
-                                                            NoValidationIdentifier
-                                                    )
-                                            )
-                                    )
-                            )
+                                                        NoValidationIdentifier,
+                                                    ),
+                                            ),
+                                    ),
+                            ),
                     ),
                     ValidationError(
                         message = "Octave can't be greater than 12, the input was 127",
@@ -86,14 +86,14 @@ class ValidateScoreTest :
                                                     ValidationIdentifierForScore(
                                                         identifier =
                                                             ScoreId.unsafeCreate(
-                                                                "d737b4ae-fbaa-4b0d-9d36-d3651e30e93a"
+                                                                "d737b4ae-fbaa-4b0d-9d36-d3651e30e93a",
                                                             ),
                                                         validationIdentifierParent =
-                                                            NoValidationIdentifier
-                                                    )
-                                            )
-                                    )
-                            )
+                                                        NoValidationIdentifier,
+                                                    ),
+                                            ),
+                                    ),
+                            ),
                     ),
                     ValidationError(
                         message = "Note name can't be value L",
@@ -111,15 +111,15 @@ class ValidateScoreTest :
                                                     ValidationIdentifierForScore(
                                                         identifier =
                                                             ScoreId.unsafeCreate(
-                                                                "d737b4ae-fbaa-4b0d-9d36-d3651e30e93a"
+                                                                "d737b4ae-fbaa-4b0d-9d36-d3651e30e93a",
                                                             ),
                                                         validationIdentifierParent =
-                                                            NoValidationIdentifier
-                                                    )
-                                            )
-                                    )
-                            )
-                    )
+                                                        NoValidationIdentifier,
+                                                    ),
+                                            ),
+                                    ),
+                            ),
+                    ),
                 )
 
             inputScore.validate() shouldBeLeft expectedValidationErrors

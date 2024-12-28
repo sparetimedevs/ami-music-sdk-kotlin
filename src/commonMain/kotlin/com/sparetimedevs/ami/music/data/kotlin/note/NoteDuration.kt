@@ -31,11 +31,9 @@ public data class NoteDuration(
     val noteValue: NoteValue,
     val modifier: NoteModifier = NoteModifier.NONE,
 ) {
-
     val value: Double = noteValue.value * modifier.value
 
     public companion object {
-
         public fun validate(
             input: Double,
             validationIdentifier: ValidationIdentifier = NoValidationIdentifier,
@@ -315,16 +313,17 @@ public data class NoteDuration(
                 NoteValue._4096TH.value -> NoteDuration(NoteValue._4096TH).right()
                 else ->
                     ValidationError(
-                            "Input for note duration is not a valid value, the value is: $input",
-                            validationErrorForProperty<NoteDuration>(),
-                            validationIdentifier,
-                        )
+                        "Input for note duration is not a valid value, the value is: $input",
+                        validationErrorForProperty<NoteDuration>(),
+                        validationIdentifier,
+                    )
                         .nel()
                         .left()
             }
     }
 }
 
+@Suppress("ktlint:standard:enum-entry-name-case")
 @Serializable
 public enum class NoteValue(public val value: Double) {
     MAXIMA(8.0),
@@ -342,7 +341,8 @@ public enum class NoteValue(public val value: Double) {
     _512TH(0.001953125),
     _1024TH(0.0009765625),
     _2048TH(0.00048828125),
-    _4096TH(0.000244140625);
+    _4096TH(0.000244140625),
+    ;
 
     public companion object {
         public fun validate(
@@ -368,10 +368,10 @@ public enum class NoteValue(public val value: Double) {
                 _4096TH.name -> _4096TH.right()
                 else ->
                     ValidationError(
-                            "Note value can't be value $input",
-                            validationErrorForProperty<NoteDuration>(),
-                            validationIdentifier,
-                        )
+                        "Note value can't be value $input",
+                        validationErrorForProperty<NoteDuration>(),
+                        validationIdentifier,
+                    )
                         .nel()
                         .left()
             }
@@ -388,10 +388,10 @@ public enum class NoteModifier(public val value: Double) {
     QUINTUPLE_DOTTED(1.03125),
     SEXTUPLE_DOTTED(1.015625),
     SEPTUPLE_DOTTED(1.0078125),
-    OCTUPLE_DOTTED(1.00390625);
+    OCTUPLE_DOTTED(1.00390625),
+    ;
 
     public companion object {
-
         public fun validate(
             input: String,
             validationIdentifier: ValidationIdentifier = NoValidationIdentifier,
@@ -408,10 +408,10 @@ public enum class NoteModifier(public val value: Double) {
                 OCTUPLE_DOTTED.name -> OCTUPLE_DOTTED.right()
                 else ->
                     ValidationError(
-                            "Note modifier can't be value $input",
-                            validationErrorForProperty<NoteDuration>(),
-                            validationIdentifier,
-                        )
+                        "Note modifier can't be value $input",
+                        validationErrorForProperty<NoteDuration>(),
+                        validationIdentifier,
+                    )
                         .nel()
                         .left()
             }

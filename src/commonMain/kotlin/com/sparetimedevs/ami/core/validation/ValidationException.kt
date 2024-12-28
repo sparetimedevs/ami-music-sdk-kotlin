@@ -24,4 +24,6 @@ public class ValidationException(override val message: String) : RuntimeExceptio
 public fun ValidationError.asException(): ValidationException = ValidationException(this.message)
 
 public fun <A> EitherNel<ValidationError, A>.getOrThrowFirstValidationError(): A =
-    this.getOrElse { throw it.head.asException() }
+    this.getOrElse {
+        throw it.head.asException()
+    }

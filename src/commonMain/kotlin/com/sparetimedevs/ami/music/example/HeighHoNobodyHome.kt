@@ -46,7 +46,7 @@ public fun getExampleScoreHeighHoNobodyHome(): Score {
                     PartInstrument(
                         name = PartInstrumentName.unsafeCreate("Grand Piano"),
                         midiChannel = MidiChannel.unsafeCreate(0),
-                        midiProgram = MidiProgram.unsafeCreate(1)
+                        midiProgram = MidiProgram.unsafeCreate(1),
                     ),
                 measures =
                     listOf(
@@ -56,14 +56,14 @@ public fun getExampleScoreHeighHoNobodyHome(): Score {
                                 Note.Pitched(
                                     NoteDuration(NoteValue.HALF),
                                     NoteAttributes(null, null, null, null),
-                                    Pitch(NoteName.D, Octave.unsafeCreate(4))
+                                    Pitch(NoteName.D, Octave.unsafeCreate(4)),
                                 ),
                                 Note.Pitched(
                                     NoteDuration(NoteValue.HALF),
                                     NoteAttributes(null, null, null, null),
-                                    Pitch(NoteName.C, Octave.unsafeCreate(4))
-                                )
-                            )
+                                    Pitch(NoteName.C, Octave.unsafeCreate(4)),
+                                ),
+                            ),
                         ),
                         Measure(
                             null,
@@ -71,24 +71,24 @@ public fun getExampleScoreHeighHoNobodyHome(): Score {
                                 Note.Pitched(
                                     NoteDuration(NoteValue.QUARTER),
                                     NoteAttributes(null, null, null, null),
-                                    Pitch(NoteName.D, Octave.unsafeCreate(4))
+                                    Pitch(NoteName.D, Octave.unsafeCreate(4)),
                                 ),
                                 Note.Pitched(
                                     NoteDuration(NoteValue._8TH),
                                     NoteAttributes(null, null, null, null),
-                                    Pitch(NoteName.D, Octave.unsafeCreate(4))
+                                    Pitch(NoteName.D, Octave.unsafeCreate(4)),
                                 ),
                                 Note.Pitched(
                                     NoteDuration(NoteValue._8TH),
                                     NoteAttributes(null, null, null, null),
-                                    Pitch(NoteName.D, Octave.unsafeCreate(4))
+                                    Pitch(NoteName.D, Octave.unsafeCreate(4)),
                                 ),
                                 Note.Pitched(
                                     NoteDuration(NoteValue.HALF),
                                     NoteAttributes(null, null, null, null),
-                                    Pitch(NoteName.A, Octave.unsafeCreate(4))
-                                )
-                            )
+                                    Pitch(NoteName.A, Octave.unsafeCreate(4)),
+                                ),
+                            ),
                         ),
                         Measure(
                             null,
@@ -96,24 +96,24 @@ public fun getExampleScoreHeighHoNobodyHome(): Score {
                                 Note.Pitched(
                                     NoteDuration(NoteValue.QUARTER),
                                     NoteAttributes(null, null, null, null),
-                                    Pitch(NoteName.D, Octave.unsafeCreate(4))
+                                    Pitch(NoteName.D, Octave.unsafeCreate(4)),
                                 ),
                                 Note.Pitched(
                                     NoteDuration(NoteValue.QUARTER),
                                     NoteAttributes(null, null, null, null),
-                                    Pitch(NoteName.D, Octave.unsafeCreate(4))
+                                    Pitch(NoteName.D, Octave.unsafeCreate(4)),
                                 ),
                                 Note.Pitched(
                                     NoteDuration(NoteValue.QUARTER),
                                     NoteAttributes(null, null, null, null),
-                                    Pitch(NoteName.E, Octave.unsafeCreate(4))
+                                    Pitch(NoteName.E, Octave.unsafeCreate(4)),
                                 ),
                                 Note.Pitched(
                                     NoteDuration(NoteValue.QUARTER),
                                     NoteAttributes(null, null, null, null),
-                                    Pitch(NoteName.E, Octave.unsafeCreate(4))
-                                )
-                            )
+                                    Pitch(NoteName.E, Octave.unsafeCreate(4)),
+                                ),
+                            ),
                         ),
                         Measure(
                             null,
@@ -121,29 +121,29 @@ public fun getExampleScoreHeighHoNobodyHome(): Score {
                                 Note.Pitched(
                                     NoteDuration(NoteValue._8TH),
                                     NoteAttributes(null, null, null, null),
-                                    Pitch(NoteName.F, Octave.unsafeCreate(4))
+                                    Pitch(NoteName.F, Octave.unsafeCreate(4)),
                                 ),
                                 Note.Pitched(
                                     NoteDuration(NoteValue._8TH),
                                     NoteAttributes(null, null, null, null),
-                                    Pitch(NoteName.F, Octave.unsafeCreate(4))
+                                    Pitch(NoteName.F, Octave.unsafeCreate(4)),
                                 ),
                                 Note.Pitched(
                                     NoteDuration(NoteValue._8TH),
                                     NoteAttributes(null, null, null, null),
-                                    Pitch(NoteName.F, Octave.unsafeCreate(4))
+                                    Pitch(NoteName.F, Octave.unsafeCreate(4)),
                                 ),
                                 Note.Pitched(
                                     NoteDuration(NoteValue._8TH),
                                     NoteAttributes(null, null, null, null),
-                                    Pitch(NoteName.F, Octave.unsafeCreate(4))
+                                    Pitch(NoteName.F, Octave.unsafeCreate(4)),
                                 ),
                                 Note.Pitched(
                                     NoteDuration(NoteValue.HALF),
                                     NoteAttributes(null, null, null, null),
-                                    Pitch(NoteName.E, Octave.unsafeCreate(4))
-                                )
-                            )
+                                    Pitch(NoteName.E, Octave.unsafeCreate(4)),
+                                ),
+                            ),
                         ),
                         Measure(
                             null,
@@ -151,24 +151,24 @@ public fun getExampleScoreHeighHoNobodyHome(): Score {
                                 Note.Pitched(
                                     NoteDuration(NoteValue.QUARTER, NoteModifier.DOTTED),
                                     NoteAttributes(null, null, null, null),
-                                    Pitch(NoteName.A, Octave.unsafeCreate(5))
+                                    Pitch(NoteName.A, Octave.unsafeCreate(5)),
                                 ),
                                 Note.Pitched(
                                     NoteDuration(NoteValue._8TH),
                                     NoteAttributes(null, null, null, null),
-                                    Pitch(NoteName.G, Octave.unsafeCreate(4))
+                                    Pitch(NoteName.G, Octave.unsafeCreate(4)),
                                 ),
                                 Note.Pitched(
                                     NoteDuration(NoteValue.QUARTER, NoteModifier.DOTTED),
                                     NoteAttributes(null, null, null, null),
-                                    Pitch(NoteName.A, Octave.unsafeCreate(5))
+                                    Pitch(NoteName.A, Octave.unsafeCreate(5)),
                                 ),
                                 Note.Pitched(
                                     NoteDuration(NoteValue._8TH),
                                     NoteAttributes(null, null, null, null),
-                                    Pitch(NoteName.G, Octave.unsafeCreate(4))
-                                )
-                            )
+                                    Pitch(NoteName.G, Octave.unsafeCreate(4)),
+                                ),
+                            ),
                         ),
                         Measure(
                             null,
@@ -176,42 +176,42 @@ public fun getExampleScoreHeighHoNobodyHome(): Score {
                                 Note.Pitched(
                                     NoteDuration(NoteValue.QUARTER, NoteModifier.DOTTED),
                                     NoteAttributes(null, null, null, null),
-                                    Pitch(NoteName.A, Octave.unsafeCreate(5))
+                                    Pitch(NoteName.A, Octave.unsafeCreate(5)),
                                 ),
                                 Note.Pitched(
                                     NoteDuration(NoteValue._8TH),
                                     NoteAttributes(null, null, null, null),
-                                    Pitch(NoteName.G, Octave.unsafeCreate(4))
+                                    Pitch(NoteName.G, Octave.unsafeCreate(4)),
                                 ),
                                 Note.Pitched(
                                     NoteDuration(NoteValue._8TH),
                                     NoteAttributes(null, null, null, null),
-                                    Pitch(NoteName.A, Octave.unsafeCreate(5))
+                                    Pitch(NoteName.A, Octave.unsafeCreate(5)),
                                 ),
                                 Note.Pitched(
                                     NoteDuration(NoteValue._8TH),
                                     NoteAttributes(null, null, null, null),
-                                    Pitch(NoteName.G, Octave.unsafeCreate(4))
+                                    Pitch(NoteName.G, Octave.unsafeCreate(4)),
                                 ),
                                 Note.Pitched(
                                     NoteDuration(NoteValue._8TH),
                                     NoteAttributes(null, null, null, null),
-                                    Pitch(NoteName.F, Octave.unsafeCreate(4))
+                                    Pitch(NoteName.F, Octave.unsafeCreate(4)),
                                 ),
                                 Note.Pitched(
                                     NoteDuration(NoteValue._8TH),
                                     NoteAttributes(null, null, null, null),
-                                    Pitch(NoteName.E, Octave.unsafeCreate(4))
-                                )
-                            )
+                                    Pitch(NoteName.E, Octave.unsafeCreate(4)),
+                                ),
+                            ),
                         ),
-                    )
-            )
+                    ),
+            ),
         )
 
     return Score(
         ScoreId.unsafeCreate("1064db99-3726-43d7-b0ed-3fc0281bfc02"),
         ScoreTitle.unsafeCreate("Heigh Ho Nobody Home"),
-        parts
+        parts,
     )
 }

@@ -23,7 +23,7 @@ public data class Chord(
     val duration: NoteDuration,
     val noteAttributes: NoteAttributes,
     val pitches: List<Pitch>,
-    val rootNote: Pitch
+    val rootNote: Pitch,
 )
 
 @Serializable public data class Key(val todo: String? = null)
@@ -38,7 +38,7 @@ public data class NoteAttributes(
     val attack: Float? = null,
     val dynamics: Float? = null,
     val endDynamics: Float? = null,
-    val release: Float? = null
+    val release: Float? = null,
 )
 
 @Serializable
@@ -46,14 +46,14 @@ public data class Part(
     val id: String,
     val name: String? = null,
     val instrument: PartInstrument? = null,
-    val measures: List<Measure>
+    val measures: List<Measure>,
 )
 
 @Serializable
 public data class PartInstrument(
     val name: String? = null,
     val midiChannel: Byte? = null,
-    val midiProgram: Byte? = null
+    val midiProgram: Byte? = null,
 )
 
 @Serializable public data class Pitch(val alter: Float, val noteName: String, val octave: Byte)
@@ -62,7 +62,7 @@ public data class PartInstrument(
 public data class Pitched(
     val duration: NoteDuration,
     val noteAttributes: NoteAttributes,
-    val pitch: Pitch
+    val pitch: Pitch,
 )
 
 @Serializable

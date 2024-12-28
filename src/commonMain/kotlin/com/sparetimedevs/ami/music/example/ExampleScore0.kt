@@ -45,7 +45,7 @@ public fun getExampleScore0(): Score {
                     PartInstrument(
                         name = PartInstrumentName.unsafeCreate("Grand Piano"),
                         midiChannel = MidiChannel.unsafeCreate(0),
-                        midiProgram = MidiProgram.unsafeCreate(1)
+                        midiProgram = MidiProgram.unsafeCreate(1),
                     ),
                 measures =
                     listOf(
@@ -59,14 +59,14 @@ public fun getExampleScore0(): Score {
                                             attack = null,
                                             dynamics = null,
                                             endDynamics = null,
-                                            release = null
+                                            release = null,
                                         ),
                                     pitch =
                                         Pitch(
                                             noteName = NoteName.C,
                                             octave = Octave.unsafeCreate(input = 4),
-                                            alter = Semitones.unsafeCreate(input = 0.0f)
-                                        )
+                                            alter = Semitones.unsafeCreate(input = 0.0f),
+                                        ),
                                 ),
                                 Pitched(
                                     duration = NoteDuration(noteValue = NoteValue.QUARTER),
@@ -75,14 +75,14 @@ public fun getExampleScore0(): Score {
                                             attack = null,
                                             dynamics = null,
                                             endDynamics = null,
-                                            release = null
+                                            release = null,
                                         ),
                                     pitch =
                                         Pitch(
                                             noteName = NoteName.G,
                                             octave = Octave.unsafeCreate(input = 4),
-                                            alter = Semitones.unsafeCreate(input = 0.0f)
-                                        )
+                                            alter = Semitones.unsafeCreate(input = 0.0f),
+                                        ),
                                 ),
                                 Pitched(
                                     duration = NoteDuration(noteValue = NoteValue.QUARTER),
@@ -91,14 +91,14 @@ public fun getExampleScore0(): Score {
                                             attack = null,
                                             dynamics = null,
                                             endDynamics = null,
-                                            release = null
+                                            release = null,
                                         ),
                                     pitch =
                                         Pitch(
                                             noteName = NoteName.A,
                                             octave = Octave.unsafeCreate(input = 4),
-                                            alter = Semitones.unsafeCreate(input = 0.0f)
-                                        )
+                                            alter = Semitones.unsafeCreate(input = 0.0f),
+                                        ),
                                 ),
                                 Pitched(
                                     duration = NoteDuration(noteValue = NoteValue.QUARTER),
@@ -107,16 +107,16 @@ public fun getExampleScore0(): Score {
                                             attack = null,
                                             dynamics = null,
                                             endDynamics = null,
-                                            release = null
+                                            release = null,
                                         ),
                                     pitch =
                                         Pitch(
                                             noteName = NoteName.E,
                                             octave = Octave.unsafeCreate(input = 4),
-                                            alter = Semitones.unsafeCreate(input = 0.0f)
-                                        )
-                                )
-                            )
+                                            alter = Semitones.unsafeCreate(input = 0.0f),
+                                        ),
+                                ),
+                            ),
                         ),
                         Measure(
                             attributes = null,
@@ -129,14 +129,14 @@ public fun getExampleScore0(): Score {
                                                 attack = null,
                                                 dynamics = null,
                                                 endDynamics = null,
-                                                release = null
+                                                release = null,
                                             ),
                                         pitch =
                                             Pitch(
                                                 noteName = NoteName.C,
                                                 octave = Octave.unsafeCreate(input = 4),
-                                                alter = Semitones.unsafeCreate(input = 0.0f)
-                                            )
+                                                alter = Semitones.unsafeCreate(input = 0.0f),
+                                            ),
                                     ),
                                     Pitched(
                                         duration = NoteDuration(noteValue = NoteValue.QUARTER),
@@ -145,14 +145,14 @@ public fun getExampleScore0(): Score {
                                                 attack = null,
                                                 dynamics = null,
                                                 endDynamics = null,
-                                                release = null
+                                                release = null,
                                             ),
                                         pitch =
                                             Pitch(
                                                 noteName = NoteName.C,
                                                 octave = Octave.unsafeCreate(input = 4),
-                                                alter = Semitones.unsafeCreate(input = 0.0f)
-                                            )
+                                                alter = Semitones.unsafeCreate(input = 0.0f),
+                                            ),
                                     ),
                                     Pitched(
                                         duration = NoteDuration(noteValue = NoteValue.QUARTER),
@@ -161,14 +161,14 @@ public fun getExampleScore0(): Score {
                                                 attack = null,
                                                 dynamics = null,
                                                 endDynamics = null,
-                                                release = null
+                                                release = null,
                                             ),
                                         pitch =
                                             Pitch(
                                                 noteName = NoteName.A,
                                                 octave = Octave.unsafeCreate(input = 4),
-                                                alter = Semitones.unsafeCreate(input = 0.0f)
-                                            )
+                                                alter = Semitones.unsafeCreate(input = 0.0f),
+                                            ),
                                     ),
                                     Pitched(
                                         duration = NoteDuration(noteValue = NoteValue.QUARTER),
@@ -177,18 +177,18 @@ public fun getExampleScore0(): Score {
                                                 attack = null,
                                                 dynamics = null,
                                                 endDynamics = null,
-                                                release = null
+                                                release = null,
                                             ),
                                         pitch =
                                             Pitch(
                                                 noteName = NoteName.A,
                                                 octave = Octave.unsafeCreate(input = 4),
-                                                alter = Semitones.unsafeCreate(input = 0.0f)
-                                            )
-                                    )
-                                )
+                                                alter = Semitones.unsafeCreate(input = 0.0f),
+                                            ),
+                                    ),
+                                ),
                         ),
-                    )
+                    ),
             ),
             Part(
                 id = PartId.unsafeCreate("p-2"),
@@ -197,7 +197,7 @@ public fun getExampleScore0(): Score {
                     PartInstrument(
                         name = PartInstrumentName.unsafeCreate("Overdriven Guitar"),
                         midiChannel = MidiChannel.unsafeCreate(1),
-                        midiProgram = MidiProgram.unsafeCreate(30)
+                        midiProgram = MidiProgram.unsafeCreate(30),
                     ),
                 measures =
                     listOf(
@@ -212,14 +212,14 @@ public fun getExampleScore0(): Score {
                                                 attack = null,
                                                 dynamics = null,
                                                 endDynamics = null,
-                                                release = null
+                                                release = null,
                                             ),
                                         pitch =
                                             Pitch(
                                                 noteName = NoteName.C,
                                                 octave = Octave.unsafeCreate(input = 4),
-                                                alter = Semitones.unsafeCreate(input = 0.0f)
-                                            )
+                                                alter = Semitones.unsafeCreate(input = 0.0f),
+                                            ),
                                     ),
                                     Pitched(
                                         duration = NoteDuration(noteValue = NoteValue.QUARTER),
@@ -228,14 +228,14 @@ public fun getExampleScore0(): Score {
                                                 attack = null,
                                                 dynamics = null,
                                                 endDynamics = null,
-                                                release = null
+                                                release = null,
                                             ),
                                         pitch =
                                             Pitch(
                                                 noteName = NoteName.G,
                                                 octave = Octave.unsafeCreate(input = 4),
-                                                alter = Semitones.unsafeCreate(input = 0.0f)
-                                            )
+                                                alter = Semitones.unsafeCreate(input = 0.0f),
+                                            ),
                                     ),
                                     Pitched(
                                         duration = NoteDuration(noteValue = NoteValue.QUARTER),
@@ -244,14 +244,14 @@ public fun getExampleScore0(): Score {
                                                 attack = null,
                                                 dynamics = null,
                                                 endDynamics = null,
-                                                release = null
+                                                release = null,
                                             ),
                                         pitch =
                                             Pitch(
                                                 noteName = NoteName.A,
                                                 octave = Octave.unsafeCreate(input = 4),
-                                                alter = Semitones.unsafeCreate(input = 0.0f)
-                                            )
+                                                alter = Semitones.unsafeCreate(input = 0.0f),
+                                            ),
                                     ),
                                     Pitched(
                                         duration = NoteDuration(noteValue = NoteValue.QUARTER),
@@ -260,16 +260,16 @@ public fun getExampleScore0(): Score {
                                                 attack = null,
                                                 dynamics = null,
                                                 endDynamics = null,
-                                                release = null
+                                                release = null,
                                             ),
                                         pitch =
                                             Pitch(
                                                 noteName = NoteName.E,
                                                 octave = Octave.unsafeCreate(input = 4),
-                                                alter = Semitones.unsafeCreate(input = 0.0f)
-                                            )
-                                    )
-                                )
+                                                alter = Semitones.unsafeCreate(input = 0.0f),
+                                            ),
+                                    ),
+                                ),
                         ),
                         Measure(
                             attributes = null,
@@ -282,14 +282,14 @@ public fun getExampleScore0(): Score {
                                                 attack = null,
                                                 dynamics = null,
                                                 endDynamics = null,
-                                                release = null
+                                                release = null,
                                             ),
                                         pitch =
                                             Pitch(
                                                 noteName = NoteName.C,
                                                 octave = Octave.unsafeCreate(input = 4),
-                                                alter = Semitones.unsafeCreate(input = 0.0f)
-                                            )
+                                                alter = Semitones.unsafeCreate(input = 0.0f),
+                                            ),
                                     ),
                                     Pitched(
                                         duration = NoteDuration(noteValue = NoteValue.QUARTER),
@@ -298,14 +298,14 @@ public fun getExampleScore0(): Score {
                                                 attack = null,
                                                 dynamics = null,
                                                 endDynamics = null,
-                                                release = null
+                                                release = null,
                                             ),
                                         pitch =
                                             Pitch(
                                                 noteName = NoteName.C,
                                                 octave = Octave.unsafeCreate(input = 4),
-                                                alter = Semitones.unsafeCreate(input = 0.0f)
-                                            )
+                                                alter = Semitones.unsafeCreate(input = 0.0f),
+                                            ),
                                     ),
                                     Pitched(
                                         duration = NoteDuration(noteValue = NoteValue.QUARTER),
@@ -314,14 +314,14 @@ public fun getExampleScore0(): Score {
                                                 attack = null,
                                                 dynamics = null,
                                                 endDynamics = null,
-                                                release = null
+                                                release = null,
                                             ),
                                         pitch =
                                             Pitch(
                                                 noteName = NoteName.A,
                                                 octave = Octave.unsafeCreate(input = 4),
-                                                alter = Semitones.unsafeCreate(input = 0.0f)
-                                            )
+                                                alter = Semitones.unsafeCreate(input = 0.0f),
+                                            ),
                                     ),
                                     Pitched(
                                         duration = NoteDuration(noteValue = NoteValue.QUARTER),
@@ -330,19 +330,19 @@ public fun getExampleScore0(): Score {
                                                 attack = null,
                                                 dynamics = null,
                                                 endDynamics = null,
-                                                release = null
+                                                release = null,
                                             ),
                                         pitch =
                                             Pitch(
                                                 noteName = NoteName.A,
                                                 octave = Octave.unsafeCreate(input = 4),
-                                                alter = Semitones.unsafeCreate(input = 0.0f)
-                                            )
-                                    )
-                                )
-                        )
-                    )
-            )
+                                                alter = Semitones.unsafeCreate(input = 0.0f),
+                                            ),
+                                    ),
+                                ),
+                        ),
+                    ),
+            ),
         )
 
     return Score(ScoreId.unsafeCreate("d737b4ae-fbaa-4b0d-9d36-d3651e30e93a"), null, parts)
