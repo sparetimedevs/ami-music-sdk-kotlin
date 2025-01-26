@@ -30,7 +30,9 @@ import kotlin.jvm.JvmInline
 
 @Serializable
 @JvmInline
-public value class BeatType private constructor(public val value: Byte) {
+public value class BeatType private constructor(
+    public val value: Byte,
+) {
     public companion object {
         public fun validate(
             input: Byte,
@@ -42,8 +44,7 @@ public value class BeatType private constructor(public val value: Byte) {
                         "BeatType can't be zero or negative, the input was $input",
                         validationErrorForProperty<BeatType>(),
                         validationIdentifier,
-                    )
-                        .nel()
+                    ).nel()
                 }
                 BeatType(input)
             }

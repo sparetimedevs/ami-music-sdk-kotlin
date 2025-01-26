@@ -30,23 +30,23 @@ public fun fromJson(
     jsonParser: Json,
     input: String,
 ): Either<DomainError, Score> =
-    Either.catch { jsonParser.decodeFromString<com.sparetimedevs.ami.music.input.Score>(input) }
+    Either
+        .catch { jsonParser.decodeFromString<com.sparetimedevs.ami.music.input.Score>(input) }
         .mapLeft {
             ParseError(
                 "There was an exception while parsing the input. The exception is: ${it.message}",
             )
-        }
-        .flatMap { it.validateInput() }
+        }.flatMap { it.validateInput() }
 
 public fun toJson(
     jsonParser: Json,
     score: Score,
 ): Either<DomainError, String> =
-    Either.catch {
-        val scoreInputType: com.sparetimedevs.ami.music.input.Score = score.toInput()
-        jsonParser.encodeToString(scoreInputType)
-    }
-        .mapLeft {
+    Either
+        .catch {
+            val scoreInputType: com.sparetimedevs.ami.music.input.Score = score.toInput()
+            jsonParser.encodeToString(scoreInputType)
+        }.mapLeft {
             ParseError(
                 "There was an exception while encoding to JSON. The exception is: ${it.message}",
             )

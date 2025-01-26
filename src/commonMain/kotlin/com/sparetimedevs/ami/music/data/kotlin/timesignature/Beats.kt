@@ -30,7 +30,9 @@ import kotlin.jvm.JvmInline
 
 @Serializable
 @JvmInline
-public value class Beats private constructor(public val value: Byte) {
+public value class Beats private constructor(
+    public val value: Byte,
+) {
     public companion object {
         public fun validate(
             input: Byte,
@@ -42,8 +44,7 @@ public value class Beats private constructor(public val value: Byte) {
                         "Beats can't be zero or negative, the input was $input",
                         validationErrorForProperty<Beats>(),
                         validationIdentifier,
-                    )
-                        .nel()
+                    ).nel()
                 }
                 Beats(input)
             }

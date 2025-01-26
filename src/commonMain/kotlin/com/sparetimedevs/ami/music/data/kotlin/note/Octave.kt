@@ -30,7 +30,9 @@ import kotlin.jvm.JvmInline
 
 @Serializable
 @JvmInline
-public value class Octave private constructor(public val value: Byte) {
+public value class Octave private constructor(
+    public val value: Byte,
+) {
     public companion object {
         public fun validate(
             input: Byte,
@@ -43,16 +45,14 @@ public value class Octave private constructor(public val value: Byte) {
                         "Octave can't be lesser than -12, the input was $input",
                         validationErrorForProperty<Octave>(),
                         validationIdentifier,
-                    )
-                        .nel()
+                    ).nel()
                 }
                 ensure(input <= 12) {
                     ValidationError(
                         "Octave can't be greater than 12, the input was $input",
                         validationErrorForProperty<Octave>(),
                         validationIdentifier,
-                    )
-                        .nel()
+                    ).nel()
                 }
                 Octave(input)
             }

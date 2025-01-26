@@ -75,8 +75,7 @@ public enum class NoteName {
                         "Note name can't be value $input",
                         validationErrorForProperty<NoteName>(),
                         validationIdentifier,
-                    )
-                        .nel()
+                    ).nel()
                         .left()
             }
     }

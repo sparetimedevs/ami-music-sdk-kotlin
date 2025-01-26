@@ -35,7 +35,9 @@ import kotlin.jvm.JvmInline
  */
 @Serializable
 @JvmInline
-public value class Semitones private constructor(public val value: Float) {
+public value class Semitones private constructor(
+    public val value: Float,
+) {
     public companion object {
         public val DefaultSemitones: Semitones = Semitones(0.0f)
 
@@ -50,16 +52,14 @@ public value class Semitones private constructor(public val value: Float) {
                         "Semitones can't be lesser than -10.0, the input was $input",
                         validationErrorForProperty<Semitones>(),
                         validationIdentifier,
-                    )
-                        .nel()
+                    ).nel()
                 }
                 ensure(input <= 10.0f) {
                     ValidationError(
                         "Semitones can't be greater than 10.0, the input was $input",
                         validationErrorForProperty<Semitones>(),
                         validationIdentifier,
-                    )
-                        .nel()
+                    ).nel()
                 }
                 Semitones(input)
             }

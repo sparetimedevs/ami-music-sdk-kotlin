@@ -50,7 +50,6 @@ class NoteDurationTest :
                     "Input for note duration is not a valid value, the value is: 1.23456789",
                     validationErrorForProperty<NoteDuration>(),
                     NoValidationIdentifier,
-                )
-                    .nel()
+                ).nel()
         }
     })

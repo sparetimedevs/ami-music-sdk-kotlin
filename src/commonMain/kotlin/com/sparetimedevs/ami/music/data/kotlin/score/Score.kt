@@ -33,7 +33,9 @@ import kotlin.jvm.JvmInline
 
 @Serializable
 @JvmInline
-public value class ScoreId private constructor(public val value: String) : Id {
+public value class ScoreId private constructor(
+    public val value: String,
+) : Id {
     public companion object {
         public operator fun invoke(): ScoreId = ScoreId(randomUuidString())
 
@@ -47,16 +49,14 @@ public value class ScoreId private constructor(public val value: String) : Id {
                         "Score ID can't be empty, the input was $input",
                         validationErrorForProperty<ScoreId>(),
                         validationIdentifier,
-                    )
-                        .nel()
+                    ).nel()
                 }
                 ensure(input.length <= 128) {
                     ValidationError(
                         "Score ID can't be longer than 128 characters, the input was $input",
                         validationErrorForProperty<ScoreId>(),
                         validationIdentifier,
-                    )
-                        .nel()
+                    ).nel()
                 }
                 ScoreId(input)
             }
@@ -71,28 +71,24 @@ public value class ScoreId private constructor(public val value: String) : Id {
 
 @Serializable
 @JvmInline
-public value class ScoreTitle private constructor(public val value: String) {
+public value class ScoreTitle private constructor(
+    public val value: String,
+) {
     public companion object {
         public fun validate(
-            input: String,
+            input: String?,
             validationIdentifier: ValidationIdentifier = NoValidationIdentifier,
-        ): EitherNel<ValidationError, ScoreTitle> =
+        ): EitherNel<ValidationError, ScoreTitle?> =
             either {
-                ensure(input.isNotEmpty()) {
-                    ValidationError(
-                        "Score title can't be empty, the input was $input",
-                        validationErrorForProperty<ScoreTitle>(),
-                        validationIdentifier,
-                    )
-                        .nel()
+                if (input.isNullOrEmpty()) {
+                    return@either null
                 }
                 ensure(input.length <= 512) {
                     ValidationError(
                         "Score title can't be longer than 512 characters, the input was $input",
                         validationErrorForProperty<ScoreTitle>(),
                         validationIdentifier,
-                    )
-                        .nel()
+                    ).nel()
                 }
                 ScoreTitle(input)
             }
@@ -101,9 +97,13 @@ public value class ScoreTitle private constructor(public val value: String) {
             validate(
                 input,
                 NoValidationIdentifier,
-            ).getOrThrowFirstValidationError()
+            ).getOrThrowFirstValidationError()!!
     }
 }
 
 @Serializable
-public data class Score(val id: ScoreId, val title: ScoreTitle?, val parts: List<Part>)
+public data class Score(
+    val id: ScoreId,
+    val title: ScoreTitle?,
+    val parts: List<Part>,
+)

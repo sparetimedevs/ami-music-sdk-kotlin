@@ -22,4 +22,6 @@ public interface NotYetImplemented {
     public val todo: String?
 }
 
-@Serializable public data class Key(override val todo: String?) : NotYetImplemented
+@Serializable public data class Key(
+    override val todo: String?,
+) : NotYetImplemented

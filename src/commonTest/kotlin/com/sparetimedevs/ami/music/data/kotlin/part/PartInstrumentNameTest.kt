@@ -70,14 +70,12 @@ class PartInstrumentNameTest :
                 |Some very lengthy input string. With a lot of nonsense and repetition.
                 |Some very lengthy input string. With a lot of nonsense and repetition.
                 |Some very lengthy input string. With a lot of nonsense and repetition.
-            """
-                    .trimMargin()
+                """.trimMargin()
             PartInstrumentName.validate(input) shouldBeLeft
                 ValidationError(
                     "Part instrument name can't be longer than 512 characters, the input was $input",
                     validationErrorForProperty<PartInstrumentName>(),
                     NoValidationIdentifier,
-                )
-                    .nel()
+                ).nel()
         }
     })

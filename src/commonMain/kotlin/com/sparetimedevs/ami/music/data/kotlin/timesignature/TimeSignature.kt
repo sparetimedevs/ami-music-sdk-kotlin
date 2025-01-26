@@ -22,4 +22,7 @@ import kotlinx.serialization.Serializable
  * A time signature is represented by the beats element for the numerator and the beat-type element
  * for the denominator.
  */
-@Serializable public data class TimeSignature(val beats: Beats, val beatType: BeatType)
+@Serializable public data class TimeSignature(
+    val beats: Beats,
+    val beatType: BeatType,
+)

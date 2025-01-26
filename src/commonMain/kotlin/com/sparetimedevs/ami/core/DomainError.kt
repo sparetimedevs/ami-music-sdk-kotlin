@@ -23,7 +23,9 @@ public sealed interface DomainError {
     public val message: String
 }
 
-public data class ParseError(override val message: String) : DomainError
+public data class ParseError(
+    override val message: String,
+) : DomainError
 
 // This would be used when we convert
 // a EitherNel<ValidationError, A>

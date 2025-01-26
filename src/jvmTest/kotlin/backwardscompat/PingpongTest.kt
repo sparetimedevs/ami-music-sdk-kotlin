@@ -42,11 +42,12 @@ class PingPongTest :
                 httpClient,
                 jsonParser,
                 input,
-            )
-                .flatMap { response -> response.inputScore.validateInput() }
+            ).flatMap { response -> response.inputScore.validateInput() }
                 .shouldBeRight(expectedScore)
         }
     })
 
 @Serializable
-data class ResponseInputScore(val inputScore: com.sparetimedevs.ami.music.input.Score)
+data class ResponseInputScore(
+    val inputScore: com.sparetimedevs.ami.music.input.Score,
+)

@@ -29,7 +29,9 @@ public data class ValidationError(
 )
 
 @Serializable @JvmInline
-public value class ValidationErrorForProperty(public val value: String)
+public value class ValidationErrorForProperty(
+    public val value: String,
+)
 
 public inline fun <reified T : Any> validationErrorForProperty(): ValidationErrorForProperty =
     ValidationErrorForProperty(T::class.simpleName ?: "unknown")

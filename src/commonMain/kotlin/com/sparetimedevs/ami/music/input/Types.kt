@@ -26,12 +26,19 @@ public data class Chord(
     val rootNote: Pitch,
 )
 
-@Serializable public data class Key(val todo: String? = null)
+@Serializable public data class Key(
+    val todo: String? = null,
+)
 
 @Serializable
-public data class Measure(val attributes: MeasureAttributes? = null, val notes: List<Pitched>)
+public data class Measure(
+    val attributes: MeasureAttributes? = null,
+    val notes: List<Pitched>,
+)
 
-@Serializable public data class MeasureAttributes(val key: Key? = null)
+@Serializable public data class MeasureAttributes(
+    val key: Key? = null,
+)
 
 @Serializable
 public data class NoteAttributes(
@@ -56,7 +63,11 @@ public data class PartInstrument(
     val midiProgram: Byte? = null,
 )
 
-@Serializable public data class Pitch(val alter: Float, val noteName: String, val octave: Byte)
+@Serializable public data class Pitch(
+    val alter: Float,
+    val noteName: String,
+    val octave: Byte,
+)
 
 @Serializable
 public data class Pitched(
@@ -66,12 +77,25 @@ public data class Pitched(
 )
 
 @Serializable
-public data class Rest(val duration: NoteDuration, val noteAttributes: NoteAttributes)
+public data class Rest(
+    val duration: NoteDuration,
+    val noteAttributes: NoteAttributes,
+)
 
-@Serializable public data class NoteDuration(val noteValue: String, val modifier: String)
+@Serializable public data class NoteDuration(
+    val noteValue: String,
+    val modifier: String,
+)
 
 @Serializable
-public data class Score(val id: String, val title: String? = null, val parts: List<Part>)
+public data class Score(
+    val id: String,
+    val title: String? = null,
+    val parts: List<Part>,
+)
 
 @Serializable
-public data class Unpitched(val duration: NoteDuration, val noteAttributes: NoteAttributes)
+public data class Unpitched(
+    val duration: NoteDuration,
+    val noteAttributes: NoteAttributes,
+)
