@@ -23,5 +23,6 @@ import com.sparetimedevs.ami.core.validation.NoValidationIdentifier
 import com.sparetimedevs.ami.music.data.kotlin.score.Score
 
 public fun com.sparetimedevs.ami.music.input.Score.validateInput(): Either<DomainError, Score> =
-    this.validate(validationIdentifier = NoValidationIdentifier)
+    this
+        .validate(validationIdentifier = NoValidationIdentifier)
         .asEitherWithAccumulatedValidationErrors()

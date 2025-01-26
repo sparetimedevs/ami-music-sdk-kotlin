@@ -25,7 +25,9 @@ import okhttp3.Request
 import okhttp3.RequestBody.Companion.toRequestBody
 import java.io.IOException
 
-data class TestError(val reason: String)
+data class TestError(
+    val reason: String,
+)
 
 inline fun <reified A, reified B> postJsonRequest(
     apiUrl: String,
@@ -33,23 +35,24 @@ inline fun <reified A, reified B> postJsonRequest(
     jsonParser: Json,
     requestObject: A,
 ): Either<TestError, B> =
-    Either.catch {
-        val requestBodyJson = jsonParser.encodeToString(requestObject)
+    Either
+        .catch {
+            val requestBodyJson = jsonParser.encodeToString(requestObject)
 
-        val request =
-            Request.Builder()
-                .url(apiUrl)
-                .post(requestBodyJson.toRequestBody(MEDIA_TYPE_JSON))
-                .build()
+            val request =
+                Request
+                    .Builder()
+                    .url(apiUrl)
+                    .post(requestBodyJson.toRequestBody(MEDIA_TYPE_JSON))
+                    .build()
 
-        val responseBody: String =
-            client.newCall(request).execute().use { response ->
-                if (!response.isSuccessful) throw IOException("Unexpected code $response")
+            val responseBody: String =
+                client.newCall(request).execute().use { response ->
+                    if (!response.isSuccessful) throw IOException("Unexpected code $response")
 
-                response.body!!.string()
-            }
-        jsonParser.decodeFromString<B>(responseBody)
-    }
-        .mapLeft { TestError(reason = it.message ?: "An exception was thrown.") }
+                    response.body!!.string()
+                }
+            jsonParser.decodeFromString<B>(responseBody)
+        }.mapLeft { TestError(reason = it.message ?: "An exception was thrown.") }
 
 val MEDIA_TYPE_JSON = "application/json".toMediaType()

@@ -103,7 +103,12 @@ val compatibilityTest by
         )
 
         useJUnitPlatform()
-        testClassesDirs = kotlin.jvm().compilations.get("test").output.classesDirs
+        testClassesDirs =
+            kotlin
+                .jvm()
+                .compilations
+                .get("test")
+                .output.classesDirs
         classpath +=
             objects
                 .fileCollection()

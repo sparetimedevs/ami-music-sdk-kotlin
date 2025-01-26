@@ -32,7 +32,9 @@ import kotlin.jvm.JvmInline
 
 @Serializable
 @JvmInline
-public value class PartInstrumentName private constructor(public val value: String) {
+public value class PartInstrumentName private constructor(
+    public val value: String,
+) {
     public companion object {
         public fun validate(
             input: String?,
@@ -47,8 +49,7 @@ public value class PartInstrumentName private constructor(public val value: Stri
                         "Part instrument name can't be longer than 512 characters, the input was $input",
                         validationErrorForProperty<PartInstrumentName>(),
                         validationIdentifier,
-                    )
-                        .nel()
+                    ).nel()
                 }
                 PartInstrumentName(input)
             }

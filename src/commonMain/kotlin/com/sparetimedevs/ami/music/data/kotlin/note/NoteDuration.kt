@@ -316,8 +316,7 @@ public data class NoteDuration(
                         "Input for note duration is not a valid value, the value is: $input",
                         validationErrorForProperty<NoteDuration>(),
                         validationIdentifier,
-                    )
-                        .nel()
+                    ).nel()
                         .left()
             }
     }
@@ -325,7 +324,9 @@ public data class NoteDuration(
 
 @Suppress("ktlint:standard:enum-entry-name-case")
 @Serializable
-public enum class NoteValue(public val value: Double) {
+public enum class NoteValue(
+    public val value: Double,
+) {
     MAXIMA(8.0),
     LONG(4.0),
     DOUBLE_WHOLE(2.0),
@@ -371,15 +372,16 @@ public enum class NoteValue(public val value: Double) {
                         "Note value can't be value $input",
                         validationErrorForProperty<NoteDuration>(),
                         validationIdentifier,
-                    )
-                        .nel()
+                    ).nel()
                         .left()
             }
     }
 }
 
 @Serializable
-public enum class NoteModifier(public val value: Double) {
+public enum class NoteModifier(
+    public val value: Double,
+) {
     NONE(1.0),
     DOTTED(1.5),
     DOUBLE_DOTTED(1.25),
@@ -411,8 +413,7 @@ public enum class NoteModifier(public val value: Double) {
                         "Note modifier can't be value $input",
                         validationErrorForProperty<NoteDuration>(),
                         validationIdentifier,
-                    )
-                        .nel()
+                    ).nel()
                         .left()
             }
     }

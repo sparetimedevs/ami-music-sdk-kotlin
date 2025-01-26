@@ -75,7 +75,9 @@ public fun com.sparetimedevs.ami.music.input.Chord.validate(
         this.duration.validate(validationIdentifier),
         this.noteAttributes.validate(validationIdentifier),
         this.rootNote.validate(validationIdentifier),
-        this.pitches.withIndex().map { (index, pitch) -> pitch.validate(index, validationIdentifier) }
+        this.pitches
+            .withIndex()
+            .map { (index, pitch) -> pitch.validate(index, validationIdentifier) }
             .combineAllValidationErrors(),
     ) { duration, noteAttributes, rootNote, pitches ->
         Chord(duration, noteAttributes, rootNote, pitches)

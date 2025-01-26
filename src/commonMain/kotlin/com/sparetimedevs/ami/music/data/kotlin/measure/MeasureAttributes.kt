@@ -19,4 +19,6 @@ package com.sparetimedevs.ami.music.data.kotlin.measure
 import com.sparetimedevs.ami.core.Key
 import kotlinx.serialization.Serializable
 
-@Serializable public data class MeasureAttributes(val key: Key?)
+@Serializable public data class MeasureAttributes(
+    val key: Key?,
+)

@@ -19,7 +19,9 @@ package com.sparetimedevs.ami.core.validation
 import arrow.core.EitherNel
 import arrow.core.getOrElse
 
-public class ValidationException(override val message: String) : RuntimeException()
+public class ValidationException(
+    override val message: String,
+) : RuntimeException()
 
 public fun ValidationError.asException(): ValidationException = ValidationException(this.message)
 

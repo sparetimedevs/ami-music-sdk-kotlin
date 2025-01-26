@@ -37,7 +37,6 @@ class OctaveTest :
                     "Octave can't be lesser than -12, the input was -13",
                     validationErrorForProperty<Octave>(),
                     NoValidationIdentifier,
-                )
-                    .nel()
+                ).nel()
         }
     })

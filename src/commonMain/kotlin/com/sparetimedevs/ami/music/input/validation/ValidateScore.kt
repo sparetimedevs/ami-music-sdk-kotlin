@@ -40,11 +40,7 @@ public fun com.sparetimedevs.ami.music.input.Score.validate(
             ValidationIdentifierForScore(scoreId, validationIdentifier)
 
         Either.zipOrAccumulate(
-            if (this.title != null) {
-                ScoreTitle.validate(this.title, validationIdentifierForScore)
-            } else {
-                Either.Right(null)
-            },
+            ScoreTitle.validate(this.title, validationIdentifierForScore),
             this.parts
                 .map { part -> part.validate(validationIdentifierForScore) }
                 .combineAllValidationErrors(),
@@ -75,8 +71,7 @@ public fun com.sparetimedevs.ami.music.input.Measure.validate(
     index: Int,
     validationIdentifier: ValidationIdentifier = NoValidationIdentifier,
 ): EitherNel<ValidationError, Measure> =
-    ValidationIdentifierForMeasure(index, validationIdentifier).let { validationIdentifierForMeasure,
-        ->
+    ValidationIdentifierForMeasure(index, validationIdentifier).let { validationIdentifierForMeasure ->
         Either.zipOrAccumulate(
             this.attributes.validate(validationIdentifierForMeasure),
             this.notes

@@ -30,7 +30,9 @@ import kotlin.jvm.JvmInline
 
 @Serializable
 @JvmInline
-public value class MidiChannel private constructor(public val value: Byte) {
+public value class MidiChannel private constructor(
+    public val value: Byte,
+) {
     public companion object {
         public fun validate(
             input: Byte?,
@@ -45,8 +47,7 @@ public value class MidiChannel private constructor(public val value: Byte) {
                         "Midi channel can't be negative, the input was $input",
                         validationErrorForProperty<MidiChannel>(),
                         validationIdentifier,
-                    )
-                        .nel()
+                    ).nel()
                 }
                 MidiChannel(input)
             }
@@ -61,7 +62,9 @@ public value class MidiChannel private constructor(public val value: Byte) {
 
 @Serializable
 @JvmInline
-public value class MidiProgram private constructor(public val value: Byte) {
+public value class MidiProgram private constructor(
+    public val value: Byte,
+) {
     public companion object {
         public fun validate(
             input: Byte?,
@@ -76,8 +79,7 @@ public value class MidiProgram private constructor(public val value: Byte) {
                         "Midi program can't be negative, the input was $input",
                         validationErrorForProperty<MidiProgram>(),
                         validationIdentifier,
-                    )
-                        .nel()
+                    ).nel()
                 }
                 MidiProgram(input)
             }

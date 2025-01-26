@@ -33,7 +33,9 @@ import kotlin.jvm.JvmInline
 
 @Serializable
 @JvmInline
-public value class PartId private constructor(public val value: String) : Id {
+public value class PartId private constructor(
+    public val value: String,
+) : Id {
     public companion object {
         public operator fun invoke(): PartId = PartId(randomUuidString())
 
@@ -47,16 +49,14 @@ public value class PartId private constructor(public val value: String) : Id {
                         "Part ID can't be empty, the input was $input",
                         validationErrorForProperty<PartId>(),
                         validationIdentifier,
-                    )
-                        .nel()
+                    ).nel()
                 }
                 ensure(input.length <= 128) {
                     ValidationError(
                         "Part ID can't be longer than 128 characters, the input was $input",
                         validationErrorForProperty<PartId>(),
                         validationIdentifier,
-                    )
-                        .nel()
+                    ).nel()
                 }
                 PartId(input)
             }
@@ -71,7 +71,9 @@ public value class PartId private constructor(public val value: String) : Id {
 
 @Serializable
 @JvmInline
-public value class PartName private constructor(public val value: String) {
+public value class PartName private constructor(
+    public val value: String,
+) {
     public companion object {
         public fun validate(
             input: String?,
@@ -86,8 +88,7 @@ public value class PartName private constructor(public val value: String) {
                         "Part name can't be longer than 512 characters, the input was $input",
                         validationErrorForProperty<PartName>(),
                         validationIdentifier,
-                    )
-                        .nel()
+                    ).nel()
                 }
                 PartName(input)
             }

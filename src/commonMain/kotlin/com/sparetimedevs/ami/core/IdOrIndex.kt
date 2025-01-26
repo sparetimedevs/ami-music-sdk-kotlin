@@ -22,4 +22,6 @@ public sealed interface IdOrIndex
 
 public interface Id : IdOrIndex
 
-@JvmInline public value class Index(public val value: Int) : IdOrIndex
+@JvmInline public value class Index(
+    public val value: Int,
+) : IdOrIndex
