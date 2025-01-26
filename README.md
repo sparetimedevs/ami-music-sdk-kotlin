@@ -57,4 +57,7 @@ dependencies {
 }
 ```
 
-To make a project use the latest snapshot version, execute: `./gradlew clean build --refresh-dependencies`
+To make a project use the latest snapshot version;
+
+- remove `/.kotlin/` dir
+- execute: `./gradlew clean build --refresh-dependencies`
