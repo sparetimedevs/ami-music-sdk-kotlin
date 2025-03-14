@@ -4,7 +4,6 @@ import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 plugins {
     alias(libs.plugins.kotlin.multiplatform)
     alias(libs.plugins.kotlin.serialization)
-    alias(libs.plugins.kotest.multiplatform)
     alias(libs.plugins.spotless)
     id("convention.publication")
 }
@@ -52,14 +51,12 @@ kotlin {
             implementation(libs.kotlinx.serialization.json)
         }
         commonTest.dependencies {
+            implementation(kotlin("test"))
             implementation(libs.kotest.assertions.core)
             implementation(libs.kotest.assertions.json)
             implementation(libs.kotest.assertions.arrow)
-            implementation(libs.kotest.framework.engine)
-            implementation(libs.kotest.framework.datatest)
         }
         jvmTest.dependencies {
-            implementation(libs.kotest.runner.junit5)
             implementation(libs.okhttp)
         }
     }

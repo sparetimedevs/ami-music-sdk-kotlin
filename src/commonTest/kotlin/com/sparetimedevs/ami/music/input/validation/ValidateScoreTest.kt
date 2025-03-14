@@ -30,98 +30,99 @@ import com.sparetimedevs.ami.music.example.getExampleScore0Input
 import com.sparetimedevs.ami.music.example.getExampleScore0InvalidInput
 import io.kotest.assertions.arrow.core.shouldBeLeft
 import io.kotest.assertions.arrow.core.shouldBeRight
-import io.kotest.core.spec.style.StringSpec
+import kotlin.test.Test
 
-class ValidateScoreTest :
-    StringSpec({
-        "validate score should return valid score with valid input" {
-            val inputScore: com.sparetimedevs.ami.music.input.Score = getExampleScore0Input()
-            val expectedScore: Score = getExampleScore0()
+class ValidateScoreTest {
+    @Test
+    fun `validate score should return valid score with valid input`() {
+        val inputScore: com.sparetimedevs.ami.music.input.Score = getExampleScore0Input()
+        val expectedScore: Score = getExampleScore0()
 
-            inputScore.validate() shouldBeRight expectedScore
-        }
+        inputScore.validate() shouldBeRight expectedScore
+    }
 
-        "validate score should return validation errors with invalid input" {
-            val inputScore: com.sparetimedevs.ami.music.input.Score = getExampleScore0InvalidInput()
-            val expectedValidationErrors =
-                listOf(
-                    ValidationError(
-                        message = "Note value can't be value QUARTAAAR",
-                        validationErrorForProperty = validationErrorForProperty<NoteDuration>(),
-                        validationIdentifier =
-                            ValidationIdentifierForNote(
-                                noteIndex = 0,
-                                validationIdentifierParent =
-                                    ValidationIdentifierForMeasure(
-                                        measureIndex = 0,
-                                        validationIdentifierParent =
-                                            ValidationIdentifierForPart(
-                                                identifier = PartId.unsafeCreate("p-1"),
-                                                validationIdentifierParent =
-                                                    ValidationIdentifierForScore(
-                                                        identifier =
-                                                            ScoreId.unsafeCreate(
-                                                                "d737b4ae-fbaa-4b0d-9d36-d3651e30e93a",
-                                                            ),
-                                                        validationIdentifierParent =
-                                                        NoValidationIdentifier,
-                                                    ),
-                                            ),
-                                    ),
-                            ),
-                    ),
-                    ValidationError(
-                        message = "Octave can't be greater than 12, the input was 127",
-                        validationErrorForProperty = validationErrorForProperty<Octave>(),
-                        validationIdentifier =
-                            ValidationIdentifierForNote(
-                                noteIndex = 1,
-                                validationIdentifierParent =
-                                    ValidationIdentifierForMeasure(
-                                        measureIndex = 0,
-                                        validationIdentifierParent =
-                                            ValidationIdentifierForPart(
-                                                identifier = PartId.unsafeCreate("p-1"),
-                                                validationIdentifierParent =
-                                                    ValidationIdentifierForScore(
-                                                        identifier =
-                                                            ScoreId.unsafeCreate(
-                                                                "d737b4ae-fbaa-4b0d-9d36-d3651e30e93a",
-                                                            ),
-                                                        validationIdentifierParent =
-                                                        NoValidationIdentifier,
-                                                    ),
-                                            ),
-                                    ),
-                            ),
-                    ),
-                    ValidationError(
-                        message = "Note name can't be value L",
-                        validationErrorForProperty = validationErrorForProperty<NoteName>(),
-                        validationIdentifier =
-                            ValidationIdentifierForNote(
-                                noteIndex = 3,
-                                validationIdentifierParent =
-                                    ValidationIdentifierForMeasure(
-                                        measureIndex = 0,
-                                        validationIdentifierParent =
-                                            ValidationIdentifierForPart(
-                                                identifier = PartId.unsafeCreate("p-1"),
-                                                validationIdentifierParent =
-                                                    ValidationIdentifierForScore(
-                                                        identifier =
-                                                            ScoreId.unsafeCreate(
-                                                                "d737b4ae-fbaa-4b0d-9d36-d3651e30e93a",
-                                                            ),
-                                                        validationIdentifierParent =
-                                                        NoValidationIdentifier,
-                                                    ),
-                                            ),
-                                    ),
-                            ),
-                    ),
-                )
+    @Test
+    fun `validate score should return validation errors with invalid input`() {
+        val inputScore: com.sparetimedevs.ami.music.input.Score = getExampleScore0InvalidInput()
+        val expectedValidationErrors =
+            listOf(
+                ValidationError(
+                    message = "Note value can't be value QUARTAAAR",
+                    validationErrorForProperty = validationErrorForProperty<NoteDuration>(),
+                    validationIdentifier =
+                        ValidationIdentifierForNote(
+                            noteIndex = 0,
+                            validationIdentifierParent =
+                                ValidationIdentifierForMeasure(
+                                    measureIndex = 0,
+                                    validationIdentifierParent =
+                                        ValidationIdentifierForPart(
+                                            identifier = PartId.unsafeCreate("p-1"),
+                                            validationIdentifierParent =
+                                                ValidationIdentifierForScore(
+                                                    identifier =
+                                                        ScoreId.unsafeCreate(
+                                                            "d737b4ae-fbaa-4b0d-9d36-d3651e30e93a",
+                                                        ),
+                                                    validationIdentifierParent =
+                                                    NoValidationIdentifier,
+                                                ),
+                                        ),
+                                ),
+                        ),
+                ),
+                ValidationError(
+                    message = "Octave can't be greater than 12, the input was 127",
+                    validationErrorForProperty = validationErrorForProperty<Octave>(),
+                    validationIdentifier =
+                        ValidationIdentifierForNote(
+                            noteIndex = 1,
+                            validationIdentifierParent =
+                                ValidationIdentifierForMeasure(
+                                    measureIndex = 0,
+                                    validationIdentifierParent =
+                                        ValidationIdentifierForPart(
+                                            identifier = PartId.unsafeCreate("p-1"),
+                                            validationIdentifierParent =
+                                                ValidationIdentifierForScore(
+                                                    identifier =
+                                                        ScoreId.unsafeCreate(
+                                                            "d737b4ae-fbaa-4b0d-9d36-d3651e30e93a",
+                                                        ),
+                                                    validationIdentifierParent =
+                                                    NoValidationIdentifier,
+                                                ),
+                                        ),
+                                ),
+                        ),
+                ),
+                ValidationError(
+                    message = "Note name can't be value L",
+                    validationErrorForProperty = validationErrorForProperty<NoteName>(),
+                    validationIdentifier =
+                        ValidationIdentifierForNote(
+                            noteIndex = 3,
+                            validationIdentifierParent =
+                                ValidationIdentifierForMeasure(
+                                    measureIndex = 0,
+                                    validationIdentifierParent =
+                                        ValidationIdentifierForPart(
+                                            identifier = PartId.unsafeCreate("p-1"),
+                                            validationIdentifierParent =
+                                                ValidationIdentifierForScore(
+                                                    identifier =
+                                                        ScoreId.unsafeCreate(
+                                                            "d737b4ae-fbaa-4b0d-9d36-d3651e30e93a",
+                                                        ),
+                                                    validationIdentifierParent =
+                                                    NoValidationIdentifier,
+                                                ),
+                                        ),
+                                ),
+                        ),
+                ),
+            )
 
-            inputScore.validate() shouldBeLeft expectedValidationErrors
-        }
-    })
+        inputScore.validate() shouldBeLeft expectedValidationErrors
+    }
+}

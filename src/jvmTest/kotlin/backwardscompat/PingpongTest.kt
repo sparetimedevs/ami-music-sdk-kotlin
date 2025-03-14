@@ -22,32 +22,32 @@ import com.sparetimedevs.ami.music.example.getExampleScore0
 import com.sparetimedevs.ami.music.input.toInput
 import com.sparetimedevs.ami.music.input.validation.validateInput
 import io.kotest.assertions.arrow.core.shouldBeRight
-import io.kotest.core.spec.style.StringSpec
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.json.Json
 import okhttp3.OkHttpClient
+import kotlin.test.Test
 import com.sparetimedevs.ami.music.input.Score as InputScore
 
-class PingPongTest :
-    StringSpec({
-        val httpClient = OkHttpClient()
-        val jsonParser = Json
+class PingPongTest {
+    val httpClient = OkHttpClient()
+    val jsonParser = Json
 
-        "ping-pong with older version should work" {
-            val expectedScore: Score = getExampleScore0()
-            val input = expectedScore.toInput()
+    @Test
+    fun `ping-pong with older version should work`() {
+        val expectedScore: Score = getExampleScore0()
+        val input = expectedScore.toInput()
 
-            postJsonRequest<InputScore, ResponseInputScore>(
-                "http://localhost:8080/score",
-                httpClient,
-                jsonParser,
-                input,
-            ).flatMap { response -> response.inputScore.validateInput() }
-                .shouldBeRight(expectedScore)
-        }
-    })
+        postJsonRequest<InputScore, ResponseInputScore>(
+            "http://localhost:8080/score",
+            httpClient,
+            jsonParser,
+            input,
+        ).flatMap { response -> response.inputScore.validateInput() }
+            .shouldBeRight(expectedScore)
+    }
+}
 
 @Serializable
 data class ResponseInputScore(
-    val inputScore: com.sparetimedevs.ami.music.input.Score,
+    val inputScore: InputScore,
 )
