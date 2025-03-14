@@ -1,9 +1,9 @@
 [versions]
-kotlin-version = "2.0.10"
-arrow-version = "1.2.4"
+kotlin-version = "2.1.10"
+arrow-version = "2.0.1"
 kotlinx-serialization-json-version = "1.7.3"
 kotest-version = "5.9.1"
-kotest-assertions-arrow-version = "1.4.0"
+kotest-assertions-arrow-version = "2.0.0"
 okhttp-version = "4.12.0"
 spotless-version = "7.0.2"
 
@@ -12,14 +12,10 @@ arrow-core = { module = "io.arrow-kt:arrow-core", version.ref = "arrow-version" 
 kotlinx-serialization-json = { module = "org.jetbrains.kotlinx:kotlinx-serialization-json", version.ref = "kotlinx-serialization-json-version" }
 kotest-assertions-core = { module = "io.kotest:kotest-assertions-core", version.ref = "kotest-version" }
 kotest-assertions-json = { module = "io.kotest:kotest-assertions-json", version.ref = "kotest-version" }
-kotest-framework-engine = { module = "io.kotest:kotest-framework-engine", version.ref = "kotest-version" }
-kotest-framework-datatest = { module = "io.kotest:kotest-framework-datatest", version.ref = "kotest-version" }
-kotest-runner-junit5 = { module = "io.kotest:kotest-runner-junit5", version.ref = "kotest-version" }
 kotest-assertions-arrow = { module = "io.kotest.extensions:kotest-assertions-arrow", version.ref = "kotest-assertions-arrow-version" }
 okhttp = { module = "com.squareup.okhttp3:okhttp", version.ref = "okhttp-version" }
 
 [plugins]
 kotlin-multiplatform = { id = "org.jetbrains.kotlin.multiplatform", version.ref = "kotlin-version" }
 kotlin-serialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlin-version" }
-kotest-multiplatform = { id = "io.kotest.multiplatform", version.ref = "kotest-version" }
 spotless = { id = "com.diffplug.spotless", version.ref = "spotless-version" }

@@ -22,25 +22,31 @@ import com.sparetimedevs.ami.core.validation.ValidationError
 import com.sparetimedevs.ami.core.validation.validationErrorForProperty
 import io.kotest.assertions.arrow.core.shouldBeLeft
 import io.kotest.assertions.arrow.core.shouldBeRight
-import io.kotest.core.spec.style.StringSpec
+import kotlin.test.Test
 
-class PartNameTest :
-    StringSpec({
-        "validate should work with valid input" {
-            val input = "Part 1"
-            PartName.validate(input) shouldBeRight PartName.unsafeCreate(input)
-        }
-        "validate should work with null as input" {
-            val input = null
-            PartName.validate(input) shouldBeRight null
-        }
-        "validate should work with empty string as input" {
-            val input = ""
-            PartName.validate(input) shouldBeRight null
-        }
-        "validate should yield validation error for invalid value" {
-            val input =
-                """Some very lengthy input string. With a lot of nonsense and repetition.
+class PartNameTest {
+    @Test
+    fun `validate should work with valid input`() {
+        val input = "Part 1"
+        PartName.validate(input) shouldBeRight PartName.unsafeCreate(input)
+    }
+
+    @Test
+    fun `validate should work with null as input`() {
+        val input = null
+        PartName.validate(input) shouldBeRight null
+    }
+
+    @Test
+    fun `validate should work with empty string as input`() {
+        val input = ""
+        PartName.validate(input) shouldBeRight null
+    }
+
+    @Test
+    fun `validate should yield validation error for invalid value`() {
+        val input =
+            """Some very lengthy input string. With a lot of nonsense and repetition.
                 |Some very lengthy input string. With a lot of nonsense and repetition.
                 |Some very lengthy input string. With a lot of nonsense and repetition.
                 |Some very lengthy input string. With a lot of nonsense and repetition.
@@ -70,12 +76,12 @@ class PartNameTest :
                 |Some very lengthy input string. With a lot of nonsense and repetition.
                 |Some very lengthy input string. With a lot of nonsense and repetition.
                 |Some very lengthy input string. With a lot of nonsense and repetition.
-                """.trimMargin()
-            PartName.validate(input) shouldBeLeft
-                ValidationError(
-                    "Part name can't be longer than 512 characters, the input was $input",
-                    validationErrorForProperty<PartName>(),
-                    NoValidationIdentifier,
-                ).nel()
-        }
-    })
+            """.trimMargin()
+        PartName.validate(input) shouldBeLeft
+            ValidationError(
+                "Part name can't be longer than 512 characters, the input was $input",
+                validationErrorForProperty<PartName>(),
+                NoValidationIdentifier,
+            ).nel()
+    }
+}

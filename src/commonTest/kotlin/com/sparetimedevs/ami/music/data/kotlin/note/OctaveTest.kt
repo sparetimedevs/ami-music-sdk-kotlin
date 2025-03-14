@@ -22,21 +22,23 @@ import com.sparetimedevs.ami.core.validation.ValidationError
 import com.sparetimedevs.ami.core.validation.validationErrorForProperty
 import io.kotest.assertions.arrow.core.shouldBeLeft
 import io.kotest.assertions.arrow.core.shouldBeRight
-import io.kotest.core.spec.style.StringSpec
+import kotlin.test.Test
 
-class OctaveTest :
-    StringSpec({
-        "validate should return valid octave" {
-            val input: Byte = 4
-            Octave.validate(input) shouldBeRight Octave.unsafeCreate(input)
-        }
-        "validate should yield validation error for negative number" {
-            val input: Byte = -13
-            Octave.validate(input) shouldBeLeft
-                ValidationError(
-                    "Octave can't be lesser than -12, the input was -13",
-                    validationErrorForProperty<Octave>(),
-                    NoValidationIdentifier,
-                ).nel()
-        }
-    })
+class OctaveTest {
+    @Test
+    fun `validate should return valid octave`() {
+        val input: Byte = 4
+        Octave.validate(input) shouldBeRight Octave.unsafeCreate(input)
+    }
+
+    @Test
+    fun `validate should yield validation error for negative number`() {
+        val input: Byte = -13
+        Octave.validate(input) shouldBeLeft
+            ValidationError(
+                "Octave can't be lesser than -12, the input was -13",
+                validationErrorForProperty<Octave>(),
+                NoValidationIdentifier,
+            ).nel()
+    }
+}
