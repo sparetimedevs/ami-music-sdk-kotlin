@@ -5,7 +5,7 @@ kotlinx-serialization-json-version = "1.8.0"
 kotest-version = "5.9.1"
 kotest-assertions-arrow-version = "2.0.0"
 okhttp-version = "4.12.0"
-spotless-version = "7.0.2"
+spotless-version = "7.0.3"
 
 [libraries]
 arrow-core = { module = "io.arrow-kt:arrow-core", version.ref = "arrow-version" }
