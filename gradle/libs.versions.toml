@@ -1,6 +1,6 @@
 [versions]
 kotlin-version = "2.1.10"
-arrow-version = "2.0.1"
+arrow-version = "2.1.0"
 kotlinx-serialization-json-version = "1.8.0"
 kotest-version = "5.9.1"
 kotest-assertions-arrow-version = "2.0.0"
