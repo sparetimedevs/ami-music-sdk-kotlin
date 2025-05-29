@@ -35,7 +35,7 @@ public value class Octave private constructor(
 ) {
     public companion object {
         public fun validate(
-            input: Byte,
+            input: Int,
             validationIdentifier: ValidationIdentifier = NoValidationIdentifier,
         ): EitherNel<ValidationError, Octave> =
             either {
@@ -54,12 +54,12 @@ public value class Octave private constructor(
                         validationIdentifier,
                     ).nel()
                 }
-                Octave(input)
+                Octave(input.toByte())
             }
 
         public fun unsafeCreate(input: Byte): Octave =
             validate(
-                input,
+                input.toInt(),
                 NoValidationIdentifier,
             ).getOrThrowFirstValidationError()
     }

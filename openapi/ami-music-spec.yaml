@@ -1,0 +1,536 @@
+openapi: 3.1.0
+info:
+  title: (title)
+  version: 0.0.0
+tags: []
+paths: {}
+components:
+  schemas:
+    Chord:
+      type: object
+      required:
+        - duration
+        - noteAttributes
+        - pitches
+        - rootNote
+      properties:
+        duration:
+          $ref: '#/components/schemas/NoteDuration'
+        noteAttributes:
+          $ref: '#/components/schemas/NoteAttributes'
+        pitches:
+          type: array
+          items:
+            $ref: '#/components/schemas/Pitch'
+        rootNote:
+          $ref: '#/components/schemas/Pitch'
+    Key:
+      type: object
+      properties:
+        todo:
+          type: string
+    Measure:
+      type: object
+      required:
+        - notes
+      properties:
+        attributes:
+          $ref: '#/components/schemas/MeasureAttributes'
+        notes:
+          type: array
+          items:
+            $ref: '#/components/schemas/Pitched'
+    MeasureAttributes:
+      type: object
+      properties:
+        key:
+          $ref: '#/components/schemas/Key'
+    NoteAttributes:
+      type: object
+      properties:
+        attack:
+          type: number
+          format: float
+        dynamics:
+          type: number
+          format: float
+        endDynamics:
+          type: number
+          format: float
+        release:
+          type: number
+          format: float
+    NoteDuration:
+      type: object
+      required:
+        - noteValue
+        - modifier
+      properties:
+        noteValue:
+          type: string
+        modifier:
+          type: string
+    Part:
+      type: object
+      required:
+        - id
+        - measures
+      properties:
+        id:
+          type: string
+        name:
+          type: string
+        instrument:
+          $ref: '#/components/schemas/PartInstrument'
+        measures:
+          type: array
+          items:
+            $ref: '#/components/schemas/Measure'
+    PartInstrument:
+      type: object
+      properties:
+        name:
+          type: string
+        midiChannel:
+          type: integer
+          format: int8
+        midiProgram:
+          type: integer
+          format: int8
+    Pitch:
+      type: object
+      required:
+        - alter
+        - noteName
+        - octave
+      properties:
+        alter:
+          type: number
+          format: float
+        noteName:
+          type: string
+        octave:
+          type: integer
+          format: int8
+    Pitched:
+      type: object
+      required:
+        - duration
+        - noteAttributes
+        - pitch
+      properties:
+        duration:
+          $ref: '#/components/schemas/NoteDuration'
+        noteAttributes:
+          $ref: '#/components/schemas/NoteAttributes'
+        pitch:
+          $ref: '#/components/schemas/Pitch'
+    Rest:
+      type: object
+      required:
+        - duration
+        - noteAttributes
+      properties:
+        duration:
+          $ref: '#/components/schemas/NoteDuration'
+        noteAttributes:
+          $ref: '#/components/schemas/NoteAttributes'
+    Score:
+      type: object
+      required:
+        - id
+        - parts
+      properties:
+        id:
+          type: string
+        title:
+          type: string
+        parts:
+          type: array
+          items:
+            $ref: '#/components/schemas/Part'
+      examples:
+        - id: 1064db99-3726-43d7-b0ed-3fc0281bfc02
+          title: Heigh Ho Nobody Home
+          parts:
+            - id: p-1
+              name: Part one
+              instrument:
+                name: Grand Piano
+                midiChannel: 0
+                midiProgram: 1
+              measures:
+                - notes:
+                    - duration:
+                        noteValue: HALF
+                        modifier: NONE
+                      noteAttributes: {}
+                      pitch:
+                        alter: 0
+                        noteName: D
+                        octave: 4
+                    - duration:
+                        noteValue: HALF
+                        modifier: NONE
+                      noteAttributes: {}
+                      pitch:
+                        alter: 0
+                        noteName: C
+                        octave: 4
+                  attributes: {}
+                - notes:
+                    - duration:
+                        noteValue: QUARTER
+                        modifier: NONE
+                      noteAttributes: {}
+                      pitch:
+                        alter: 0
+                        noteName: D
+                        octave: 4
+                    - duration:
+                        noteValue: _8TH
+                        modifier: NONE
+                      noteAttributes: {}
+                      pitch:
+                        alter: 0
+                        noteName: D
+                        octave: 4
+                    - duration:
+                        noteValue: _8TH
+                        modifier: NONE
+                      noteAttributes: {}
+                      pitch:
+                        alter: 0
+                        noteName: D
+                        octave: 4
+                    - duration:
+                        noteValue: HALF
+                        modifier: NONE
+                      noteAttributes: {}
+                      pitch:
+                        alter: 0
+                        noteName: A
+                        octave: 4
+                  attributes: {}
+                - notes:
+                    - duration:
+                        noteValue: QUARTER
+                        modifier: NONE
+                      noteAttributes: {}
+                      pitch:
+                        alter: 0
+                        noteName: D
+                        octave: 4
+                    - duration:
+                        noteValue: QUARTER
+                        modifier: NONE
+                      noteAttributes: {}
+                      pitch:
+                        alter: 0
+                        noteName: D
+                        octave: 4
+                    - duration:
+                        noteValue: QUARTER
+                        modifier: NONE
+                      noteAttributes: {}
+                      pitch:
+                        alter: 0
+                        noteName: E
+                        octave: 4
+                    - duration:
+                        noteValue: QUARTER
+                        modifier: NONE
+                      noteAttributes: {}
+                      pitch:
+                        alter: 0
+                        noteName: E
+                        octave: 4
+                  attributes: {}
+                - notes:
+                    - duration:
+                        noteValue: _8TH
+                        modifier: NONE
+                      noteAttributes: {}
+                      pitch:
+                        alter: 0
+                        noteName: F
+                        octave: 4
+                    - duration:
+                        noteValue: _8TH
+                        modifier: NONE
+                      noteAttributes: {}
+                      pitch:
+                        alter: 0
+                        noteName: F
+                        octave: 4
+                    - duration:
+                        noteValue: _8TH
+                        modifier: NONE
+                      noteAttributes: {}
+                      pitch:
+                        alter: 0
+                        noteName: F
+                        octave: 4
+                    - duration:
+                        noteValue: _8TH
+                        modifier: NONE
+                      noteAttributes: {}
+                      pitch:
+                        alter: 0
+                        noteName: F
+                        octave: 4
+                    - duration:
+                        noteValue: HALF
+                        modifier: NONE
+                      noteAttributes: {}
+                      pitch:
+                        alter: 0
+                        noteName: E
+                        octave: 4
+                  attributes: {}
+                - notes:
+                    - duration:
+                        noteValue: QUARTER
+                        modifier: DOTTED
+                      noteAttributes: {}
+                      pitch:
+                        alter: 0
+                        noteName: A
+                        octave: 5
+                    - duration:
+                        noteValue: _8TH
+                        modifier: NONE
+                      noteAttributes: {}
+                      pitch:
+                        alter: 0
+                        noteName: G
+                        octave: 4
+                    - duration:
+                        noteValue: QUARTER
+                        modifier: DOTTED
+                      noteAttributes: {}
+                      pitch:
+                        alter: 0
+                        noteName: A
+                        octave: 5
+                    - duration:
+                        noteValue: _8TH
+                        modifier: NONE
+                      noteAttributes: {}
+                      pitch:
+                        alter: 0
+                        noteName: G
+                        octave: 4
+                  attributes: {}
+                - notes:
+                    - duration:
+                        noteValue: QUARTER
+                        modifier: DOTTED
+                      noteAttributes: {}
+                      pitch:
+                        alter: 0
+                        noteName: A
+                        octave: 5
+                    - duration:
+                        noteValue: _8TH
+                        modifier: NONE
+                      noteAttributes: {}
+                      pitch:
+                        alter: 0
+                        noteName: G
+                        octave: 4
+                    - duration:
+                        noteValue: _8TH
+                        modifier: NONE
+                      noteAttributes: {}
+                      pitch:
+                        alter: 0
+                        noteName: A
+                        octave: 5
+                    - duration:
+                        noteValue: _8TH
+                        modifier: NONE
+                      noteAttributes: {}
+                      pitch:
+                        alter: 0
+                        noteName: G
+                        octave: 4
+                    - duration:
+                        noteValue: _8TH
+                        modifier: NONE
+                      noteAttributes: {}
+                      pitch:
+                        alter: 0
+                        noteName: F
+                        octave: 4
+                    - duration:
+                        noteValue: _8TH
+                        modifier: NONE
+                      noteAttributes: {}
+                      pitch:
+                        alter: 0
+                        noteName: E
+                        octave: 4
+                  attributes: {}
+        - id: d737b4ae-fbaa-4b0d-9d36-d3651e30e93a
+          parts:
+            - id: p-1
+              name: Part one
+              instrument:
+                name: Grand Piano
+                midiChannel: 0
+                midiProgram: 1
+              measures:
+                - notes:
+                    - duration:
+                        noteValue: QUARTER
+                        modifier: NONE
+                      noteAttributes: {}
+                      pitch:
+                        alter: 0
+                        noteName: C
+                        octave: 4
+                    - duration:
+                        noteValue: QUARTER
+                        modifier: NONE
+                      noteAttributes: {}
+                      pitch:
+                        alter: 0
+                        noteName: G
+                        octave: 4
+                    - duration:
+                        noteValue: QUARTER
+                        modifier: NONE
+                      noteAttributes: {}
+                      pitch:
+                        alter: 0
+                        noteName: A
+                        octave: 4
+                    - duration:
+                        noteValue: QUARTER
+                        modifier: NONE
+                      noteAttributes: {}
+                      pitch:
+                        alter: 0
+                        noteName: E
+                        octave: 4
+                  attributes: {}
+                - notes:
+                    - duration:
+                        noteValue: QUARTER
+                        modifier: NONE
+                      noteAttributes: {}
+                      pitch:
+                        alter: 0
+                        noteName: C
+                        octave: 4
+                    - duration:
+                        noteValue: QUARTER
+                        modifier: NONE
+                      noteAttributes: {}
+                      pitch:
+                        alter: 0
+                        noteName: C
+                        octave: 4
+                    - duration:
+                        noteValue: QUARTER
+                        modifier: NONE
+                      noteAttributes: {}
+                      pitch:
+                        alter: 0
+                        noteName: A
+                        octave: 4
+                    - duration:
+                        noteValue: QUARTER
+                        modifier: NONE
+                      noteAttributes: {}
+                      pitch:
+                        alter: 0
+                        noteName: A
+                        octave: 4
+                  attributes: {}
+            - id: p-2
+              name: Part two
+              instrument:
+                name: Overdriven Guitar
+                midiChannel: 1
+                midiProgram: 30
+              measures:
+                - notes:
+                    - duration:
+                        noteValue: QUARTER
+                        modifier: NONE
+                      noteAttributes: {}
+                      pitch:
+                        alter: 0
+                        noteName: C
+                        octave: 4
+                    - duration:
+                        noteValue: QUARTER
+                        modifier: NONE
+                      noteAttributes: {}
+                      pitch:
+                        alter: 0
+                        noteName: G
+                        octave: 4
+                    - duration:
+                        noteValue: QUARTER
+                        modifier: NONE
+                      noteAttributes: {}
+                      pitch:
+                        alter: 0
+                        noteName: A
+                        octave: 4
+                    - duration:
+                        noteValue: QUARTER
+                        modifier: NONE
+                      noteAttributes: {}
+                      pitch:
+                        alter: 0
+                        noteName: E
+                        octave: 4
+                  attributes: {}
+                - notes:
+                    - duration:
+                        noteValue: QUARTER
+                        modifier: NONE
+                      noteAttributes: {}
+                      pitch:
+                        alter: 0
+                        noteName: C
+                        octave: 4
+                    - duration:
+                        noteValue: QUARTER
+                        modifier: NONE
+                      noteAttributes: {}
+                      pitch:
+                        alter: 0
+                        noteName: C
+                        octave: 4
+                    - duration:
+                        noteValue: QUARTER
+                        modifier: NONE
+                      noteAttributes: {}
+                      pitch:
+                        alter: 0
+                        noteName: A
+                        octave: 4
+                    - duration:
+                        noteValue: QUARTER
+                        modifier: NONE
+                      noteAttributes: {}
+                      pitch:
+                        alter: 0
+                        noteName: A
+                        octave: 4
+                  attributes: {}
+    Unpitched:
+      type: object
+      required:
+        - duration
+        - noteAttributes
+      properties:
+        duration:
+          $ref: '#/components/schemas/NoteDuration'
+        noteAttributes:
+          $ref: '#/components/schemas/NoteAttributes'

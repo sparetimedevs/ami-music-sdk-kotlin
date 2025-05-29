@@ -16,13 +16,13 @@
 
 package com.sparetimedevs.ami.music.example
 
-import com.sparetimedevs.ami.music.input.Measure
-import com.sparetimedevs.ami.music.input.NoteAttributes
-import com.sparetimedevs.ami.music.input.NoteDuration
-import com.sparetimedevs.ami.music.input.Part
-import com.sparetimedevs.ami.music.input.Pitch
-import com.sparetimedevs.ami.music.input.Pitched
-import com.sparetimedevs.ami.music.input.Score
+import com.sparetimedevs.ami.music.serialization.Measure
+import com.sparetimedevs.ami.music.serialization.NoteAttributes
+import com.sparetimedevs.ami.music.serialization.NoteDuration
+import com.sparetimedevs.ami.music.serialization.Part
+import com.sparetimedevs.ami.music.serialization.Pitch
+import com.sparetimedevs.ami.music.serialization.Pitched
+import com.sparetimedevs.ami.music.serialization.Score
 
 fun getExampleScore0InvalidInput(): Score {
     val parts =
@@ -34,53 +34,54 @@ fun getExampleScore0InvalidInput(): Score {
                 measures =
                     listOf(
                         Measure(
-                            null,
-                            listOf(
-                                Pitched(
-                                    duration = NoteDuration("QUARTAAAR", "NONE"),
-                                    noteAttributes =
-                                        NoteAttributes(
-                                            attack = null,
-                                            dynamics = null,
-                                            endDynamics = null,
-                                            release = null,
-                                        ),
-                                    pitch = Pitch(alter = 0.0f, noteName = "C", octave = 4),
+                            attributes = null,
+                            notes =
+                                listOf(
+                                    Pitched(
+                                        duration = NoteDuration("QUARTAAAR", "NONE"),
+                                        noteAttributes =
+                                            NoteAttributes(
+                                                attack = null,
+                                                dynamics = null,
+                                                endDynamics = null,
+                                                release = null,
+                                            ),
+                                        pitch = Pitch(alter = 0.0f, noteName = "C", octave = 4),
+                                    ),
+                                    Pitched(
+                                        duration = NoteDuration("QUARTER", "NONE"),
+                                        noteAttributes =
+                                            NoteAttributes(
+                                                attack = null,
+                                                dynamics = null,
+                                                endDynamics = null,
+                                                release = null,
+                                            ),
+                                        pitch = Pitch(alter = 0.0f, noteName = "G", octave = 127),
+                                    ),
+                                    Pitched(
+                                        duration = NoteDuration("QUARTER", "NONE"),
+                                        noteAttributes =
+                                            NoteAttributes(
+                                                attack = null,
+                                                dynamics = null,
+                                                endDynamics = null,
+                                                release = null,
+                                            ),
+                                        pitch = Pitch(alter = 0.0f, noteName = "A", octave = 4),
+                                    ),
+                                    Pitched(
+                                        duration = NoteDuration("QUARTER", "NONE"),
+                                        noteAttributes =
+                                            NoteAttributes(
+                                                attack = null,
+                                                dynamics = null,
+                                                endDynamics = null,
+                                                release = null,
+                                            ),
+                                        pitch = Pitch(alter = 0.0f, noteName = "L", octave = 4),
+                                    ),
                                 ),
-                                Pitched(
-                                    duration = NoteDuration("QUARTER", "NONE"),
-                                    noteAttributes =
-                                        NoteAttributes(
-                                            attack = null,
-                                            dynamics = null,
-                                            endDynamics = null,
-                                            release = null,
-                                        ),
-                                    pitch = Pitch(alter = 0.0f, noteName = "G", octave = 127),
-                                ),
-                                Pitched(
-                                    duration = NoteDuration("QUARTER", "NONE"),
-                                    noteAttributes =
-                                        NoteAttributes(
-                                            attack = null,
-                                            dynamics = null,
-                                            endDynamics = null,
-                                            release = null,
-                                        ),
-                                    pitch = Pitch(alter = 0.0f, noteName = "A", octave = 4),
-                                ),
-                                Pitched(
-                                    duration = NoteDuration("QUARTER", "NONE"),
-                                    noteAttributes =
-                                        NoteAttributes(
-                                            attack = null,
-                                            dynamics = null,
-                                            endDynamics = null,
-                                            release = null,
-                                        ),
-                                    pitch = Pitch(alter = 0.0f, noteName = "L", octave = 4),
-                                ),
-                            ),
                         ),
                         Measure(
                             attributes = null,
@@ -244,5 +245,5 @@ fun getExampleScore0InvalidInput(): Score {
             ),
         )
 
-    return Score("d737b4ae-fbaa-4b0d-9d36-d3651e30e93a", null, parts)
+    return Score(id = "d737b4ae-fbaa-4b0d-9d36-d3651e30e93a", title = null, parts = parts)
 }

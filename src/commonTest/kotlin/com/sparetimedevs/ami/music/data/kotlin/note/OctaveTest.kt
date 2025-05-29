@@ -27,13 +27,13 @@ import kotlin.test.Test
 class OctaveTest {
     @Test
     fun `validate should return valid octave`() {
-        val input: Byte = 4
-        Octave.validate(input) shouldBeRight Octave.unsafeCreate(input)
+        val input = 4
+        Octave.validate(input) shouldBeRight Octave.unsafeCreate(input.toByte())
     }
 
     @Test
     fun `validate should yield validation error for negative number`() {
-        val input: Byte = -13
+        val input = -13
         Octave.validate(input) shouldBeLeft
             ValidationError(
                 "Octave can't be lesser than -12, the input was -13",

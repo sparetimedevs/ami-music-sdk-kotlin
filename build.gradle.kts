@@ -1,11 +1,16 @@
 import com.diffplug.gradle.spotless.SpotlessExtension
+import com.fasterxml.jackson.databind.JsonNode
+import com.fasterxml.jackson.databind.ObjectMapper
+import com.fasterxml.jackson.dataformat.yaml.YAMLFactory
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
+import java.io.File
 
 plugins {
     alias(libs.plugins.kotlin.multiplatform)
     alias(libs.plugins.kotlin.serialization)
     alias(libs.plugins.spotless)
     id("convention.publication")
+    id("org.openapi.generator") version "7.13.0"
 }
 
 val publishedGroupId: String by project
@@ -25,7 +30,6 @@ kotlin {
     jvmToolchain { this.languageVersion.set(JavaLanguageVersion.of(11)) }
     jvm {
         compilations.all { kotlinOptions.jvmTarget = "11" }
-        withJava()
         testRuns["test"].executionTask.configure {
             useJUnitPlatform()
             filter {
@@ -59,6 +63,8 @@ kotlin {
         jvmTest.dependencies {
             implementation(libs.okhttp)
         }
+        // Add generated sources to the commonMain source set
+        commonMain.get().kotlin.srcDir("$rootDir/generated/src/commonMain/kotlin")
     }
 }
 
@@ -75,7 +81,7 @@ afterEvaluate {
 configure<SpotlessExtension> {
     kotlin {
         target("**/kotlin/**/*.kt")
-        targetExclude("**/build/**/*.*")
+        targetExclude("**/build/**/*.*", "**/generated/**/*.*")
         ktlint()
         licenseHeaderFile("$rootDir/LICENSE.header.template")
     }
@@ -123,3 +129,82 @@ val compatibilityTest by
             includeTestsMatching("backwardscompat.*")
         }
     }
+
+openApiGenerate {
+    generatorName.set("kotlin")
+    inputSpec.set("$rootDir/openapi/ami-music-spec.yaml")
+    outputDir.set("$rootDir/generated")
+    apiPackage.set("com.sparetimedevs.ami.music.api")
+    modelPackage.set("com.sparetimedevs.ami.music.serialization")
+    configOptions.set(
+        mapOf(
+            "dateLibrary" to "kotlinx-datetime",
+            "explicitApi" to "false",
+            "library" to "multiplatform",
+            "sourceFolder" to "src/commonMain/kotlin",
+        ),
+    )
+    // Skip API generation, only generate models
+    generateApiDocumentation.set(false)
+    generateApiTests.set(false)
+    generateModelTests.set(false)
+    generateModelDocumentation.set(false)
+    // Skip API generation entirely
+    globalProperties.set(
+        mapOf(
+            "apis" to "",
+            "models" to "",
+            "supportingFiles" to "false",
+        ),
+    )
+}
+
+val extractOpenApiExamples by tasks.registering {
+    group = "openApiExamples"
+    description = "Extracts all examples from OpenAPI YAML"
+
+    val openApiYaml = file("openapi/ami-music-spec.yaml")
+    val outputDir = file("openapi/examples")
+
+    inputs.file(openApiYaml)
+    outputs.dir(outputDir)
+
+    doLast {
+        val mapper = ObjectMapper(YAMLFactory())
+        val yamlTree: JsonNode = mapper.readTree(openApiYaml)
+
+        val schemas = yamlTree.path("components").path("schemas")
+        if (schemas.isMissingNode) throw GradleException("No schemas found in OpenAPI YAML!")
+
+        val jsonMapper = ObjectMapper()
+
+        schemas.fields().forEach { (modelName, modelNode) ->
+            val examplesNode = modelNode.path("examples")
+            if (!examplesNode.isMissingNode) {
+                if (examplesNode.isArray) {
+                    examplesNode.forEachIndexed { index, exampleNode ->
+                        // Use the "id" field if it exists, else fallback to index
+                        val idText = exampleNode.path("id").takeIf { it.isTextual }?.asText()
+                        val fileName = "${modelName}_${idText ?: "example$index"}.json"
+
+                        val outFile = File(outputDir, fileName)
+                        outFile.parentFile.mkdirs()
+                        jsonMapper.writerWithDefaultPrettyPrinter().writeValue(outFile, exampleNode)
+                        println("✅ Wrote example: ${outFile.absolutePath}")
+                    }
+                } else if (examplesNode.isObject) {
+                    examplesNode.fields().forEach { (exampleName, exampleNode) ->
+                        val valueNode = exampleNode.path("value")
+                        if (!valueNode.isMissingNode) {
+                            val fileName = "${modelName}_$exampleName.json"
+                            val outFile = File(outputDir, fileName)
+                            outFile.parentFile.mkdirs()
+                            jsonMapper.writerWithDefaultPrettyPrinter().writeValue(outFile, valueNode)
+                            println("✅ Wrote example: ${outFile.absolutePath}")
+                        }
+                    }
+                }
+            }
+        }
+    }
+}

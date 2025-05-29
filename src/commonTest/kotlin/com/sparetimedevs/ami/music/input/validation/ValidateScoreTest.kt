@@ -35,7 +35,7 @@ import kotlin.test.Test
 class ValidateScoreTest {
     @Test
     fun `validate score should return valid score with valid input`() {
-        val inputScore: com.sparetimedevs.ami.music.input.Score = getExampleScore0Input()
+        val inputScore: com.sparetimedevs.ami.music.serialization.Score = getExampleScore0Input()
         val expectedScore: Score = getExampleScore0()
 
         inputScore.validate() shouldBeRight expectedScore
@@ -43,7 +43,7 @@ class ValidateScoreTest {
 
     @Test
     fun `validate score should return validation errors with invalid input`() {
-        val inputScore: com.sparetimedevs.ami.music.input.Score = getExampleScore0InvalidInput()
+        val inputScore: com.sparetimedevs.ami.music.serialization.Score = getExampleScore0InvalidInput()
         val expectedValidationErrors =
             listOf(
                 ValidationError(

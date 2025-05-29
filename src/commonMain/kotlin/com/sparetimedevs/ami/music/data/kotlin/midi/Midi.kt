@@ -35,7 +35,7 @@ public value class MidiChannel private constructor(
 ) {
     public companion object {
         public fun validate(
-            input: Byte?,
+            input: Int?,
             validationIdentifier: ValidationIdentifier = NoValidationIdentifier,
         ): EitherNel<ValidationError, MidiChannel?> =
             either {
@@ -49,12 +49,19 @@ public value class MidiChannel private constructor(
                         validationIdentifier,
                     ).nel()
                 }
-                MidiChannel(input)
+                ensure(input < 128) {
+                    ValidationError(
+                        "Midi channel can't be bigger than 127, the input was $input",
+                        validationErrorForProperty<MidiChannel>(),
+                        validationIdentifier,
+                    ).nel()
+                }
+                MidiChannel(input.toByte())
             }
 
         public fun unsafeCreate(input: Byte): MidiChannel =
             validate(
-                input,
+                input.toInt(),
                 NoValidationIdentifier,
             ).getOrThrowFirstValidationError()!!
     }
@@ -67,7 +74,7 @@ public value class MidiProgram private constructor(
 ) {
     public companion object {
         public fun validate(
-            input: Byte?,
+            input: Int?,
             validationIdentifier: ValidationIdentifier = NoValidationIdentifier,
         ): EitherNel<ValidationError, MidiProgram?> =
             either {
@@ -81,12 +88,19 @@ public value class MidiProgram private constructor(
                         validationIdentifier,
                     ).nel()
                 }
-                MidiProgram(input)
+                ensure(input < 128) {
+                    ValidationError(
+                        "Midi program can't be bigger than 127, the input was $input",
+                        validationErrorForProperty<MidiProgram>(),
+                        validationIdentifier,
+                    ).nel()
+                }
+                MidiProgram(input.toByte())
             }
 
         public fun unsafeCreate(input: Byte): MidiProgram =
             validate(
-                input,
+                input.toInt(),
                 NoValidationIdentifier,
             ).getOrThrowFirstValidationError()!!
     }
