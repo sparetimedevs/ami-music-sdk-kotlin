@@ -32,7 +32,7 @@ import com.sparetimedevs.ami.music.data.kotlin.score.Score
 import com.sparetimedevs.ami.music.data.kotlin.score.ScoreId
 import com.sparetimedevs.ami.music.data.kotlin.score.ScoreTitle
 
-public fun com.sparetimedevs.ami.music.input.Score.validate(
+public fun com.sparetimedevs.ami.music.serialization.Score.validate(
     validationIdentifier: ValidationIdentifier = NoValidationIdentifier,
 ): EitherNel<ValidationError, Score> =
     ScoreId.validate(this.id, validationIdentifier).flatMap { scoreId ->
@@ -49,7 +49,7 @@ public fun com.sparetimedevs.ami.music.input.Score.validate(
         }
     }
 
-public fun com.sparetimedevs.ami.music.input.Part.validate(
+public fun com.sparetimedevs.ami.music.serialization.Part.validate(
     validationIdentifier: ValidationIdentifier = NoValidationIdentifier,
 ): EitherNel<ValidationError, Part> =
     PartId.validate(this.id, validationIdentifier).flatMap { partId ->
@@ -67,7 +67,7 @@ public fun com.sparetimedevs.ami.music.input.Part.validate(
         }
     }
 
-public fun com.sparetimedevs.ami.music.input.Measure.validate(
+public fun com.sparetimedevs.ami.music.serialization.Measure.validate(
     index: Int,
     validationIdentifier: ValidationIdentifier = NoValidationIdentifier,
 ): EitherNel<ValidationError, Measure> =
@@ -83,7 +83,7 @@ public fun com.sparetimedevs.ami.music.input.Measure.validate(
         }
     }
 
-public fun com.sparetimedevs.ami.music.input.MeasureAttributes?.validate(
+public fun com.sparetimedevs.ami.music.serialization.MeasureAttributes?.validate(
     validationIdentifier: ValidationIdentifier = NoValidationIdentifier,
 ): EitherNel<ValidationError, MeasureAttributes?> {
     // TODO use, and validate "this" provided attributes.

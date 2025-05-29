@@ -27,7 +27,7 @@ import com.sparetimedevs.ami.music.data.kotlin.midi.MidiProgram
 import com.sparetimedevs.ami.music.data.kotlin.part.PartInstrument
 import com.sparetimedevs.ami.music.data.kotlin.part.PartInstrumentName
 
-public fun com.sparetimedevs.ami.music.input.PartInstrument?.validate(
+public fun com.sparetimedevs.ami.music.serialization.PartInstrument?.validate(
     validationIdentifier: ValidationIdentifier = NoValidationIdentifier,
 ): EitherNel<ValidationError, PartInstrument?> =
     if (this == null) {

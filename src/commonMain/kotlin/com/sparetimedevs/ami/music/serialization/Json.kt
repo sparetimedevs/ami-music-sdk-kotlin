@@ -21,9 +21,7 @@ import arrow.core.flatMap
 import com.sparetimedevs.ami.core.DomainError
 import com.sparetimedevs.ami.core.ParseError
 import com.sparetimedevs.ami.music.data.kotlin.score.Score
-import com.sparetimedevs.ami.music.input.toInput
 import com.sparetimedevs.ami.music.input.validation.validateInput
-import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
 
 public fun fromJson(
@@ -31,7 +29,7 @@ public fun fromJson(
     input: String,
 ): Either<DomainError, Score> =
     Either
-        .catch { jsonParser.decodeFromString<com.sparetimedevs.ami.music.input.Score>(input) }
+        .catch { jsonParser.decodeFromString<com.sparetimedevs.ami.music.serialization.Score>(input) }
         .mapLeft {
             ParseError(
                 "There was an exception while parsing the input. The exception is: ${it.message}",
@@ -44,7 +42,7 @@ public fun toJson(
 ): Either<DomainError, String> =
     Either
         .catch {
-            val scoreInputType: com.sparetimedevs.ami.music.input.Score = score.toInput()
+            val scoreInputType: com.sparetimedevs.ami.music.serialization.Score = score.toSerializable()
             jsonParser.encodeToString(scoreInputType)
         }.mapLeft {
             ParseError(

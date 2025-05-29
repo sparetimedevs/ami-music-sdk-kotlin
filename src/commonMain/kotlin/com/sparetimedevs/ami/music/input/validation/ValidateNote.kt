@@ -44,8 +44,8 @@ public fun validateNote(
 ): EitherNel<ValidationError, Note> =
     ValidationIdentifierForNote(index, validationIdentifier).let { validationIdentifierForNote ->
         when (input) {
-            is com.sparetimedevs.ami.music.input.Pitched -> input.validate(validationIdentifierForNote)
-            is com.sparetimedevs.ami.music.input.Chord -> input.validate(validationIdentifierForNote)
+            is com.sparetimedevs.ami.music.serialization.Pitched -> input.validate(validationIdentifierForNote)
+            is com.sparetimedevs.ami.music.serialization.Chord -> input.validate(validationIdentifierForNote)
             // TODO add Unpitched, Rest
             else ->
                 ValidationError(
@@ -56,7 +56,7 @@ public fun validateNote(
         }
     }
 
-public fun com.sparetimedevs.ami.music.input.Pitched.validate(
+public fun com.sparetimedevs.ami.music.serialization.Pitched.validate(
     validationIdentifier: ValidationIdentifier = NoValidationIdentifier,
 ): EitherNel<ValidationError, Pitched> =
     Either.zipOrAccumulate(
@@ -67,7 +67,7 @@ public fun com.sparetimedevs.ami.music.input.Pitched.validate(
         Pitched(duration, noteAttributes, pitch)
     }
 
-public fun com.sparetimedevs.ami.music.input.Chord.validate(
+public fun com.sparetimedevs.ami.music.serialization.Chord.validate(
     validationIdentifier: ValidationIdentifier = NoValidationIdentifier,
 ): EitherNel<ValidationError, Chord> =
 
@@ -83,7 +83,7 @@ public fun com.sparetimedevs.ami.music.input.Chord.validate(
         Chord(duration, noteAttributes, rootNote, pitches)
     }
 
-public fun com.sparetimedevs.ami.music.input.NoteDuration.validate(
+public fun com.sparetimedevs.ami.music.serialization.NoteDuration.validate(
     validationIdentifier: ValidationIdentifier = NoValidationIdentifier,
 ): EitherNel<ValidationError, NoteDuration> =
     Either.zipOrAccumulate(
@@ -93,14 +93,14 @@ public fun com.sparetimedevs.ami.music.input.NoteDuration.validate(
         NoteDuration(noteValue, modifier)
     }
 
-public fun com.sparetimedevs.ami.music.input.NoteAttributes.validate(
+public fun com.sparetimedevs.ami.music.serialization.NoteAttributes.validate(
     validationIdentifier: ValidationIdentifier = NoValidationIdentifier,
 ): EitherNel<ValidationError, NoteAttributes> {
     // TODO implement
     return NoteAttributes(null, null, null, null).right()
 }
 
-public fun com.sparetimedevs.ami.music.input.Pitch.validate(
+public fun com.sparetimedevs.ami.music.serialization.Pitch.validate(
     validationIdentifier: ValidationIdentifier = NoValidationIdentifier,
 ): EitherNel<ValidationError, Pitch> =
     Either.zipOrAccumulate(
@@ -111,7 +111,7 @@ public fun com.sparetimedevs.ami.music.input.Pitch.validate(
         Pitch(noteName, octave, alter)
     }
 
-public fun com.sparetimedevs.ami.music.input.Pitch.validate(
+public fun com.sparetimedevs.ami.music.serialization.Pitch.validate(
     index: Int,
     validationIdentifier: ValidationIdentifier = NoValidationIdentifier,
 ): EitherNel<ValidationError, Pitch> =

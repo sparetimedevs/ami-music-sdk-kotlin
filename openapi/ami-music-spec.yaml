@@ -1,0 +1,161 @@
+openapi: 3.1.0
+info:
+  title: (title)
+  version: 0.0.0
+tags: []
+paths: {}
+components:
+  schemas:
+    Chord:
+      type: object
+      required:
+        - duration
+        - noteAttributes
+        - pitches
+        - rootNote
+      properties:
+        duration:
+          $ref: '#/components/schemas/NoteDuration'
+        noteAttributes:
+          $ref: '#/components/schemas/NoteAttributes'
+        pitches:
+          type: array
+          items:
+            $ref: '#/components/schemas/Pitch'
+        rootNote:
+          $ref: '#/components/schemas/Pitch'
+    Key:
+      type: object
+      properties:
+        todo:
+          type: string
+    Measure:
+      type: object
+      required:
+        - notes
+      properties:
+        attributes:
+          $ref: '#/components/schemas/MeasureAttributes'
+        notes:
+          type: array
+          items:
+            $ref: '#/components/schemas/Pitched'
+    MeasureAttributes:
+      type: object
+      properties:
+        key:
+          $ref: '#/components/schemas/Key'
+    NoteAttributes:
+      type: object
+      properties:
+        attack:
+          type: number
+          format: float
+        dynamics:
+          type: number
+          format: float
+        endDynamics:
+          type: number
+          format: float
+        release:
+          type: number
+          format: float
+    NoteDuration:
+      type: object
+      required:
+        - noteValue
+        - modifier
+      properties:
+        noteValue:
+          type: string
+        modifier:
+          type: string
+    Part:
+      type: object
+      required:
+        - id
+        - measures
+      properties:
+        id:
+          type: string
+        name:
+          type: string
+        instrument:
+          $ref: '#/components/schemas/PartInstrument'
+        measures:
+          type: array
+          items:
+            $ref: '#/components/schemas/Measure'
+    PartInstrument:
+      type: object
+      properties:
+        name:
+          type: string
+        midiChannel:
+          type: integer
+          format: int8
+        midiProgram:
+          type: integer
+          format: int8
+    Pitch:
+      type: object
+      required:
+        - alter
+        - noteName
+        - octave
+      properties:
+        alter:
+          type: number
+          format: float
+        noteName:
+          type: string
+        octave:
+          type: integer
+          format: int8
+    Pitched:
+      type: object
+      required:
+        - duration
+        - noteAttributes
+        - pitch
+      properties:
+        duration:
+          $ref: '#/components/schemas/NoteDuration'
+        noteAttributes:
+          $ref: '#/components/schemas/NoteAttributes'
+        pitch:
+          $ref: '#/components/schemas/Pitch'
+    Rest:
+      type: object
+      required:
+        - duration
+        - noteAttributes
+      properties:
+        duration:
+          $ref: '#/components/schemas/NoteDuration'
+        noteAttributes:
+          $ref: '#/components/schemas/NoteAttributes'
+    Score:
+      type: object
+      required:
+        - id
+        - parts
+      properties:
+        id:
+          type: string
+        title:
+          type: string
+        parts:
+          type: array
+          items:
+            $ref: '#/components/schemas/Part'
+    Unpitched:
+      type: object
+      required:
+        - duration
+        - noteAttributes
+      properties:
+        duration:
+          $ref: '#/components/schemas/NoteDuration'
+        noteAttributes:
+          $ref: '#/components/schemas/NoteAttributes'

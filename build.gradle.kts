@@ -1,4 +1,5 @@
 import com.diffplug.gradle.spotless.SpotlessExtension
+import org.gradle.kotlin.dsl.commonMain
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 plugins {
@@ -6,6 +7,7 @@ plugins {
     alias(libs.plugins.kotlin.serialization)
     alias(libs.plugins.spotless)
     id("convention.publication")
+    id("org.openapi.generator") version "7.13.0"
 }
 
 val publishedGroupId: String by project
@@ -59,6 +61,8 @@ kotlin {
         jvmTest.dependencies {
             implementation(libs.okhttp)
         }
+        // Add generated sources to the commonMain source set
+        commonMain.get().kotlin.srcDir("$buildDir/generated/src/commonMain/kotlin")
     }
 }
 
@@ -123,3 +127,37 @@ val compatibilityTest by
             includeTestsMatching("backwardscompat.*")
         }
     }
+
+openApiGenerate {
+    generatorName.set("kotlin")
+    inputSpec.set("$rootDir/openapi/ami-music-spec.yaml")
+    outputDir.set("$buildDir/generated")
+    apiPackage.set("com.sparetimedevs.ami.music.api")
+    modelPackage.set("com.sparetimedevs.ami.music.serialization")
+    configOptions.set(
+        mapOf(
+            "dateLibrary" to "kotlinx-datetime",
+            "explicitApi" to "false",
+            "library" to "multiplatform",
+            "sourceFolder" to "src/commonMain/kotlin",
+        ),
+    )
+    // Skip API generation, only generate models
+    generateApiDocumentation.set(false)
+    generateApiTests.set(false)
+    generateModelTests.set(false)
+    generateModelDocumentation.set(false)
+    // Skip API generation entirely
+    globalProperties.set(
+        mapOf(
+            "apis" to "",
+            "models" to "",
+            "supportingFiles" to "false",
+        ),
+    )
+}
+
+// Make sure the OpenAPI code is generated before compilation
+// tasks.withType<KotlinCompile> {
+//    dependsOn("openApiGenerate")
+// }
