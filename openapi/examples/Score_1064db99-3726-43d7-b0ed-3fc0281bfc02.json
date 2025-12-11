@@ -1,0 +1,307 @@
+{
+  "id" : "1064db99-3726-43d7-b0ed-3fc0281bfc02",
+  "title" : "Heigh Ho Nobody Home",
+  "parts" : [ {
+    "id" : "p-1",
+    "name" : "Part one",
+    "instrument" : {
+      "name" : "Grand Piano",
+      "midiChannel" : 0,
+      "midiProgram" : 1
+    },
+    "measures" : [ {
+      "notes" : [ {
+        "duration" : {
+          "noteValue" : "HALF",
+          "modifier" : "NONE"
+        },
+        "noteAttributes" : { },
+        "pitch" : {
+          "alter" : 0,
+          "noteName" : "D",
+          "octave" : 4
+        }
+      }, {
+        "duration" : {
+          "noteValue" : "HALF",
+          "modifier" : "NONE"
+        },
+        "noteAttributes" : { },
+        "pitch" : {
+          "alter" : 0,
+          "noteName" : "C",
+          "octave" : 4
+        }
+      } ],
+      "attributes" : { }
+    }, {
+      "notes" : [ {
+        "duration" : {
+          "noteValue" : "QUARTER",
+          "modifier" : "NONE"
+        },
+        "noteAttributes" : { },
+        "pitch" : {
+          "alter" : 0,
+          "noteName" : "D",
+          "octave" : 4
+        }
+      }, {
+        "duration" : {
+          "noteValue" : "_8TH",
+          "modifier" : "NONE"
+        },
+        "noteAttributes" : { },
+        "pitch" : {
+          "alter" : 0,
+          "noteName" : "D",
+          "octave" : 4
+        }
+      }, {
+        "duration" : {
+          "noteValue" : "_8TH",
+          "modifier" : "NONE"
+        },
+        "noteAttributes" : { },
+        "pitch" : {
+          "alter" : 0,
+          "noteName" : "D",
+          "octave" : 4
+        }
+      }, {
+        "duration" : {
+          "noteValue" : "HALF",
+          "modifier" : "NONE"
+        },
+        "noteAttributes" : { },
+        "pitch" : {
+          "alter" : 0,
+          "noteName" : "A",
+          "octave" : 4
+        }
+      } ],
+      "attributes" : { }
+    }, {
+      "notes" : [ {
+        "duration" : {
+          "noteValue" : "QUARTER",
+          "modifier" : "NONE"
+        },
+        "noteAttributes" : { },
+        "pitch" : {
+          "alter" : 0,
+          "noteName" : "D",
+          "octave" : 4
+        }
+      }, {
+        "duration" : {
+          "noteValue" : "QUARTER",
+          "modifier" : "NONE"
+        },
+        "noteAttributes" : { },
+        "pitch" : {
+          "alter" : 0,
+          "noteName" : "D",
+          "octave" : 4
+        }
+      }, {
+        "duration" : {
+          "noteValue" : "QUARTER",
+          "modifier" : "NONE"
+        },
+        "noteAttributes" : { },
+        "pitch" : {
+          "alter" : 0,
+          "noteName" : "E",
+          "octave" : 4
+        }
+      }, {
+        "duration" : {
+          "noteValue" : "QUARTER",
+          "modifier" : "NONE"
+        },
+        "noteAttributes" : { },
+        "pitch" : {
+          "alter" : 0,
+          "noteName" : "E",
+          "octave" : 4
+        }
+      } ],
+      "attributes" : { }
+    }, {
+      "notes" : [ {
+        "duration" : {
+          "noteValue" : "_8TH",
+          "modifier" : "NONE"
+        },
+        "noteAttributes" : { },
+        "pitch" : {
+          "alter" : 0,
+          "noteName" : "F",
+          "octave" : 4
+        }
+      }, {
+        "duration" : {
+          "noteValue" : "_8TH",
+          "modifier" : "NONE"
+        },
+        "noteAttributes" : { },
+        "pitch" : {
+          "alter" : 0,
+          "noteName" : "F",
+          "octave" : 4
+        }
+      }, {
+        "duration" : {
+          "noteValue" : "_8TH",
+          "modifier" : "NONE"
+        },
+        "noteAttributes" : { },
+        "pitch" : {
+          "alter" : 0,
+          "noteName" : "F",
+          "octave" : 4
+        }
+      }, {
+        "duration" : {
+          "noteValue" : "_8TH",
+          "modifier" : "NONE"
+        },
+        "noteAttributes" : { },
+        "pitch" : {
+          "alter" : 0,
+          "noteName" : "F",
+          "octave" : 4
+        }
+      }, {
+        "duration" : {
+          "noteValue" : "HALF",
+          "modifier" : "NONE"
+        },
+        "noteAttributes" : { },
+        "pitch" : {
+          "alter" : 0,
+          "noteName" : "E",
+          "octave" : 4
+        }
+      } ],
+      "attributes" : { }
+    }, {
+      "notes" : [ {
+        "duration" : {
+          "noteValue" : "QUARTER",
+          "modifier" : "DOTTED"
+        },
+        "noteAttributes" : { },
+        "pitch" : {
+          "alter" : 0,
+          "noteName" : "A",
+          "octave" : 5
+        }
+      }, {
+        "duration" : {
+          "noteValue" : "_8TH",
+          "modifier" : "NONE"
+        },
+        "noteAttributes" : { },
+        "pitch" : {
+          "alter" : 0,
+          "noteName" : "G",
+          "octave" : 4
+        }
+      }, {
+        "duration" : {
+          "noteValue" : "QUARTER",
+          "modifier" : "DOTTED"
+        },
+        "noteAttributes" : { },
+        "pitch" : {
+          "alter" : 0,
+          "noteName" : "A",
+          "octave" : 5
+        }
+      }, {
+        "duration" : {
+          "noteValue" : "_8TH",
+          "modifier" : "NONE"
+        },
+        "noteAttributes" : { },
+        "pitch" : {
+          "alter" : 0,
+          "noteName" : "G",
+          "octave" : 4
+        }
+      } ],
+      "attributes" : { }
+    }, {
+      "notes" : [ {
+        "duration" : {
+          "noteValue" : "QUARTER",
+          "modifier" : "DOTTED"
+        },
+        "noteAttributes" : { },
+        "pitch" : {
+          "alter" : 0,
+          "noteName" : "A",
+          "octave" : 5
+        }
+      }, {
+        "duration" : {
+          "noteValue" : "_8TH",
+          "modifier" : "NONE"
+        },
+        "noteAttributes" : { },
+        "pitch" : {
+          "alter" : 0,
+          "noteName" : "G",
+          "octave" : 4
+        }
+      }, {
+        "duration" : {
+          "noteValue" : "_8TH",
+          "modifier" : "NONE"
+        },
+        "noteAttributes" : { },
+        "pitch" : {
+          "alter" : 0,
+          "noteName" : "A",
+          "octave" : 5
+        }
+      }, {
+        "duration" : {
+          "noteValue" : "_8TH",
+          "modifier" : "NONE"
+        },
+        "noteAttributes" : { },
+        "pitch" : {
+          "alter" : 0,
+          "noteName" : "G",
+          "octave" : 4
+        }
+      }, {
+        "duration" : {
+          "noteValue" : "_8TH",
+          "modifier" : "NONE"
+        },
+        "noteAttributes" : { },
+        "pitch" : {
+          "alter" : 0,
+          "noteName" : "F",
+          "octave" : 4
+        }
+      }, {
+        "duration" : {
+          "noteValue" : "_8TH",
+          "modifier" : "NONE"
+        },
+        "noteAttributes" : { },
+        "pitch" : {
+          "alter" : 0,
+          "noteName" : "E",
+          "octave" : 4
+        }
+      } ],
+      "attributes" : { }
+    } ]
+  } ]
+}

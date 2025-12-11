@@ -61,3 +61,38 @@ To make a project use the latest snapshot version;
 
 - remove `/.kotlin/` dir
 - execute: `./gradlew clean build --refresh-dependencies`
+
+### TypeSpec data models
+
+This project has a dependency on the data models defined in `ami-music-spec`.
+
+#### Include latest changes of `ami-music-spec` locally
+
+(This assumes both projects `ami-music-spec` and `ami-music-sdk-kotlin` are in the same parent directory and your
+current directory is `ami-music-sdk-kotlin`)
+
+Execute:
+
+```
+(cd ../ami-music-spec && npm install)
+(cd ../ami-music-spec && tsp compile .)
+cp ../ami-music-spec/tsp-output/schema/openapi.yaml openapi/ami-music-spec.yaml
+```
+
+Now the OpenAPI spec included in this project is up to date.
+
+Generate sources:
+
+```
+./gradlew openApiGenerate
+```
+
+Now the code in `generated` is up to date.
+
+Extract examples as JSON:
+
+```
+./gradlew extractOpenApiExamples
+```
+
+Now the JSON examples in `openapi/examples` are up to date. 

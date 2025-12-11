@@ -1,0 +1,13 @@
+src/commonMain/kotlin/com/sparetimedevs/ami/music/serialization/Chord.kt
+src/commonMain/kotlin/com/sparetimedevs/ami/music/serialization/Key.kt
+src/commonMain/kotlin/com/sparetimedevs/ami/music/serialization/Measure.kt
+src/commonMain/kotlin/com/sparetimedevs/ami/music/serialization/MeasureAttributes.kt
+src/commonMain/kotlin/com/sparetimedevs/ami/music/serialization/NoteAttributes.kt
+src/commonMain/kotlin/com/sparetimedevs/ami/music/serialization/NoteDuration.kt
+src/commonMain/kotlin/com/sparetimedevs/ami/music/serialization/Part.kt
+src/commonMain/kotlin/com/sparetimedevs/ami/music/serialization/PartInstrument.kt
+src/commonMain/kotlin/com/sparetimedevs/ami/music/serialization/Pitch.kt
+src/commonMain/kotlin/com/sparetimedevs/ami/music/serialization/Pitched.kt
+src/commonMain/kotlin/com/sparetimedevs/ami/music/serialization/Rest.kt
+src/commonMain/kotlin/com/sparetimedevs/ami/music/serialization/Score.kt
+src/commonMain/kotlin/com/sparetimedevs/ami/music/serialization/Unpitched.kt

@@ -19,14 +19,14 @@ package backwardscompat
 import arrow.core.flatMap
 import com.sparetimedevs.ami.music.data.kotlin.score.Score
 import com.sparetimedevs.ami.music.example.getExampleScore0
-import com.sparetimedevs.ami.music.input.toInput
 import com.sparetimedevs.ami.music.input.validation.validateInput
+import com.sparetimedevs.ami.music.serialization.toSerializable
 import io.kotest.assertions.arrow.core.shouldBeRight
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.json.Json
 import okhttp3.OkHttpClient
 import kotlin.test.Test
-import com.sparetimedevs.ami.music.input.Score as InputScore
+import com.sparetimedevs.ami.music.serialization.Score as InputScore
 
 class PingPongTest {
     val httpClient = OkHttpClient()
@@ -35,7 +35,7 @@ class PingPongTest {
     @Test
     fun `ping-pong with older version should work`() {
         val expectedScore: Score = getExampleScore0()
-        val input = expectedScore.toInput()
+        val input = expectedScore.toSerializable()
 
         postJsonRequest<InputScore, ResponseInputScore>(
             "http://localhost:8080/score",
