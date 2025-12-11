@@ -33,10 +33,11 @@ import kotlin.test.Test
 class ExamplesTest {
     val jsonParser = Json.Default
 
-    val mapOfJsonAndKotlinExamples = mapOf(
-        "openapi/examples/Score_d737b4ae-fbaa-4b0d-9d36-d3651e30e93a.json" to getExampleScore0(),
-        "openapi/examples/Score_1064db99-3726-43d7-b0ed-3fc0281bfc02.json" to getExampleScoreHeighHoNobodyHome(),
-    )
+    val mapOfJsonAndKotlinExamples =
+        mapOf(
+            "openapi/examples/Score_d737b4ae-fbaa-4b0d-9d36-d3651e30e93a.json" to getExampleScore0(),
+            "openapi/examples/Score_1064db99-3726-43d7-b0ed-3fc0281bfc02.json" to getExampleScoreHeighHoNobodyHome(),
+        )
 
     @Test
     fun `fromJson and toJson should work with examples in JSON and Kotlin code`() {

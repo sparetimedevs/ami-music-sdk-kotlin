@@ -27,9 +27,8 @@ repositories {
 
 kotlin {
     explicitApi()
-    jvmToolchain { this.languageVersion.set(JavaLanguageVersion.of(11)) }
+    jvmToolchain(11)
     jvm {
-        compilations.all { kotlinOptions.jvmTarget = "11" }
         testRuns["test"].executionTask.configure {
             useJUnitPlatform()
             filter {
