@@ -52,7 +52,7 @@ repositories {
 
 dependencies {
     ...
-	  implementation("com.sparetimedevs.ami:ami-music-sdk-kotlin:0.0.1-SNAPSHOT)
+	  implementation("com.sparetimedevs.ami:ami-music-sdk-kotlin:0.0.1-SNAPSHOT")
 	  ...
 }
 ```
