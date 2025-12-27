@@ -23,11 +23,12 @@ import com.sparetimedevs.ami.music.example.getExampleScoreHeighHoNobodyHome
 import kotlinx.serialization.json.Json
 
 /**
- * Compatibility tests for SDK version 0.0.1-SNAPSHOT
+ * Compatibility tests for the currently developed SDK
  */
 class CompatibilityTest : AbstractCompatibilityTest<DomainError, Score>() {
     override fun examples(): Map<String, Score> =
         mapOf(
+            // TODO add list of old versions of JSON files.
             "../openapi/examples/Score_d737b4ae-fbaa-4b0d-9d36-d3651e30e93a.json" to getExampleScore0(),
             "../openapi/examples/Score_1064db99-3726-43d7-b0ed-3fc0281bfc02.json" to getExampleScoreHeighHoNobodyHome(),
         )

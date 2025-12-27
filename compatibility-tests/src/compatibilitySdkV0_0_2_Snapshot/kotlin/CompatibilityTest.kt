@@ -14,40 +14,35 @@
  * limitations under the License.
  */
 
-import arrow.core.getOrElse
+import arrow.core.Either
+import com.sparetimedevs.ami.compat.AbstractCompatibilityTest
+import com.sparetimedevs.ami.core.DomainError
+import com.sparetimedevs.ami.music.data.kotlin.score.Score
 import com.sparetimedevs.ami.music.example.getExampleScore0
 import com.sparetimedevs.ami.music.example.getExampleScoreHeighHoNobodyHome
-import com.sparetimedevs.ami.music.serialization.fromJson
-import com.sparetimedevs.ami.music.serialization.toJson
-import io.kotest.assertions.arrow.core.shouldBeRight
-import io.kotest.assertions.json.shouldEqualJson
 import kotlinx.serialization.json.Json
-import java.nio.file.Files
-import java.nio.file.Paths
-import kotlin.test.Test
 
 /**
  * Compatibility tests for SDK version 0.0.2-SNAPSHOT
  */
-class CompatibilityTest {
-    val jsonParser = Json.Default
-
-    val mapOfJsonAndKotlinExamples =
+class CompatibilityTest : AbstractCompatibilityTest<DomainError, Score>() {
+    override fun examples(): Map<String, Score> =
         mapOf(
             "../openapi/examples/Score_d737b4ae-fbaa-4b0d-9d36-d3651e30e93a.json" to getExampleScore0(),
             "../openapi/examples/Score_1064db99-3726-43d7-b0ed-3fc0281bfc02.json" to getExampleScoreHeighHoNobodyHome(),
         )
 
-    @Test
-    fun `fromJson and toJson should work with examples in JSON and Kotlin code`() {
-        mapOfJsonAndKotlinExamples.forEach { (jsonExamplePath, score) ->
-            val path = Paths.get(jsonExamplePath)
-            val json = Files.readString(path)
+    override fun fromJson(
+        jsonParser: Json,
+        input: String,
+    ): Either<DomainError, Score> =
+        com.sparetimedevs.ami.music.serialization
+            .fromJson(jsonParser, input)
 
-            fromJson(jsonParser, json) shouldBeRight score
-            toJson(jsonParser, score).getOrElse {
-                throw RuntimeException("Test failed")
-            } shouldEqualJson json
-        }
-    }
+    override fun toJson(
+        jsonParser: Json,
+        value: Score,
+    ): Either<DomainError, String> =
+        com.sparetimedevs.ami.music.serialization
+            .toJson(jsonParser, value)
 }
