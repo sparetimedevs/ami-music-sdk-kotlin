@@ -23,8 +23,6 @@ import io.kotest.assertions.json.shouldEqualJson
 import kotlinx.serialization.json.Json
 import java.nio.file.Files
 import java.nio.file.Paths
-import kotlin.collections.component1
-import kotlin.collections.component2
 import kotlin.test.Test
 
 abstract class AbstractCompatibilityTest<Error, A> {
@@ -58,8 +56,8 @@ abstract class AbstractCompatibilityTest<Error, A> {
             val json = Files.readString(path)
 
             fromJson(jsonParser, json) shouldBeRight a
-            toJson(jsonParser, a).getOrElse {
-                throw RuntimeException("Test failed")
+            toJson(jsonParser, a).getOrElse { error ->
+                throw AssertionError("toJson failed for $jsonExamplePath, error is: $error")
             } shouldEqualJson json
         }
     }
