@@ -46,7 +46,7 @@ Moreover, the SDK is designed with extensibility in mind. Much of the functional
 repositories {
 	  ...
 	  mavenLocal() // In case of locally published artifact.
-	  maven("https://oss.sonatype.org/content/repositories/snapshots/") // In case of snapshot artifact published to Maven Central snapshots repositories.
+	  maven("https://central.sonatype.com/repository/maven-snapshots/") // In case of snapshot artifact published to Maven Central snapshots repositories.
 	  ...
 }
 
