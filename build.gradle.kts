@@ -13,8 +13,8 @@ plugins {
     id("org.openapi.generator") version "7.13.0"
 }
 
-val publishedGroupId: String by project
-val libraryVersion: String by project
+val publishedGroupId: String = providers.gradleProperty("publishedGroupId").get()
+val libraryVersion: String = providers.gradleProperty("libraryVersion").get()
 
 project.group = publishedGroupId
 
@@ -37,7 +37,7 @@ kotlin {
             }
         }
     }
-    js(IR) { browser { commonWebpackConfig { cssSupport { enabled.set(true) } } } }
+    js { browser { commonWebpackConfig { cssSupport { enabled.set(true) } } } }
     val hostOs = System.getProperty("os.name")
     val isMingwX64 = hostOs.startsWith("Windows")
     // Native targets are build conditionally, depending on the host.
@@ -96,44 +96,40 @@ configure<SpotlessExtension> {
     }
 }
 
-afterEvaluate {
-    val spotlessApply = tasks.findByName("spotlessApply")
-    tasks.withType<KotlinCompile> { dependsOn(spotlessApply) }
-}
+tasks.withType<KotlinCompile>().configureEach { dependsOn(tasks.named("spotlessApply")) }
 
-val compatibilityTest by
-    tasks.registering(Test::class) {
-        description = "Runs compatibility tests."
-        group = "verification"
+tasks.register<Test>("compatibilityTest") {
+    description = "Runs compatibility tests."
+    group = "verification"
 
-        javaLauncher.set(
-            javaToolchains.launcherFor { languageVersion.set(JavaLanguageVersion.of(11)) },
-        )
+    javaLauncher.set(
+        javaToolchains.launcherFor { languageVersion.set(JavaLanguageVersion.of(11)) },
+    )
 
-        useJUnitPlatform()
-        testClassesDirs =
-            kotlin
-                .jvm()
-                .compilations
-                .get("test")
-                .output.classesDirs
-        classpath +=
-            objects
-                .fileCollection()
-                .from(
-                    tasks.named("compileKotlinJvm"),
-                    tasks.named("compileTestKotlinJvm"),
-                    configurations.named("jvmRuntimeClasspath"),
-                    configurations.named("jvmTestRuntimeClasspath"),
-                )
+    useJUnitPlatform()
+    testClassesDirs =
+        kotlin
+            .jvm()
+            .compilations
+            .get("test")
+            .output.classesDirs
+    classpath +=
+        objects
+            .fileCollection()
+            .from(
+                tasks.named("compileKotlinJvm"),
+                tasks.named("compileTestKotlinJvm"),
+                configurations.named("jvmRuntimeClasspath"),
+                configurations.named("jvmTestRuntimeClasspath"),
+            )
 
-        filter {
-            // Exclude all unit tests
-            excludeTestsMatching("com.sparetimedevs.ami.*")
-            // Include all compatibility tests
-            includeTestsMatching("backwardscompat.*")
-        }
+    filter {
+        // Exclude all unit tests
+        excludeTestsMatching("com.sparetimedevs.ami.*")
+        // Include all compatibility tests
+        includeTestsMatching("backwardscompat.*")
     }
+}
 
 openApiGenerate {
     generatorName.set("kotlin")
@@ -164,7 +160,7 @@ openApiGenerate {
     )
 }
 
-val extractOpenApiExamples by tasks.registering {
+tasks.register("extractOpenApiExamples") {
     group = "openApiExamples"
     description = "Extracts all examples from OpenAPI YAML"
 
