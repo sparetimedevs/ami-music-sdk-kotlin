@@ -118,7 +118,12 @@ The module uses one Gradle test suite per SDK version (`compatibilitySdkCurrent`
 expected Kotlin object, serialize back, compare to the JSON) via the shared `AbstractCompatibilityTest` in
 `testFixtures`.
 
-Note: until there are real, immutable releases, the versioned suites all resolve the same snapshot artifact, so the
-setup currently showcases the mechanism rather than testing genuinely different versions. Once real releases exist, the
-suites will pin those versions, and JSON files as serialized by each release will be kept as fixtures so both
-directions are truly covered.
+JSON files as serialized by each version are frozen under `compatibility-tests/fixtures/vX.Y.Z/` — never edited after
+being added. Every suite reads its own version's fixtures (baseline), older fixtures (backward) and newer fixtures plus
+the current `openapi/examples` (forward). When a release is cut, its serialized JSON is snapshotted into a new
+`fixtures/vX.Y.Z/` directory as part of the release checklist.
+
+Note: until there are real, immutable releases, the versioned suites all resolve the same snapshot artifact and the
+versioned fixture directories contain copies of the current examples, so the setup currently showcases the mechanism
+rather than testing genuinely different versions. Once real releases exist, the suites will pin those versions and the
+fixtures will be true per-release snapshots, covering both directions for real.

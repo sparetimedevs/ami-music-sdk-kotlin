@@ -2,7 +2,12 @@
 
 ## Summary
 
-The compatibility-tests module establishes a good foundation for testing SDK compatibility across versions using Gradle's test suites and the `java-test-fixtures` plugin. However, there are several issues that prevent it from achieving true backward/forward compatibility testing.
+The compatibility-tests module establishes a good foundation for testing SDK compatibility across versions using Gradle's test suites and the `java-test-fixtures` plugin.
+
+Update 2026-08-11: the frozen versioned JSON fixtures (`compatibility-tests/fixtures/vX.Y.Z/`) and the cross-version
+test matrix are now in place, so the structure for true backward/forward compatibility testing exists. Remaining work
+is tracked in the Priority Order at the bottom; the biggest outstanding caveat is that everything runs against the same
+snapshot artifact and placeholder fixtures until real releases exist.
 
 ---
 
@@ -34,22 +39,8 @@ If the SDK's internal example objects change between versions, the tests will pa
 
 ### 4. No versioned JSON test fixtures
 
-For true compatibility testing, you need:
-- **Backward compatibility**: Current SDK can deserialize JSON written by older SDK versions
-- **Forward compatibility**: Older SDK can deserialize JSON written by current SDK
-
-Currently, all suites use the same `../openapi/examples/` JSON files. Consider organizing like:
-
-```
-compatibility-tests/
-  fixtures/
-    v0.0.1/
-      Score_example1.json  # JSON as serialized by v0.0.1
-    v0.0.2/
-      Score_example1.json  # JSON as serialized by v0.0.2
-    current/
-      Score_example1.json  # JSON from current version
-```
+Done. Structure in place at `compatibility-tests/fixtures/vX.Y.Z/` (see its README). Until real releases exist, the
+versioned directories contain placeholder copies of the current examples; snapshot real JSON per release going forward.
 
 ### 5. Expected Kotlin objects should be in testFixtures
 
@@ -57,6 +48,13 @@ The expected `Score` objects should be defined in `testFixtures` (not pulled fro
 - You define once what the expected domain object looks like
 - You test that each SDK version can deserialize to that same expected object
 - Changes to example objects in the SDK don't silently change your test expectations
+
+**Caveat — this is harder than it looks.** The canonical objects must be written in terms of `Score` and friends, so
+`testFixtures` has to compile against *some* SDK version, while each test suite loads a *different* SDK version on its
+classpath. Same fully-qualified class names coming from different artifacts is exactly the kind of classpath conflict
+that turns into confusing failures. Solvable (e.g., express expectations as JSON-comparable data, or generate per-suite
+sources), but it deserves design thought before implementing. Note that once frozen JSON fixtures (#4) are the truth,
+the `shouldEqualJson` round-trip check carries most of the correctness weight this item was aiming for anyway.
 
 ### 6. Relative file paths are fragile
 
@@ -90,11 +88,7 @@ package com.sparetimedevs.ami.compat.v0_0_2
 
 ### 10. TODO comment left in code
 
-```kotlin
-// TODO add list of old versions of JSON files.
-```
-
-This suggests the versioned JSON approach was intended but not implemented.
+Done. (The TODO was removed when the versioned fixtures from #4 were added.)
 
 ---
 
@@ -102,26 +96,13 @@ This suggests the versioned JSON approach was intended but not implemented.
 
 ### A. Restructure for true compatibility testing
 
-```kotlin
-// In testFixtures - canonical expected objects
-object CanonicalExamples {
-    val score0: Score = Score(...)  // Define the expected structure explicitly
-}
-
-// In each version's test
-override fun examples(): Map<String, Score> = mapOf(
-    "fixtures/v0.0.1/Score_example.json" to CanonicalExamples.score0,
-    "fixtures/current/Score_example.json" to CanonicalExamples.score0,
-)
-```
+Partially done. The versioned-fixtures half is in place (#4). The remaining half — canonical `CanonicalExamples`
+objects in `testFixtures` — is item #5; see the classpath caveat there before implementing.
 
 ### B. Add cross-version matrix testing
 
-Test that:
-1. v0.0.1 SDK can read v0.0.1 JSON (baseline)
-2. v0.0.2 SDK can read v0.0.1 JSON (backward compat)
-3. v0.0.1 SDK can read v0.0.2 JSON (forward compat, if supported)
-4. Current SDK can read all previous JSON versions
+Done, structurally. Every suite reads its own version's fixtures (baseline), older fixtures (backward) and newer
+fixtures plus the current examples (forward). Becomes meaningful once real released versions are pinned (#1/#2).
 
 ### C. Consider property-based testing
 
@@ -142,8 +123,13 @@ For comprehensive compatibility testing, generate arbitrary `Score` objects, ser
 
 ## Priority Order
 
-1. **Fix version mismatch** in build.gradle.kts (bug)
-2. **Improve error reporting** in AbstractCompatibilityTest (debugging)
-3. **Add versioned JSON fixtures** (core functionality)
-4. **Move expected objects to testFixtures** (test correctness)
-5. **Parameterize tests** (test visibility)
+(Revised 2026-08-11: items 1/2 from the original list are deferred until real releases exist; error reporting and
+versioned JSON fixtures are done.)
+
+1. **Parameterize tests** (#8) — small, quick win so one failing example doesn't hide the rest.
+2. **Resolve fixture paths from the project root** (#6) — matters more now that fixtures are a real directory structure.
+3. **Move expected objects to testFixtures** (#5) — revisit with the classpath caveat (see #5) in mind.
+4. **Pin real released versions** (#1/#2) — once 0.0.1 is actually released.
+
+**Release-checklist habit:** every time a release is cut, snapshot its serialized JSON into a new `fixtures/vX.Y.Z/`
+directory as part of the release checklist. That's what makes the backward-compat matrix grow on its own.

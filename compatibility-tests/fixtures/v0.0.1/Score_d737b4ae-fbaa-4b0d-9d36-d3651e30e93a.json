@@ -1,0 +1,210 @@
+{
+  "id" : "d737b4ae-fbaa-4b0d-9d36-d3651e30e93a",
+  "parts" : [ {
+    "id" : "p-1",
+    "name" : "Part one",
+    "instrument" : {
+      "name" : "Grand Piano",
+      "midiChannel" : 0,
+      "midiProgram" : 1
+    },
+    "measures" : [ {
+      "notes" : [ {
+        "duration" : {
+          "noteValue" : "QUARTER",
+          "modifier" : "NONE"
+        },
+        "noteAttributes" : { },
+        "pitch" : {
+          "alter" : 0,
+          "noteName" : "C",
+          "octave" : 4
+        }
+      }, {
+        "duration" : {
+          "noteValue" : "QUARTER",
+          "modifier" : "NONE"
+        },
+        "noteAttributes" : { },
+        "pitch" : {
+          "alter" : 0,
+          "noteName" : "G",
+          "octave" : 4
+        }
+      }, {
+        "duration" : {
+          "noteValue" : "QUARTER",
+          "modifier" : "NONE"
+        },
+        "noteAttributes" : { },
+        "pitch" : {
+          "alter" : 0,
+          "noteName" : "A",
+          "octave" : 4
+        }
+      }, {
+        "duration" : {
+          "noteValue" : "QUARTER",
+          "modifier" : "NONE"
+        },
+        "noteAttributes" : { },
+        "pitch" : {
+          "alter" : 0,
+          "noteName" : "E",
+          "octave" : 4
+        }
+      } ],
+      "attributes" : { }
+    }, {
+      "notes" : [ {
+        "duration" : {
+          "noteValue" : "QUARTER",
+          "modifier" : "NONE"
+        },
+        "noteAttributes" : { },
+        "pitch" : {
+          "alter" : 0,
+          "noteName" : "C",
+          "octave" : 4
+        }
+      }, {
+        "duration" : {
+          "noteValue" : "QUARTER",
+          "modifier" : "NONE"
+        },
+        "noteAttributes" : { },
+        "pitch" : {
+          "alter" : 0,
+          "noteName" : "C",
+          "octave" : 4
+        }
+      }, {
+        "duration" : {
+          "noteValue" : "QUARTER",
+          "modifier" : "NONE"
+        },
+        "noteAttributes" : { },
+        "pitch" : {
+          "alter" : 0,
+          "noteName" : "A",
+          "octave" : 4
+        }
+      }, {
+        "duration" : {
+          "noteValue" : "QUARTER",
+          "modifier" : "NONE"
+        },
+        "noteAttributes" : { },
+        "pitch" : {
+          "alter" : 0,
+          "noteName" : "A",
+          "octave" : 4
+        }
+      } ],
+      "attributes" : { }
+    } ]
+  }, {
+    "id" : "p-2",
+    "name" : "Part two",
+    "instrument" : {
+      "name" : "Overdriven Guitar",
+      "midiChannel" : 1,
+      "midiProgram" : 30
+    },
+    "measures" : [ {
+      "notes" : [ {
+        "duration" : {
+          "noteValue" : "QUARTER",
+          "modifier" : "NONE"
+        },
+        "noteAttributes" : { },
+        "pitch" : {
+          "alter" : 0,
+          "noteName" : "C",
+          "octave" : 4
+        }
+      }, {
+        "duration" : {
+          "noteValue" : "QUARTER",
+          "modifier" : "NONE"
+        },
+        "noteAttributes" : { },
+        "pitch" : {
+          "alter" : 0,
+          "noteName" : "G",
+          "octave" : 4
+        }
+      }, {
+        "duration" : {
+          "noteValue" : "QUARTER",
+          "modifier" : "NONE"
+        },
+        "noteAttributes" : { },
+        "pitch" : {
+          "alter" : 0,
+          "noteName" : "A",
+          "octave" : 4
+        }
+      }, {
+        "duration" : {
+          "noteValue" : "QUARTER",
+          "modifier" : "NONE"
+        },
+        "noteAttributes" : { },
+        "pitch" : {
+          "alter" : 0,
+          "noteName" : "E",
+          "octave" : 4
+        }
+      } ],
+      "attributes" : { }
+    }, {
+      "notes" : [ {
+        "duration" : {
+          "noteValue" : "QUARTER",
+          "modifier" : "NONE"
+        },
+        "noteAttributes" : { },
+        "pitch" : {
+          "alter" : 0,
+          "noteName" : "C",
+          "octave" : 4
+        }
+      }, {
+        "duration" : {
+          "noteValue" : "QUARTER",
+          "modifier" : "NONE"
+        },
+        "noteAttributes" : { },
+        "pitch" : {
+          "alter" : 0,
+          "noteName" : "C",
+          "octave" : 4
+        }
+      }, {
+        "duration" : {
+          "noteValue" : "QUARTER",
+          "modifier" : "NONE"
+        },
+        "noteAttributes" : { },
+        "pitch" : {
+          "alter" : 0,
+          "noteName" : "A",
+          "octave" : 4
+        }
+      }, {
+        "duration" : {
+          "noteValue" : "QUARTER",
+          "modifier" : "NONE"
+        },
+        "noteAttributes" : { },
+        "pitch" : {
+          "alter" : 0,
+          "noteName" : "A",
+          "octave" : 4
+        }
+      } ],
+      "attributes" : { }
+    } ]
+  } ]
+}

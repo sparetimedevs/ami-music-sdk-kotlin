@@ -23,12 +23,18 @@ import com.sparetimedevs.ami.music.example.getExampleScoreHeighHoNobodyHome
 import kotlinx.serialization.json.Json
 
 /**
- * Compatibility tests for the currently developed SDK
+ * Compatibility tests for the currently developed SDK.
+ *
+ * Reading the frozen JSON fixtures of older versions tests the backward compatibility direction:
+ * the current SDK can deserialize JSON written by older SDK versions.
  */
 class CompatibilityTest : AbstractCompatibilityTest<DomainError, Score>() {
     override fun examples(): Map<String, Score> =
         mapOf(
-            // TODO add list of old versions of JSON files.
+            "fixtures/v0.0.1/Score_d737b4ae-fbaa-4b0d-9d36-d3651e30e93a.json" to getExampleScore0(),
+            "fixtures/v0.0.1/Score_1064db99-3726-43d7-b0ed-3fc0281bfc02.json" to getExampleScoreHeighHoNobodyHome(),
+            "fixtures/v0.0.2/Score_d737b4ae-fbaa-4b0d-9d36-d3651e30e93a.json" to getExampleScore0(),
+            "fixtures/v0.0.2/Score_1064db99-3726-43d7-b0ed-3fc0281bfc02.json" to getExampleScoreHeighHoNobodyHome(),
             "../openapi/examples/Score_d737b4ae-fbaa-4b0d-9d36-d3651e30e93a.json" to getExampleScore0(),
             "../openapi/examples/Score_1064db99-3726-43d7-b0ed-3fc0281bfc02.json" to getExampleScoreHeighHoNobodyHome(),
         )
