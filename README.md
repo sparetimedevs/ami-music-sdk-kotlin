@@ -96,3 +96,29 @@ Extract examples as JSON:
 ```
 
 Now the JSON examples in `openapi/examples` are up to date. 
+
+### Compatibility tests
+
+The `compatibility-tests` module tests that serialized music data (JSON) remains usable across SDK versions. Run them
+with:
+
+```
+./gradlew compatibility-tests:check
+```
+
+Two directions of compatibility matter:
+
+- **Backward compatibility**: the *current* SDK can deserialize JSON that was written by an *older* SDK version. This is
+  tested by keeping JSON files as serialized by each released version and letting the current SDK read all of them.
+- **Forward compatibility**: an *older* SDK version can deserialize JSON written by the *current* SDK. This is tested by
+  letting test suites that depend on older, published SDK artifacts read the current JSON examples.
+
+The module uses one Gradle test suite per SDK version (`compatibilitySdkCurrent`, `compatibilitySdkV0_0_1_Snapshot`,
+...). Each suite pins its own SDK dependency and runs the same round-trip test (deserialize JSON, compare to the
+expected Kotlin object, serialize back, compare to the JSON) via the shared `AbstractCompatibilityTest` in
+`testFixtures`.
+
+Note: until there are real, immutable releases, the versioned suites all resolve the same snapshot artifact, so the
+setup currently showcases the mechanism rather than testing genuinely different versions. Once real releases exist, the
+suites will pin those versions, and JSON files as serialized by each release will be kept as fixtures so both
+directions are truly covered.
