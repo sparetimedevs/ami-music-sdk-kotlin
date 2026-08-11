@@ -43,7 +43,6 @@ kotlin {
     // Native targets are build conditionally, depending on the host.
     when {
         hostOs == "Mac OS X" -> {
-            macosX64()
             macosArm64()
             iosX64()
             iosArm64()
