@@ -21,10 +21,14 @@ import arrow.core.getOrElse
 import io.kotest.assertions.arrow.core.shouldBeRight
 import io.kotest.assertions.json.shouldEqualJson
 import kotlinx.serialization.json.Json
+import org.junit.jupiter.api.TestInstance
+import org.junit.jupiter.params.ParameterizedTest
+import org.junit.jupiter.params.provider.Arguments
+import org.junit.jupiter.params.provider.MethodSource
 import java.nio.file.Files
 import java.nio.file.Paths
-import kotlin.test.Test
 
+@TestInstance(TestInstance.Lifecycle.PER_CLASS)
 abstract class AbstractCompatibilityTest<Error, A> {
     private val jsonParser: Json = Json.Default
 
@@ -49,16 +53,21 @@ abstract class AbstractCompatibilityTest<Error, A> {
         value: A,
     ): Either<Error, String>
 
-    @Test
-    fun `fromJson and toJson should work with examples in JSON and Kotlin code`() {
-        examples().forEach { (jsonExamplePath, a) ->
-            val path = Paths.get(jsonExamplePath)
-            val json = Files.readString(path)
+    fun exampleArguments(): List<Arguments> =
+        examples().map { (jsonExamplePath, a) -> Arguments.of(jsonExamplePath, a) }
 
-            fromJson(jsonParser, json) shouldBeRight a
-            toJson(jsonParser, a).getOrElse { error ->
-                throw AssertionError("toJson failed for $jsonExamplePath, error is: $error")
-            } shouldEqualJson json
-        }
+    @ParameterizedTest(name = "{0}")
+    @MethodSource("exampleArguments")
+    fun `fromJson and toJson should work with examples in JSON and Kotlin code`(
+        jsonExamplePath: String,
+        a: A,
+    ) {
+        val path = Paths.get(jsonExamplePath)
+        val json = Files.readString(path)
+
+        fromJson(jsonParser, json) shouldBeRight a
+        toJson(jsonParser, a).getOrElse { error ->
+            throw AssertionError("toJson failed for $jsonExamplePath, error is: $error")
+        } shouldEqualJson json
     }
 }

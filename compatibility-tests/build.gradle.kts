@@ -14,6 +14,7 @@ kotlin {
 
 dependencies {
     testFixturesImplementation(kotlin("test-junit5"))
+    testFixturesImplementation("org.junit.jupiter:junit-jupiter-params")
     testFixturesImplementation(libs.arrow.core)
     testFixturesImplementation(libs.kotlinx.serialization.json)
     testFixturesImplementation(libs.kotest.assertions.core)

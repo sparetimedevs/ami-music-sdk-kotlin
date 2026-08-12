@@ -6,9 +6,8 @@ The compatibility-tests module establishes a good foundation for testing SDK com
 Gradle's test suites and the `java-test-fixtures` plugin.
 
 The frozen versioned JSON fixtures (`compatibility-tests/fixtures/vX.Y.Z/`) and the cross-version test matrix are now in
-place, so the structure for true backward/forward compatibility testing exists. Remaining work is tracked in the
-Priority Order further down in this document; the biggest outstanding caveat is that everything runs against the same
-snapshot artifact and placeholder fixtures until real releases exist.
+place, so the structure for true backward/forward compatibility testing exists. The biggest outstanding caveat is that
+everything runs against the same snapshot artifact and placeholder fixtures until real releases exist.
 
 **Release-checklist habit:** every time a release is cut, snapshot its serialized JSON into a new `fixtures/vX.Y.Z/`
 directory as part of the release checklist. That's what makes the backward-compat matrix grow on its own.
@@ -61,17 +60,6 @@ the `shouldEqualJson` round-trip check carries most of the correctness weight th
 
 This works only when tests run from `` directory. Consider using resource loading or absolute paths resolved from
 project root.
-
-### 4. Single test method for all examples
-
-If one example fails, the `forEach` stops and you don't see results for remaining examples. Consider using JUnit 5's
-`@ParameterizedTest` with `@MethodSource` or Kotest's data-driven testing to run each example as a separate test case.
-
-## Priority Order
-
-1. **Parameterize tests** (#4) — small, quick win so one failing example doesn't hide the rest.
-2. **Resolve fixture paths from the project root** (#3) — matters more now that fixtures are a real directory structure.
-3. **Move expected objects to testFixtures** (#2) — revisit with the classpath caveat (see #2) in mind.
 
 ## Potential future improvements
 
