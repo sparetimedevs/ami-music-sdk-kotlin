@@ -40,13 +40,18 @@ kotlin {
     js { browser { commonWebpackConfig { cssSupport { enabled.set(true) } } } }
     val hostOs = System.getProperty("os.name")
     val isMingwX64 = hostOs.startsWith("Windows")
-    val nativeTarget =
-        when {
-            hostOs == "Mac OS X" -> macosArm64()
-            hostOs == "Linux" -> linuxX64()
-            isMingwX64 -> mingwX64()
-            else -> throw GradleException("Host OS is not supported in Kotlin/Native.")
+    // Native targets are build conditionally, depending on the host.
+    when {
+        hostOs == "Mac OS X" -> {
+            macosArm64()
+            iosX64()
+            iosArm64()
+            iosSimulatorArm64()
         }
+        hostOs == "Linux" -> linuxX64()
+        isMingwX64 -> mingwX64()
+        else -> throw GradleException("Host OS is not supported in Kotlin/Native.")
+    }
 
     sourceSets {
         commonMain.dependencies {

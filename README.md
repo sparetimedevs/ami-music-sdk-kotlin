@@ -46,13 +46,13 @@ Moreover, the SDK is designed with extensibility in mind. Much of the functional
 repositories {
 	  ...
 	  mavenLocal() // In case of locally published artifact.
-	  maven("https://oss.sonatype.org/content/repositories/snapshots/") // In case of snapshot artifact published to Maven Central snapshots repositories.
+	  maven("https://central.sonatype.com/repository/maven-snapshots/") // In case of snapshot artifact published to Maven Central snapshots repositories.
 	  ...
 }
 
 dependencies {
     ...
-	  implementation("com.sparetimedevs.ami:ami-music-sdk-kotlin:0.0.1-SNAPSHOT)
+	  implementation("com.sparetimedevs.ami:ami-music-sdk-kotlin:0.0.1-SNAPSHOT")
 	  ...
 }
 ```
@@ -96,3 +96,34 @@ Extract examples as JSON:
 ```
 
 Now the JSON examples in `openapi/examples` are up to date. 
+
+### Compatibility tests
+
+The `compatibility-tests` module tests that serialized music data (JSON) remains usable across SDK versions. Run them
+with:
+
+```
+./gradlew compatibility-tests:check
+```
+
+Two directions of compatibility matter:
+
+- **Backward compatibility**: the *current* SDK can deserialize JSON that was written by an *older* SDK version. This is
+  tested by keeping JSON files as serialized by each released version and letting the current SDK read all of them.
+- **Forward compatibility**: an *older* SDK version can deserialize JSON written by the *current* SDK. This is tested by
+  letting test suites that depend on older, published SDK artifacts read the current JSON examples.
+
+The module uses one Gradle test suite per SDK version (`compatibilitySdkCurrent`, `compatibilitySdkV0_0_1_Snapshot`,
+...). Each suite pins its own SDK dependency and runs the same round-trip test (deserialize JSON, compare to the
+expected Kotlin object, serialize back, compare to the JSON) via the shared `AbstractCompatibilityTest` in
+`testFixtures`.
+
+JSON files as serialized by each version are frozen under `compatibility-tests/fixtures/vX.Y.Z/` — never edited after
+being added. Every suite reads its own version's fixtures (baseline), older fixtures (backward) and newer fixtures plus
+the current `openapi/examples` (forward). When a release is cut, its serialized JSON is snapshotted into a new
+`fixtures/vX.Y.Z/` directory as part of the release checklist.
+
+Note: until there are real, immutable releases, the versioned suites all resolve the same snapshot artifact and the
+versioned fixture directories contain copies of the current examples, so the setup currently showcases the mechanism
+rather than testing genuinely different versions. Once real releases exist, the suites will pin those versions and the
+fixtures will be true per-release snapshots, covering both directions for real.
