@@ -51,6 +51,14 @@ testing {
             }
         }
         // later add more versions…
+
+        withType<JvmTestSuite>().configureEach {
+            targets.configureEach {
+                testTask.configure {
+                    systemProperty("rootProjectDir", rootProject.projectDir.absolutePath)
+                }
+            }
+        }
     }
 }
 

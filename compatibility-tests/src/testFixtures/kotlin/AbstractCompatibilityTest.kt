@@ -33,6 +33,16 @@ abstract class AbstractCompatibilityTest<Error, A> {
     private val jsonParser: Json = Json.Default
 
     /**
+     * Resolves example paths against the repository root, set explicitly by the Gradle build,
+     * rather than the JVM's current working directory.
+     */
+    private val rootProjectDir =
+        Paths.get(
+            System.getProperty("rootProjectDir")
+                ?: error("System property 'rootProjectDir' is not set."),
+        )
+
+    /**
      * Map of JSON example path -> expected Kotlin object
      */
     protected abstract fun examples(): Map<String, A>
@@ -62,7 +72,7 @@ abstract class AbstractCompatibilityTest<Error, A> {
         jsonExamplePath: String,
         a: A,
     ) {
-        val path = Paths.get(jsonExamplePath)
+        val path = rootProjectDir.resolve(jsonExamplePath)
         val json = Files.readString(path)
 
         fromJson(jsonParser, json) shouldBeRight a

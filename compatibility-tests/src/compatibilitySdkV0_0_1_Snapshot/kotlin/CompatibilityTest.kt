@@ -33,13 +33,15 @@ class CompatibilityTest : AbstractCompatibilityTest<DomainError, Score>() {
     override fun examples(): Map<String, Score> =
         mapOf(
             // Baseline: v0.0.1 SDK reads v0.0.1 JSON.
-            "fixtures/v0.0.1/Score_d737b4ae-fbaa-4b0d-9d36-d3651e30e93a.json" to getExampleScore0(),
-            "fixtures/v0.0.1/Score_1064db99-3726-43d7-b0ed-3fc0281bfc02.json" to getExampleScoreHeighHoNobodyHome(),
+            "compatibility-tests/fixtures/v0.0.1/Score_d737b4ae-fbaa-4b0d-9d36-d3651e30e93a.json" to getExampleScore0(),
+            "compatibility-tests/fixtures/v0.0.1/Score_1064db99-3726-43d7-b0ed-3fc0281bfc02.json" to
+                getExampleScoreHeighHoNobodyHome(),
             // Forward compatibility: v0.0.1 SDK reads JSON written by newer versions.
-            "fixtures/v0.0.2/Score_d737b4ae-fbaa-4b0d-9d36-d3651e30e93a.json" to getExampleScore0(),
-            "fixtures/v0.0.2/Score_1064db99-3726-43d7-b0ed-3fc0281bfc02.json" to getExampleScoreHeighHoNobodyHome(),
-            "../openapi/examples/Score_d737b4ae-fbaa-4b0d-9d36-d3651e30e93a.json" to getExampleScore0(),
-            "../openapi/examples/Score_1064db99-3726-43d7-b0ed-3fc0281bfc02.json" to getExampleScoreHeighHoNobodyHome(),
+            "compatibility-tests/fixtures/v0.0.2/Score_d737b4ae-fbaa-4b0d-9d36-d3651e30e93a.json" to getExampleScore0(),
+            "compatibility-tests/fixtures/v0.0.2/Score_1064db99-3726-43d7-b0ed-3fc0281bfc02.json" to
+                getExampleScoreHeighHoNobodyHome(),
+            "openapi/examples/Score_d737b4ae-fbaa-4b0d-9d36-d3651e30e93a.json" to getExampleScore0(),
+            "openapi/examples/Score_1064db99-3726-43d7-b0ed-3fc0281bfc02.json" to getExampleScoreHeighHoNobodyHome(),
         )
 
     override fun fromJson(

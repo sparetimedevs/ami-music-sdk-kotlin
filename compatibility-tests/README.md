@@ -18,12 +18,16 @@ directory as part of the release checklist. That's what makes the backward-compa
 - Proper use of Gradle test suites for version isolation
 - Good use of `java-test-fixtures` plugin for sharing test infrastructure
 - Kotest assertions integration (`shouldBeRight`, `shouldEqualJson`)
+- Makes good use of `@ParameterizedTest` instead of `examples().forEach { (jsonExamplePath, a) -> /* the test case */ }`
 - Clear separation between test fixtures and versioned test suites
 - Hook into `check` task ensures compatibility tests run in CI
+- Uses absolute file paths instead of relative paths
 
-## Design Issues
+## Potential future improvements
 
-### 1. Example Kotlin objects come from the tested SDK
+### Expected Kotlin objects could be in testFixtures
+
+Currently, example Kotlin objects come from the tested SDK.
 
 Each test suite pulls `getExampleScore0()` and `getExampleScoreHeighHoNobodyHome()` from the SDK version being tested:
 
@@ -36,9 +40,7 @@ implementation("com.sparetimedevs.ami:ami-music-sdk-kotlin:0.0.1-SNAPSHOT")
 If the SDK's internal example objects change between versions, the tests will pass trivially because both sides of the
 comparison come from the same version.
 
-### 2. Expected Kotlin objects should be in testFixtures
-
-The expected `Score` objects should be defined in `testFixtures` (not pulled from each SDK version) to serve as the
+The expected `Score` objects could be defined in `testFixtures` (not pulled from each SDK version) to serve as the
 canonical "truth". This way:
 
 - You define once what the expected domain object looks like
@@ -51,17 +53,6 @@ classpath. Same fully-qualified class names coming from different artifacts is e
 that turns into confusing failures. Solvable (e.g., express expectations as JSON-comparable data, or generate per-suite
 sources), but it deserves design thought before implementing. Note that once frozen JSON fixtures (#4) are the truth,
 the `shouldEqualJson` round-trip check carries most of the correctness weight this item was aiming for anyway.
-
-### 3. Relative file paths are fragile
-
-```kotlin
-"../openapi/examples/Score_d737b4ae-fbaa-4b0d-9d36-d3651e30e93a.json"
-```
-
-This works only when tests run from `` directory. Consider using resource loading or absolute paths resolved from
-project root.
-
-## Potential future improvements
 
 ### Consider property-based testing
 
