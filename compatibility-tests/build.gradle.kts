@@ -5,6 +5,13 @@ plugins {
 
 repositories {
     mavenCentral()
+    maven {
+        name = "centralSnapshots"
+        url = uri("https://central.sonatype.com/repository/maven-snapshots/")
+        mavenContent {
+            snapshotsOnly()
+        }
+    }
     mavenLocal()
 }
 
