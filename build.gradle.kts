@@ -10,7 +10,7 @@ plugins {
     alias(libs.plugins.kotlin.serialization)
     alias(libs.plugins.spotless)
     id("convention.publication")
-    id("org.openapi.generator") version "7.13.0"
+    id("org.openapi.generator") version "7.24.0"
 }
 
 val publishedGroupId: String = providers.gradleProperty("publishedGroupId").get()
