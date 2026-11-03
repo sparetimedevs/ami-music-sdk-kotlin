@@ -50,7 +50,7 @@ inline fun <reified A, reified B> postJsonRequest(
                 client.newCall(request).execute().use { response ->
                     if (!response.isSuccessful) throw IOException("Unexpected code $response")
 
-                    response.body!!.string()
+                    response.body.string()
                 }
             jsonParser.decodeFromString<B>(responseBody)
         }.mapLeft { TestError(reason = it.message ?: "An exception was thrown.") }

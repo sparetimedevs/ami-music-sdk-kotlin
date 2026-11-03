@@ -31,7 +31,12 @@ import kotlin.test.Test
  */
 @Suppress("ktlint:standard:max-line-length")
 class ExamplesTest {
-    val jsonParser = Json.Default
+    val jsonParser =
+        Json {
+            ignoreUnknownKeys = true
+            encodeDefaults = true
+            explicitNulls = false
+        }
 
     val mapOfJsonAndKotlinExamples =
         mapOf(

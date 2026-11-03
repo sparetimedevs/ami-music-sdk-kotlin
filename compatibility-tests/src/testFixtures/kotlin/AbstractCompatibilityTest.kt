@@ -30,7 +30,12 @@ import java.nio.file.Paths
 
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 abstract class AbstractCompatibilityTest<Error, A> {
-    private val jsonParser: Json = Json.Default
+    private val jsonParser: Json =
+        Json {
+            ignoreUnknownKeys = true
+            encodeDefaults = true
+            explicitNulls = false
+        }
 
     /**
      * Resolves example paths against the repository root, set explicitly by the Gradle build,
