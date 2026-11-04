@@ -36,7 +36,10 @@ public fun com.sparetimedevs.ami.music.data.kotlin.part.Part.toSerializable(): P
         id = this.id.value,
         name = this.name?.value,
         instrument = this.instrument?.toSerializable(),
-        measures = this.measures.mapIndexed { index, measure -> measure.toSerializable(isFirstOfPart = index == 0) },
+        measures =
+            this.measures.mapIndexed { index, measure ->
+                measure.toSerializable(previousTimeSignature = this.measures.getOrNull(index - 1)?.timeSignature)
+            },
     )
 
 public fun com.sparetimedevs.ami.music.data.kotlin.part.PartInstrument.toSerializable(): PartInstrument =
@@ -46,11 +49,15 @@ public fun com.sparetimedevs.ami.music.data.kotlin.part.PartInstrument.toSeriali
         midiProgram = this.midiProgram?.value?.toInt(),
     )
 
+/**
+ * The time signature is stated in the attributes only when it is the first measure of a part ([previousTimeSignature] is
+ * `null`) or when it differs from the one of the previous measure, like in MusicXML.
+ */
 public fun com.sparetimedevs.ami.music.data.kotlin.measure.Measure.toSerializable(
-    isFirstOfPart: Boolean = false,
+    previousTimeSignature: com.sparetimedevs.ami.music.data.kotlin.timesignature.TimeSignature? = null,
 ): Measure =
     Measure(
-        attributes = this.attributes.toSerializable(this.timeSignature.takeIf { isFirstOfPart }),
+        attributes = this.attributes.toSerializable(this.timeSignature.takeIf { it != previousTimeSignature }),
         notes = this.notes.map { it.toSerializable() },
         pickup = this.pickup?.toSerializable(),
         harmonies = this.harmonies.takeIf { it.isNotEmpty() }?.map { it.toSerializable() },
@@ -84,9 +91,9 @@ public fun com.sparetimedevs.ami.music.data.kotlin.fraction.Fraction.toSerializa
  * passes its time signature as [firstMeasureTimeSignature], which is written when the attributes don't state one.
  */
 public fun com.sparetimedevs.ami.music.data.kotlin.measure.MeasureAttributes?.toSerializable(
-    firstMeasureTimeSignature: com.sparetimedevs.ami.music.data.kotlin.timesignature.TimeSignature? = null,
+    statedTimeSignature: com.sparetimedevs.ami.music.data.kotlin.timesignature.TimeSignature? = null,
 ): MeasureAttributes? {
-    val time = (this?.time ?: firstMeasureTimeSignature)?.toSerializable()
+    val time = statedTimeSignature?.toSerializable()
     val key = this?.key?.toSerializable()
     val tempo = this?.tempo?.toSerializable()
     return if (time == null && key == null &&

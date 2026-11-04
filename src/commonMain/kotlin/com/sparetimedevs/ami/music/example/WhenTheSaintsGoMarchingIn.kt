@@ -94,11 +94,10 @@ public fun getExampleScoreWhenTheSaintsGoMarchingIn(): Score {
                 attributes =
                     MeasureAttributes(
                         key = Key(Fifths.unsafeCreate(0), KeyMode.MAJOR),
-                        time = FOUR_FOUR,
                         tempo = Tempo(QuarterNotesPerMinute.unsafeCreate(100)),
                     ),
                 notes = emptyList(),
-                previousTimeSignature = null,
+                timeSignature = FOUR_FOUR,
                 pickup = THREE_QUARTERS,
                 harmonies = listOf(Harmony(ZERO, C_MAJOR)),
                 lyrics =
@@ -113,7 +112,7 @@ public fun getExampleScoreWhenTheSaintsGoMarchingIn(): Score {
             Measure(
                 attributes = null,
                 notes = emptyList(),
-                previousTimeSignature = FOUR_FOUR,
+                timeSignature = FOUR_FOUR,
                 harmonies = listOf(Harmony(ZERO, C_MAJOR), Harmony(HALF, G_SEVENTH)),
                 lyrics =
                     lyrics(ZERO, "saints ", "sun ") +
@@ -124,7 +123,7 @@ public fun getExampleScoreWhenTheSaintsGoMarchingIn(): Score {
             Measure(
                 attributes = null,
                 notes = emptyList(),
-                previousTimeSignature = FOUR_FOUR,
+                timeSignature = FOUR_FOUR,
                 harmonies = listOf(Harmony(ZERO, C_MAJOR), Harmony(THREE_QUARTERS, G_SEVENTH)),
                 lyrics =
                     lyrics(ZERO, "in", "shine") +
@@ -136,7 +135,7 @@ public fun getExampleScoreWhenTheSaintsGoMarchingIn(): Score {
             Measure(
                 attributes = null,
                 notes = emptyList(),
-                previousTimeSignature = FOUR_FOUR,
+                timeSignature = FOUR_FOUR,
                 harmonies = listOf(Harmony(ZERO, C_ADD_NINE), Harmony(HALF, F_MAJOR)),
                 lyrics =
                     lyrics(ZERO, "saints ", "sun ") +
@@ -147,7 +146,7 @@ public fun getExampleScoreWhenTheSaintsGoMarchingIn(): Score {
             Measure(
                 attributes = null,
                 notes = emptyList(),
-                previousTimeSignature = FOUR_FOUR,
+                timeSignature = FOUR_FOUR,
                 harmonies = listOf(Harmony(ZERO, C_OVER_G), Harmony(HALF, NO_CHORD)),
                 lyrics = lyrics(ZERO, "in", "shine"),
             ),

@@ -17,7 +17,6 @@
 package com.sparetimedevs.ami.music.example
 
 import com.sparetimedevs.ami.music.data.kotlin.measure.Measure
-import com.sparetimedevs.ami.music.data.kotlin.measure.MeasureAttributes
 import com.sparetimedevs.ami.music.data.kotlin.note.Note
 import com.sparetimedevs.ami.music.data.kotlin.timesignature.BeatType
 import com.sparetimedevs.ami.music.data.kotlin.timesignature.Beats
@@ -25,10 +24,6 @@ import com.sparetimedevs.ami.music.data.kotlin.timesignature.TimeSignature
 
 internal val FOUR_FOUR: TimeSignature = TimeSignature(Beats.unsafeCreate(4), BeatType.unsafeCreate(4))
 
-/** Creates a measure in 4/4, following another measure in 4/4. */
+/** Creates a measure in 4/4. */
 internal fun createMeasure(vararg notes: Note): Measure =
-    Measure(attributes = null, notes = notes.asList(), previousTimeSignature = FOUR_FOUR)
-
-/** Creates the first measure of a part, in 4/4. It states the time signature in its attributes. */
-internal fun createFirstMeasure(vararg notes: Note): Measure =
-    Measure(attributes = MeasureAttributes(time = FOUR_FOUR), notes = notes.asList(), previousTimeSignature = null)
+    Measure(attributes = null, notes = notes.asList(), timeSignature = FOUR_FOUR)

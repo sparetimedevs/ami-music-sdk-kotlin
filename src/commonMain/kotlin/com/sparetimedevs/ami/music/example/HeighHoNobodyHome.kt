@@ -52,7 +52,7 @@ public fun getExampleScoreHeighHoNobodyHome(): Score {
                 measures =
                     listOf(
                         Measure(
-                            MeasureAttributes(time = FOUR_FOUR),
+                            null,
                             listOf(
                                 Note.Pitched(
                                     NoteDuration(NoteValue.HALF),
@@ -65,7 +65,7 @@ public fun getExampleScoreHeighHoNobodyHome(): Score {
                                     Pitch(NoteName.C, Octave.unsafeCreate(4)),
                                 ),
                             ),
-                            null,
+                            FOUR_FOUR,
                         ),
                         Measure(
                             null,

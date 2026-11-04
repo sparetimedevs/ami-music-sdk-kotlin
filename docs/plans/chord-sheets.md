@@ -138,6 +138,12 @@ None
 
 #### Notes from task 4
 
+- **Later change:** the time signature now lives only in `Measure.timeSignature`; `MeasureAttributes` has no `time`.
+  `Measure(attributes, notes, timeSignature, pickup)` takes the time signature that is in effect, so callers decide
+  whether it is the previous one or a new one. Validation carries it forward (4/4 at the start, D4) and
+  `Measure.toSerializable(previousTimeSignature)` writes it only on a part's first measure and where it changes, like
+  MusicXML. A repeated time signature in input JSON reads fine and is dropped when written. The bullets below describe
+  the earlier design (`previousTimeSignature`, `attributes.time`).
 - `Measure(attributes, notes, previousTimeSignature)` has no default for the previous time signature. With `attributes.time`
   missing and no previous measure it fills 4/4 into the attributes (D4), and it turns empty attributes into `null`. So
   the "fill in 4/4" rule lives in one place, and part validation only folds over the measures.

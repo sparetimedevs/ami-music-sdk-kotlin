@@ -98,7 +98,7 @@ private fun validateMeasures(
             measures
                 .withIndex()
                 .map { (index, measure) ->
-                    measure.attributes.validate(ValidationIdentifierForMeasure(index, validationIdentifier))
+                    measure.attributes.validateWithTime(ValidationIdentifierForMeasure(index, validationIdentifier))
                 }.combineAllValidationErrors(),
             measures
                 .withIndex()
@@ -157,20 +157,22 @@ private fun validateMeasures(
                 sectionStarts,
             )
         }.flatMap { parts ->
-            var previousTimeSignature: TimeSignature? = null
+            // A time signature stays in effect until the next one is stated; a part starts in 4/4 (D4).
+            var timeSignature: TimeSignature = DEFAULT_TIME_SIGNATURE
             val built =
                 parts.attributes.indices.map { index ->
+                    timeSignature = parts.attributes[index].time ?: timeSignature
                     Measure(
-                        parts.attributes[index],
+                        parts.attributes[index].attributes,
                         parts.notes[index],
-                        previousTimeSignature,
+                        timeSignature,
                         parts.pickups[index],
                         parts.harmonies[index],
                         parts.lyrics[index],
                         parts.textDirections[index],
                         parts.lineBreaks[index],
                         parts.sectionStarts[index],
-                    ).also { previousTimeSignature = it.timeSignature }
+                    )
                 }
             // These checks need the length of the measure, so they run after the time signatures and pickups are resolved.
             val errors =
@@ -224,8 +226,17 @@ private fun validateMeasures(
             if (errors.isEmpty()) Either.Right(built) else Either.Left(NonEmptyList(errors.first(), errors.drop(1)))
         }
 
+/** The validated attributes of a measure, and the time signature it states, if any. */
+private class ValidatedAttributes(
+    val attributes: MeasureAttributes?,
+    val time: TimeSignature?,
+)
+
+private val DEFAULT_TIME_SIGNATURE: TimeSignature =
+    TimeSignature(Beats.unsafeCreate(4), BeatType.unsafeCreate(4))
+
 private class ValidatedMeasureParts(
-    val attributes: List<MeasureAttributes?>,
+    val attributes: List<ValidatedAttributes>,
     val notes: List<List<Note>>,
     val pickups: List<Fraction?>,
     val harmonies: List<List<Harmony>>,
@@ -403,19 +414,26 @@ private fun com.sparetimedevs.ami.music.serialization.Fraction?.validatePickup(
     validationIdentifier: ValidationIdentifier,
 ): EitherNel<ValidationError, Fraction?> = if (this == null) Either.Right(null) else validate(validationIdentifier)
 
-/** Empty attributes (`"attributes": {}`) are the same as no attributes. */
+/**
+ * Empty attributes (`"attributes": {}`) are the same as no attributes. A time signature in the attributes is validated,
+ * but isn't part of the result: the time signature belongs to the measure (see [validateMeasures]).
+ */
 public fun com.sparetimedevs.ami.music.serialization.MeasureAttributes?.validate(
     validationIdentifier: ValidationIdentifier = NoValidationIdentifier,
-): EitherNel<ValidationError, MeasureAttributes?> =
+): EitherNel<ValidationError, MeasureAttributes?> = validateWithTime(validationIdentifier).map { it.attributes }
+
+private fun com.sparetimedevs.ami.music.serialization.MeasureAttributes?.validateWithTime(
+    validationIdentifier: ValidationIdentifier,
+): EitherNel<ValidationError, ValidatedAttributes> =
     if (this == null) {
-        Either.Right(null)
+        Either.Right(ValidatedAttributes(null, null))
     } else {
         Either.zipOrAccumulate(
             this.key.validate(validationIdentifier),
             this.time.validate(validationIdentifier),
             this.tempo.validate(validationIdentifier),
         ) { key, time, tempo ->
-            MeasureAttributes(key = key, time = time, tempo = tempo).takeUnless { it.isEmpty() }
+            ValidatedAttributes(MeasureAttributes(key = key, tempo = tempo).takeUnless { it.isEmpty() }, time)
         }
     }
 

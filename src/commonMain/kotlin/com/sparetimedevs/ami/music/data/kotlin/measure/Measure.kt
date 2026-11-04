@@ -22,8 +22,6 @@ import com.sparetimedevs.ami.music.data.kotlin.lyric.LyricFragment
 import com.sparetimedevs.ami.music.data.kotlin.note.Note
 import com.sparetimedevs.ami.music.data.kotlin.section.SectionStart
 import com.sparetimedevs.ami.music.data.kotlin.textdirection.TextDirection
-import com.sparetimedevs.ami.music.data.kotlin.timesignature.BeatType
-import com.sparetimedevs.ami.music.data.kotlin.timesignature.Beats
 import com.sparetimedevs.ami.music.data.kotlin.timesignature.TimeSignature
 import kotlinx.serialization.Serializable
 
@@ -96,15 +94,15 @@ public sealed interface Measure {
 
     public companion object {
         /**
-         * Creates a measure whose [Measure.timeSignature] never contradicts its [Measure.attributes]: it is
-         * `attributes.time` when stated, and otherwise [previousTimeSignature], the one of the previous measure in the
-         * part. A part's first measure has no previous one ([previousTimeSignature] is `null`), and gets 4/4 in its
-         * attributes when it doesn't state a time signature (D4). Empty attributes are the same as no attributes.
+         * Creates a measure with the [timeSignature] that is in effect for it. The time signature is stored once, on the
+         * measure itself; [MeasureAttributes] don't repeat it. Whether a time signature is stated in the serialized form
+         * (the first measure of a part, and wherever it changes) is decided when serializing. Empty attributes are the
+         * same as no attributes.
          */
         public operator fun invoke(
             attributes: MeasureAttributes?,
             notes: List<Note>,
-            previousTimeSignature: TimeSignature?,
+            timeSignature: TimeSignature,
             pickup: Fraction? = null,
             harmonies: List<Harmony> = emptyList(),
             lyrics: List<LyricFragment> = emptyList(),
@@ -112,13 +110,7 @@ public sealed interface Measure {
             lineBreaks: List<Fraction> = emptyList(),
             sectionStarts: List<SectionStart> = emptyList(),
         ): Measure {
-            val timeSignature = attributes?.time ?: previousTimeSignature ?: DEFAULT_TIME_SIGNATURE
-            val resolvedAttributes =
-                when {
-                    attributes?.time == null && previousTimeSignature == null ->
-                        (attributes ?: MeasureAttributes()).copy(time = timeSignature)
-                    else -> attributes?.takeUnless { it.isEmpty() }
-                }
+            val resolvedAttributes = attributes?.takeUnless { it.isEmpty() }
             return when {
                 notesShouldBeInAccordanceWithTimeSignature(notes, timeSignature) ->
                     CompleteMeasure(
@@ -159,9 +151,6 @@ public sealed interface Measure {
                     )
             }
         }
-
-        private val DEFAULT_TIME_SIGNATURE: TimeSignature =
-            TimeSignature(Beats.unsafeCreate(4), BeatType.unsafeCreate(4))
 
         private fun notesShouldBeInAccordanceWithTimeSignature(
             notes: List<Note>,

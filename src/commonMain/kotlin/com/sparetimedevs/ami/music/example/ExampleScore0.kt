@@ -51,7 +51,7 @@ public fun getExampleScore0(): Score {
                 measures =
                     listOf(
                         Measure(
-                            MeasureAttributes(time = FOUR_FOUR),
+                            null,
                             listOf(
                                 Pitched(
                                     duration = NoteDuration(noteValue = NoteValue.QUARTER),
@@ -118,7 +118,7 @@ public fun getExampleScore0(): Score {
                                         ),
                                 ),
                             ),
-                            null,
+                            FOUR_FOUR,
                         ),
                         Measure(
                             attributes = null,
@@ -189,7 +189,7 @@ public fun getExampleScore0(): Score {
                                             ),
                                     ),
                                 ),
-                            previousTimeSignature = FOUR_FOUR,
+                            timeSignature = FOUR_FOUR,
                         ),
                     ),
             ),
@@ -205,7 +205,7 @@ public fun getExampleScore0(): Score {
                 measures =
                     listOf(
                         Measure(
-                            attributes = MeasureAttributes(time = FOUR_FOUR),
+                            attributes = null,
                             notes =
                                 listOf(
                                     Pitched(
@@ -273,7 +273,7 @@ public fun getExampleScore0(): Score {
                                             ),
                                     ),
                                 ),
-                            previousTimeSignature = null,
+                            timeSignature = FOUR_FOUR,
                         ),
                         Measure(
                             attributes = null,
@@ -344,7 +344,7 @@ public fun getExampleScore0(): Score {
                                             ),
                                     ),
                                 ),
-                            previousTimeSignature = FOUR_FOUR,
+                            timeSignature = FOUR_FOUR,
                         ),
                     ),
             ),

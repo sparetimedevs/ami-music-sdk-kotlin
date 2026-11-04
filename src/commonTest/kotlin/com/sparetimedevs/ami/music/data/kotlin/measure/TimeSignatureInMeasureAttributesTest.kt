@@ -88,10 +88,10 @@ class TimeSignatureInMeasureAttributesTest {
     }
 
     @Test
-    fun `a first measure without time signature gets 4 over 4 in its attributes`() {
+    fun `a first measure without time signature gets 4 over 4`() {
         val measures = read(scoreJson(null, null)).parts.single().measures
 
-        measures[0].attributes shouldBe MeasureAttributes(time = timeSignature(4, 4))
+        measures[0].attributes shouldBe null
         measures[0].timeSignature shouldBe timeSignature(4, 4)
         measures[1].attributes shouldBe null
         measures[1].timeSignature shouldBe timeSignature(4, 4)
@@ -110,18 +110,26 @@ class TimeSignatureInMeasureAttributesTest {
                 timeSignature(3, 4),
                 timeSignature(3, 4),
             )
-        measures.map { it.attributes?.time } shouldBe
-            listOf(timeSignature(4, 4), null, timeSignature(3, 4), null, null)
     }
 
     @Test
-    fun `measure takes its time signature from its attributes or else from the previous measure`() {
+    fun `measure keeps the time signature it is given`() {
         val threeFour = timeSignature(3, 4)
 
-        Measure(MeasureAttributes(time = threeFour), emptyList(), timeSignature(4, 4)).timeSignature shouldBe threeFour
         Measure(null, emptyList(), threeFour).timeSignature shouldBe threeFour
         Measure(null, emptyList(), threeFour).attributes shouldBe null
         Measure(MeasureAttributes(), emptyList(), threeFour).attributes shouldBe null
+    }
+
+    @Test
+    fun `a time signature that repeats the previous one is not written`() {
+        written(read(scoreJson(time(3, 4), time(3, 4), null, time(4, 4), time(4, 4)))) shouldEqualJson
+            scoreJson(time(3, 4), null, null, time(4, 4), null)
+    }
+
+    @Test
+    fun `a time signature that repeats the previous one reads the same as leaving it out`() {
+        read(scoreJson(time(3, 4), time(3, 4))) shouldBe read(scoreJson(time(3, 4), null))
     }
 
     @Test
