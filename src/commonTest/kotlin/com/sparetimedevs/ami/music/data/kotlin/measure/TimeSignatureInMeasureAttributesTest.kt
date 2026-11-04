@@ -91,10 +91,10 @@ class TimeSignatureInMeasureAttributesTest {
     fun `a first measure without time signature gets 4 over 4`() {
         val measures = read(scoreJson(null, null)).parts.single().measures
 
-        measures[0].attributes shouldBe null
-        measures[0].timeSignature shouldBe timeSignature(4, 4)
-        measures[1].attributes shouldBe null
-        measures[1].timeSignature shouldBe timeSignature(4, 4)
+        measures[0].attributes shouldBe MeasureAttributes(timeSignature = timeSignature(4, 4))
+        measures[0].attributes.timeSignature shouldBe timeSignature(4, 4)
+        measures[1].attributes shouldBe MeasureAttributes(timeSignature = timeSignature(4, 4))
+        measures[1].attributes.timeSignature shouldBe timeSignature(4, 4)
     }
 
     @Test
@@ -102,7 +102,7 @@ class TimeSignatureInMeasureAttributesTest {
         val measures =
             read(scoreJson(null, null, time(3, 4), null, null)).parts.single().measures
 
-        measures.map { it.timeSignature } shouldBe
+        measures.map { it.attributes.timeSignature } shouldBe
             listOf(
                 timeSignature(4, 4),
                 timeSignature(4, 4),
@@ -113,12 +113,12 @@ class TimeSignatureInMeasureAttributesTest {
     }
 
     @Test
-    fun `measure keeps the time signature it is given`() {
+    fun `measure holds its time signature in its attributes only`() {
         val threeFour = timeSignature(3, 4)
 
-        Measure(null, emptyList(), threeFour).timeSignature shouldBe threeFour
-        Measure(null, emptyList(), threeFour).attributes shouldBe null
-        Measure(MeasureAttributes(), emptyList(), threeFour).attributes shouldBe null
+        Measure(MeasureAttributes(timeSignature = threeFour), emptyList()).attributes.timeSignature shouldBe threeFour
+        Measure(MeasureAttributes(timeSignature = threeFour), emptyList()).attributes shouldBe
+            MeasureAttributes(timeSignature = threeFour)
     }
 
     @Test

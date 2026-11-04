@@ -98,7 +98,7 @@ private fun validateMeasures(
             measures
                 .withIndex()
                 .map { (index, measure) ->
-                    measure.attributes.validateWithTime(ValidationIdentifierForMeasure(index, validationIdentifier))
+                    measure.attributes.validateStated(ValidationIdentifierForMeasure(index, validationIdentifier))
                 }.combineAllValidationErrors(),
             measures
                 .withIndex()
@@ -157,15 +157,20 @@ private fun validateMeasures(
                 sectionStarts,
             )
         }.flatMap { parts ->
-            // A time signature stays in effect until the next one is stated; a part starts in 4/4 (D4).
-            var timeSignature: TimeSignature = DEFAULT_TIME_SIGNATURE
+            // Time signature, key and tempo stay in effect until the next one is stated; a part starts in 4/4 (D4).
+            var attributes = MeasureAttributes(timeSignature = DEFAULT_TIME_SIGNATURE)
             val built =
                 parts.attributes.indices.map { index ->
-                    timeSignature = parts.attributes[index].time ?: timeSignature
+                    val stated = parts.attributes[index]
+                    attributes =
+                        MeasureAttributes(
+                            timeSignature = stated.timeSignature ?: attributes.timeSignature,
+                            key = stated.key ?: attributes.key,
+                            tempo = stated.tempo ?: attributes.tempo,
+                        )
                     Measure(
-                        parts.attributes[index].attributes,
+                        attributes,
                         parts.notes[index],
-                        timeSignature,
                         parts.pickups[index],
                         parts.harmonies[index],
                         parts.lyrics[index],
@@ -183,7 +188,7 @@ private fun validateMeasures(
                             checkPickup(
                                 index,
                                 it,
-                                measure.timeSignature,
+                                measure.attributes.timeSignature,
                                 validationIdentifierForMeasure,
                             )
                         },
@@ -226,17 +231,18 @@ private fun validateMeasures(
             if (errors.isEmpty()) Either.Right(built) else Either.Left(NonEmptyList(errors.first(), errors.drop(1)))
         }
 
-/** The validated attributes of a measure, and the time signature it states, if any. */
-private class ValidatedAttributes(
-    val attributes: MeasureAttributes?,
-    val time: TimeSignature?,
+/** The validated attributes a measure states itself. What it doesn't state is `null` and carries forward. */
+private class StatedAttributes(
+    val key: Key?,
+    val timeSignature: TimeSignature?,
+    val tempo: Tempo?,
 )
 
 private val DEFAULT_TIME_SIGNATURE: TimeSignature =
     TimeSignature(Beats.unsafeCreate(4), BeatType.unsafeCreate(4))
 
 private class ValidatedMeasureParts(
-    val attributes: List<ValidatedAttributes>,
+    val attributes: List<StatedAttributes>,
     val notes: List<List<Note>>,
     val pickups: List<Fraction?>,
     val harmonies: List<List<Harmony>>,
@@ -414,27 +420,18 @@ private fun com.sparetimedevs.ami.music.serialization.Fraction?.validatePickup(
     validationIdentifier: ValidationIdentifier,
 ): EitherNel<ValidationError, Fraction?> = if (this == null) Either.Right(null) else validate(validationIdentifier)
 
-/**
- * Empty attributes (`"attributes": {}`) are the same as no attributes. A time signature in the attributes is validated,
- * but isn't part of the result: the time signature belongs to the measure (see [validateMeasures]).
- */
-public fun com.sparetimedevs.ami.music.serialization.MeasureAttributes?.validate(
-    validationIdentifier: ValidationIdentifier = NoValidationIdentifier,
-): EitherNel<ValidationError, MeasureAttributes?> = validateWithTime(validationIdentifier).map { it.attributes }
-
-private fun com.sparetimedevs.ami.music.serialization.MeasureAttributes?.validateWithTime(
+/** Empty attributes (`"attributes": {}`) state nothing, the same as no attributes. */
+private fun com.sparetimedevs.ami.music.serialization.MeasureAttributes?.validateStated(
     validationIdentifier: ValidationIdentifier,
-): EitherNel<ValidationError, ValidatedAttributes> =
+): EitherNel<ValidationError, StatedAttributes> =
     if (this == null) {
-        Either.Right(ValidatedAttributes(null, null))
+        Either.Right(StatedAttributes(null, null, null))
     } else {
         Either.zipOrAccumulate(
             this.key.validate(validationIdentifier),
             this.time.validate(validationIdentifier),
             this.tempo.validate(validationIdentifier),
-        ) { key, time, tempo ->
-            ValidatedAttributes(MeasureAttributes(key = key, tempo = tempo).takeUnless { it.isEmpty() }, time)
-        }
+        ) { key, time, tempo -> StatedAttributes(key, time, tempo) }
     }
 
 public fun com.sparetimedevs.ami.music.serialization.Key?.validate(

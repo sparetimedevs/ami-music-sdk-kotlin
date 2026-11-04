@@ -38,7 +38,7 @@ public fun com.sparetimedevs.ami.music.data.kotlin.part.Part.toSerializable(): P
         instrument = this.instrument?.toSerializable(),
         measures =
             this.measures.mapIndexed { index, measure ->
-                measure.toSerializable(previousTimeSignature = this.measures.getOrNull(index - 1)?.timeSignature)
+                measure.toSerializable(previous = this.measures.getOrNull(index - 1)?.attributes)
             },
     )
 
@@ -50,14 +50,14 @@ public fun com.sparetimedevs.ami.music.data.kotlin.part.PartInstrument.toSeriali
     )
 
 /**
- * The time signature is stated in the attributes only when it is the first measure of a part ([previousTimeSignature] is
- * `null`) or when it differs from the one of the previous measure, like in MusicXML.
+ * The attributes are stated only for what differs from the [previous] measure's, so on a part's first measure (no
+ * previous one) everything that is set, like in MusicXML.
  */
 public fun com.sparetimedevs.ami.music.data.kotlin.measure.Measure.toSerializable(
-    previousTimeSignature: com.sparetimedevs.ami.music.data.kotlin.timesignature.TimeSignature? = null,
+    previous: com.sparetimedevs.ami.music.data.kotlin.measure.MeasureAttributes? = null,
 ): Measure =
     Measure(
-        attributes = this.attributes.toSerializable(this.timeSignature.takeIf { it != previousTimeSignature }),
+        attributes = this.attributes.toSerializable(previous),
         notes = this.notes.map { it.toSerializable() },
         pickup = this.pickup?.toSerializable(),
         harmonies = this.harmonies.takeIf { it.isNotEmpty() }?.map { it.toSerializable() },
@@ -87,18 +87,16 @@ public fun com.sparetimedevs.ami.music.data.kotlin.fraction.Fraction.toSerializa
     Fraction(numerator = this.numerator, denominator = this.denominator)
 
 /**
- * Writes attributes in canonical form (§4.4): `null` (so omitted) when there is nothing to write. A part's first measure
- * passes its time signature as [firstMeasureTimeSignature], which is written when the attributes don't state one.
+ * Writes attributes in canonical form (§4.4): only what differs from the [previous] measure's attributes, and `null` (so
+ * omitted) when that is nothing.
  */
-public fun com.sparetimedevs.ami.music.data.kotlin.measure.MeasureAttributes?.toSerializable(
-    statedTimeSignature: com.sparetimedevs.ami.music.data.kotlin.timesignature.TimeSignature? = null,
+public fun com.sparetimedevs.ami.music.data.kotlin.measure.MeasureAttributes.toSerializable(
+    previous: com.sparetimedevs.ami.music.data.kotlin.measure.MeasureAttributes? = null,
 ): MeasureAttributes? {
-    val time = statedTimeSignature?.toSerializable()
-    val key = this?.key?.toSerializable()
-    val tempo = this?.tempo?.toSerializable()
-    return if (time == null && key == null &&
-        tempo == null
-    ) {
+    val time = this.timeSignature.takeIf { it != previous?.timeSignature }?.toSerializable()
+    val key = this.key.takeIf { it != previous?.key }?.toSerializable()
+    val tempo = this.tempo.takeIf { it != previous?.tempo }?.toSerializable()
+    return if (time == null && key == null && tempo == null) {
         null
     } else {
         MeasureAttributes(key = key, time = time, tempo = tempo)

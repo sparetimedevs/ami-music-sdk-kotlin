@@ -51,7 +51,7 @@ public fun getExampleScore0(): Score {
                 measures =
                     listOf(
                         Measure(
-                            null,
+                            ATTRIBUTES_IN_FOUR_FOUR,
                             listOf(
                                 Pitched(
                                     duration = NoteDuration(noteValue = NoteValue.QUARTER),
@@ -118,10 +118,9 @@ public fun getExampleScore0(): Score {
                                         ),
                                 ),
                             ),
-                            FOUR_FOUR,
                         ),
                         Measure(
-                            attributes = null,
+                            attributes = ATTRIBUTES_IN_FOUR_FOUR,
                             notes =
                                 listOf(
                                     Pitched(
@@ -189,7 +188,6 @@ public fun getExampleScore0(): Score {
                                             ),
                                     ),
                                 ),
-                            timeSignature = FOUR_FOUR,
                         ),
                     ),
             ),
@@ -205,7 +203,7 @@ public fun getExampleScore0(): Score {
                 measures =
                     listOf(
                         Measure(
-                            attributes = null,
+                            attributes = ATTRIBUTES_IN_FOUR_FOUR,
                             notes =
                                 listOf(
                                     Pitched(
@@ -273,10 +271,9 @@ public fun getExampleScore0(): Score {
                                             ),
                                     ),
                                 ),
-                            timeSignature = FOUR_FOUR,
                         ),
                         Measure(
-                            attributes = null,
+                            attributes = ATTRIBUTES_IN_FOUR_FOUR,
                             notes =
                                 listOf(
                                     Pitched(
@@ -344,7 +341,6 @@ public fun getExampleScore0(): Score {
                                             ),
                                     ),
                                 ),
-                            timeSignature = FOUR_FOUR,
                         ),
                     ),
             ),

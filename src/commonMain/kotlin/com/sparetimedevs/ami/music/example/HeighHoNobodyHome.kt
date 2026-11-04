@@ -52,7 +52,7 @@ public fun getExampleScoreHeighHoNobodyHome(): Score {
                 measures =
                     listOf(
                         Measure(
-                            null,
+                            ATTRIBUTES_IN_FOUR_FOUR,
                             listOf(
                                 Note.Pitched(
                                     NoteDuration(NoteValue.HALF),
@@ -65,10 +65,9 @@ public fun getExampleScoreHeighHoNobodyHome(): Score {
                                     Pitch(NoteName.C, Octave.unsafeCreate(4)),
                                 ),
                             ),
-                            FOUR_FOUR,
                         ),
                         Measure(
-                            null,
+                            ATTRIBUTES_IN_FOUR_FOUR,
                             listOf(
                                 Note.Pitched(
                                     NoteDuration(NoteValue.QUARTER),
@@ -91,10 +90,9 @@ public fun getExampleScoreHeighHoNobodyHome(): Score {
                                     Pitch(NoteName.A, Octave.unsafeCreate(4)),
                                 ),
                             ),
-                            FOUR_FOUR,
                         ),
                         Measure(
-                            null,
+                            ATTRIBUTES_IN_FOUR_FOUR,
                             listOf(
                                 Note.Pitched(
                                     NoteDuration(NoteValue.QUARTER),
@@ -117,10 +115,9 @@ public fun getExampleScoreHeighHoNobodyHome(): Score {
                                     Pitch(NoteName.E, Octave.unsafeCreate(4)),
                                 ),
                             ),
-                            FOUR_FOUR,
                         ),
                         Measure(
-                            null,
+                            ATTRIBUTES_IN_FOUR_FOUR,
                             listOf(
                                 Note.Pitched(
                                     NoteDuration(NoteValue._8TH),
@@ -148,10 +145,9 @@ public fun getExampleScoreHeighHoNobodyHome(): Score {
                                     Pitch(NoteName.E, Octave.unsafeCreate(4)),
                                 ),
                             ),
-                            FOUR_FOUR,
                         ),
                         Measure(
-                            null,
+                            ATTRIBUTES_IN_FOUR_FOUR,
                             listOf(
                                 Note.Pitched(
                                     NoteDuration(NoteValue.QUARTER, NoteModifier.DOTTED),
@@ -174,10 +170,9 @@ public fun getExampleScoreHeighHoNobodyHome(): Score {
                                     Pitch(NoteName.G, Octave.unsafeCreate(4)),
                                 ),
                             ),
-                            FOUR_FOUR,
                         ),
                         Measure(
-                            null,
+                            ATTRIBUTES_IN_FOUR_FOUR,
                             listOf(
                                 Note.Pitched(
                                     NoteDuration(NoteValue.QUARTER, NoteModifier.DOTTED),
@@ -210,7 +205,6 @@ public fun getExampleScoreHeighHoNobodyHome(): Score {
                                     Pitch(NoteName.E, Octave.unsafeCreate(4)),
                                 ),
                             ),
-                            FOUR_FOUR,
                         ),
                     ),
             ),

@@ -49,7 +49,7 @@ public fun getExampleScore1(): Score {
                     ),
                 listOf(
                     Measure(
-                        null,
+                        ATTRIBUTES_IN_FOUR_FOUR,
                         listOf(
                             Note.Pitched(
                                 NoteDuration(NoteValue.QUARTER),
@@ -72,10 +72,9 @@ public fun getExampleScore1(): Score {
                                 Pitch(NoteName.F, Octave.unsafeCreate(4)),
                             ),
                         ),
-                        FOUR_FOUR,
                     ),
                     Measure(
-                        null,
+                        ATTRIBUTES_IN_FOUR_FOUR,
                         listOf(
                             Note.Pitched(
                                 NoteDuration(NoteValue.QUARTER),
@@ -98,7 +97,6 @@ public fun getExampleScore1(): Score {
                                 Pitch(NoteName.C, Octave.unsafeCreate(5)),
                             ),
                         ),
-                        FOUR_FOUR,
                     ),
                 ),
             ),

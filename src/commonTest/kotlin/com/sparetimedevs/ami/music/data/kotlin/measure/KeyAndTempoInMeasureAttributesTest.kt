@@ -113,6 +113,35 @@ class KeyAndTempoInMeasureAttributesTest {
     }
 
     @Test
+    fun `key and tempo carry forward into the attributes of later measures`() {
+        val measures =
+            read(
+                scoreJson("$time,${key(2, "MAJOR")},${tempo(120)}", null, tempo(90), null),
+            ).parts.single().measures
+
+        measures.map {
+            it.attributes.key
+                ?.fifths
+                ?.value
+                ?.toInt()
+        } shouldBe listOf(2, 2, 2, 2)
+        measures.map {
+            it.attributes.tempo
+                ?.quarterNotesPerMinute
+                ?.value
+                ?.toInt()
+        } shouldBe listOf(120, 120, 90, 90)
+    }
+
+    @Test
+    fun `a key or tempo that repeats the previous one is not written`() {
+        written(
+            read(scoreJson("$time,${key(2, "MAJOR")},${tempo(120)}", "${key(2, "MAJOR")},${tempo(120)}", tempo(120))),
+        ) shouldEqualJson
+            scoreJson("$time,${key(2, "MAJOR")},${tempo(120)}", null, null)
+    }
+
+    @Test
     fun `keyAt and tempoAt give the last stated value or null`() {
         val part =
             read(scoreJson(time, null, key(1, "MAJOR"), tempo(100), key(-3, "MINOR"), null, tempo(60))).parts.single()

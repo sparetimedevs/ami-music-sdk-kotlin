@@ -27,11 +27,11 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 public sealed interface Measure {
-    public val timeSignature: TimeSignature
-    public val attributes: MeasureAttributes?
+    /** The time signature, key and tempo in effect for this measure (carried forward from earlier measures). */
+    public val attributes: MeasureAttributes
     public val notes: List<Note>
 
-    /** The length of the first measure of a part when it is shorter than [timeSignature] says (D5), otherwise `null`. */
+    /** The length of the first measure of a part when it is shorter than the time signature says (D5), otherwise `null`. */
     public val pickup: Fraction?
 
     /** Chord symbols by position (F9). Offsets strictly increase and lie within [length]. */
@@ -49,13 +49,12 @@ public sealed interface Measure {
     /** Where a new section (verse, chorus) starts (D15). Offsets strictly increase, `0 ≤ offset < length`. */
     public val sectionStarts: List<SectionStart>
 
-    /** `pickup ?: timeSignature.measureLength`, as a fraction of a whole note. */
-    public val length: Fraction get() = pickup ?: timeSignature.measureLength
+    /** `pickup ?: attributes.timeSignature.measureLength`, as a fraction of a whole note. */
+    public val length: Fraction get() = pickup ?: attributes.timeSignature.measureLength
 
     @Serializable
     public data class CompleteMeasure(
-        override val timeSignature: TimeSignature,
-        override val attributes: MeasureAttributes?,
+        override val attributes: MeasureAttributes,
         override val notes: List<Note>,
         override val pickup: Fraction? = null,
         override val harmonies: List<Harmony> = emptyList(),
@@ -67,8 +66,7 @@ public sealed interface Measure {
 
     @Serializable
     public data class IncompleteMeasure(
-        override val timeSignature: TimeSignature,
-        override val attributes: MeasureAttributes?,
+        override val attributes: MeasureAttributes,
         override val notes: List<Note>,
         override val pickup: Fraction? = null,
         override val harmonies: List<Harmony> = emptyList(),
@@ -80,8 +78,7 @@ public sealed interface Measure {
 
     @Serializable
     public data class OverfloodedMeasure(
-        override val timeSignature: TimeSignature,
-        override val attributes: MeasureAttributes?,
+        override val attributes: MeasureAttributes,
         override val notes: List<Note>,
         val overfloodedNotes: List<Note>, // TODO or should this be its own type? OverfloodedNotes.
         override val pickup: Fraction? = null,
@@ -94,15 +91,13 @@ public sealed interface Measure {
 
     public companion object {
         /**
-         * Creates a measure with the [timeSignature] that is in effect for it. The time signature is stored once, on the
-         * measure itself; [MeasureAttributes] don't repeat it. Whether a time signature is stated in the serialized form
-         * (the first measure of a part, and wherever it changes) is decided when serializing. Empty attributes are the
-         * same as no attributes.
+         * Creates a measure with the [attributes] in effect for it, including its time signature. The time signature is
+         * stored once, in the attributes. Whether it, the key and the tempo are stated in the serialized form (the
+         * first measure of a part, and wherever they change) is decided when serializing.
          */
         public operator fun invoke(
-            attributes: MeasureAttributes?,
+            attributes: MeasureAttributes,
             notes: List<Note>,
-            timeSignature: TimeSignature,
             pickup: Fraction? = null,
             harmonies: List<Harmony> = emptyList(),
             lyrics: List<LyricFragment> = emptyList(),
@@ -110,12 +105,11 @@ public sealed interface Measure {
             lineBreaks: List<Fraction> = emptyList(),
             sectionStarts: List<SectionStart> = emptyList(),
         ): Measure {
-            val resolvedAttributes = attributes?.takeUnless { it.isEmpty() }
+            val timeSignature = attributes.timeSignature
             return when {
                 notesShouldBeInAccordanceWithTimeSignature(notes, timeSignature) ->
                     CompleteMeasure(
-                        timeSignature,
-                        resolvedAttributes,
+                        attributes,
                         notes,
                         pickup,
                         harmonies,
@@ -126,8 +120,7 @@ public sealed interface Measure {
                     )
                 notesAreTooManyForTimeSignature(notes, timeSignature) ->
                     OverfloodedMeasure(
-                        timeSignature,
-                        resolvedAttributes,
+                        attributes,
                         notes /* TODO split notes */,
                         notes,
                         pickup,
@@ -139,8 +132,7 @@ public sealed interface Measure {
                     )
                 else ->
                     IncompleteMeasure(
-                        timeSignature,
-                        resolvedAttributes,
+                        attributes,
                         notes,
                         pickup,
                         harmonies,

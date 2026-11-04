@@ -110,18 +110,19 @@ public data class Part(
     val instrument: PartInstrument? = null,
     val measures: List<Measure>,
 ) {
-    /** The key in effect at [measureIndex]: from the last measure at or before it that stated one, or `null`. */
+    /** The key in effect at [measureIndex], or `null` when the part hasn't stated one by then. */
     public fun keyAt(measureIndex: Int): Key? =
-        measures.take(measureIndex + 1).lastNotNullOfOrNull { it.attributes?.key }
+        measures
+            .take(measureIndex + 1)
+            .lastOrNull()
+            ?.attributes
+            ?.key
 
-    /** The tempo in effect at [measureIndex]: from the last measure at or before it that stated one, or `null`. */
+    /** The tempo in effect at [measureIndex], or `null` when the part hasn't stated one by then. */
     public fun tempoAt(measureIndex: Int): Tempo? =
-        measures.take(measureIndex + 1).lastNotNullOfOrNull { it.attributes?.tempo }
-
-    private inline fun <T, R : Any> List<T>.lastNotNullOfOrNull(transform: (T) -> R?): R? {
-        for (index in indices.reversed()) {
-            transform(this[index])?.let { return it }
-        }
-        return null
-    }
+        measures
+            .take(measureIndex + 1)
+            .lastOrNull()
+            ?.attributes
+            ?.tempo
 }

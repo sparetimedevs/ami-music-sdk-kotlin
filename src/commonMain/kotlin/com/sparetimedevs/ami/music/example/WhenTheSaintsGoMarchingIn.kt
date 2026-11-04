@@ -88,16 +88,18 @@ private fun lyrics(
  * direction, a line break inside a measure, a labelled section start, an N.C., a slash chord and an add9.
  */
 public fun getExampleScoreWhenTheSaintsGoMarchingIn(): Score {
+    // The key and tempo stay in effect for the whole song, so every measure carries them.
+    val attributes =
+        MeasureAttributes(
+            timeSignature = FOUR_FOUR,
+            key = Key(Fifths.unsafeCreate(0), KeyMode.MAJOR),
+            tempo = Tempo(QuarterNotesPerMinute.unsafeCreate(100)),
+        )
     val measures =
         listOf(
             Measure(
-                attributes =
-                    MeasureAttributes(
-                        key = Key(Fifths.unsafeCreate(0), KeyMode.MAJOR),
-                        tempo = Tempo(QuarterNotesPerMinute.unsafeCreate(100)),
-                    ),
+                attributes = attributes,
                 notes = emptyList(),
-                timeSignature = FOUR_FOUR,
                 pickup = THREE_QUARTERS,
                 harmonies = listOf(Harmony(ZERO, C_MAJOR)),
                 lyrics =
@@ -110,9 +112,8 @@ public fun getExampleScoreWhenTheSaintsGoMarchingIn(): Score {
                 sectionStarts = listOf(SectionStart(ZERO, "Verse")),
             ),
             Measure(
-                attributes = null,
+                attributes = attributes,
                 notes = emptyList(),
-                timeSignature = FOUR_FOUR,
                 harmonies = listOf(Harmony(ZERO, C_MAJOR), Harmony(HALF, G_SEVENTH)),
                 lyrics =
                     lyrics(ZERO, "saints ", "sun ") +
@@ -121,9 +122,8 @@ public fun getExampleScoreWhenTheSaintsGoMarchingIn(): Score {
                         lyrics(THREE_QUARTERS, "ing ", "to "),
             ),
             Measure(
-                attributes = null,
+                attributes = attributes,
                 notes = emptyList(),
-                timeSignature = FOUR_FOUR,
                 harmonies = listOf(Harmony(ZERO, C_MAJOR), Harmony(THREE_QUARTERS, G_SEVENTH)),
                 lyrics =
                     lyrics(ZERO, "in", "shine") +
@@ -133,9 +133,8 @@ public fun getExampleScoreWhenTheSaintsGoMarchingIn(): Score {
                 lineBreaks = listOf(QUARTER),
             ),
             Measure(
-                attributes = null,
+                attributes = attributes,
                 notes = emptyList(),
-                timeSignature = FOUR_FOUR,
                 harmonies = listOf(Harmony(ZERO, C_ADD_NINE), Harmony(HALF, F_MAJOR)),
                 lyrics =
                     lyrics(ZERO, "saints ", "sun ") +
@@ -144,9 +143,8 @@ public fun getExampleScoreWhenTheSaintsGoMarchingIn(): Score {
                         lyrics(THREE_QUARTERS, "ing ", "to "),
             ),
             Measure(
-                attributes = null,
+                attributes = attributes,
                 notes = emptyList(),
-                timeSignature = FOUR_FOUR,
                 harmonies = listOf(Harmony(ZERO, C_OVER_G), Harmony(HALF, NO_CHORD)),
                 lyrics = lyrics(ZERO, "in", "shine"),
             ),
