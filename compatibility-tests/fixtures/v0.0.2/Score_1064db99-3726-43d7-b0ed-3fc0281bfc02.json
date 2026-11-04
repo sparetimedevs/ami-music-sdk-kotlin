@@ -10,6 +10,12 @@
       "midiProgram" : 1
     },
     "measures" : [ {
+      "attributes" : {
+        "time" : {
+          "beats" : 4,
+          "beatType" : 4
+        }
+      },
       "notes" : [ {
         "duration" : {
           "noteValue" : "HALF",
@@ -32,8 +38,7 @@
           "noteName" : "C",
           "octave" : 4
         }
-      } ],
-      "attributes" : { }
+      } ]
     }, {
       "notes" : [ {
         "duration" : {
@@ -79,8 +84,7 @@
           "noteName" : "A",
           "octave" : 4
         }
-      } ],
-      "attributes" : { }
+      } ]
     }, {
       "notes" : [ {
         "duration" : {
@@ -126,8 +130,7 @@
           "noteName" : "E",
           "octave" : 4
         }
-      } ],
-      "attributes" : { }
+      } ]
     }, {
       "notes" : [ {
         "duration" : {
@@ -184,8 +187,7 @@
           "noteName" : "E",
           "octave" : 4
         }
-      } ],
-      "attributes" : { }
+      } ]
     }, {
       "notes" : [ {
         "duration" : {
@@ -231,8 +233,7 @@
           "noteName" : "G",
           "octave" : 4
         }
-      } ],
-      "attributes" : { }
+      } ]
     }, {
       "notes" : [ {
         "duration" : {
@@ -300,8 +301,7 @@
           "noteName" : "E",
           "octave" : 4
         }
-      } ],
-      "attributes" : { }
+      } ]
     } ]
   } ]
 }
