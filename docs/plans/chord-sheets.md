@@ -58,12 +58,12 @@ Rules for the tasks below:
 
 ### Task 2: Validation errors in a serializable shape
 
-- [ ] Every `ValidationIdentifier` names the kind of its location: `score`, `part`, `measure`, `note` or `pitch`.
+- [x] Every `ValidationIdentifier` names the kind of its location: `score`, `part`, `measure`, `note` or `pitch`.
   - A `ValidationError` gives its location as a list of segments from the score inward. Each segment is a kind with an
     id or an index. `NoValidationIdentifier` is left out.
   - A location also renders as text, e.g. `part p-1, measure 3, note 2` (§4.3).
   - Tests cover a note-level error and a part-level error.
-- [ ] Add the serializable error shape (F8, §4.3):
+- [x] Add the serializable error shape (F8, §4.3):
   - Plain `@Serializable` classes with `message`, `property` and `location: [{ kind, id | index }]`.
   - Mapped from `ValidationError` and from `AccumulatedValidationErrors`, without serializing `ValidationIdentifier`
     polymorphically.
@@ -72,7 +72,15 @@ Rules for the tasks below:
 
 #### Notes from task 2
 
-None
+- `ValidationIdentifier.kind` is a `ValidationLocationKind?` (`null` only for `NoValidationIdentifier`). Later tasks add
+  enum entries (`HARMONY`, `LYRIC`, ...) with their `@SerialName`, and an identifier class that sets `kind`.
+- The error shape lives in `music/input/validation/SerializableValidationErrors.kt`: `SerializableValidationError`,
+  `SerializableValidationErrors`, `ValidationLocationSegment`, with `ValidationError.toSerializable()`,
+  `AccumulatedValidationErrors.toSerializable()`, `locationSegments()` and `locationAsText()`.
+- Indexes are rendered as stored, 0-based (`measure 0` is the first measure), and the text includes the score segment:
+  `score <id>, part p-1, measure 3, note 2`. The spec's *"part p-1, measure 3"* examples leave out the score and read as
+  if 1-based; decide when writing the §7 tests whether to render 1-based.
+- Not wired into `fromJson`/`toJson`; consumers call `toSerializable()` on the `AccumulatedValidationErrors`.
 
 ### Task 3: Compatibility tests round-trip only a version's own JSON
 

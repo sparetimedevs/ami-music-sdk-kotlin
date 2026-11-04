@@ -18,23 +18,29 @@ package com.sparetimedevs.ami.music.input.validation
 
 import com.sparetimedevs.ami.core.Index
 import com.sparetimedevs.ami.core.validation.ValidationIdentifier
+import com.sparetimedevs.ami.core.validation.ValidationLocationKind
 import com.sparetimedevs.ami.music.data.kotlin.part.PartId
 import com.sparetimedevs.ami.music.data.kotlin.score.ScoreId
 
 public data class ValidationIdentifierForScore(
     public override val identifier: ScoreId,
     public override val validationIdentifierParent: ValidationIdentifier,
-) : ValidationIdentifier
+) : ValidationIdentifier {
+    public override val kind: ValidationLocationKind = ValidationLocationKind.SCORE
+}
 
 public data class ValidationIdentifierForPart(
     public override val identifier: PartId,
     public override val validationIdentifierParent: ValidationIdentifier,
-) : ValidationIdentifier
+) : ValidationIdentifier {
+    public override val kind: ValidationLocationKind = ValidationLocationKind.PART
+}
 
 public data class ValidationIdentifierForMeasure(
     public val measureIndex: Int,
     public override val validationIdentifierParent: ValidationIdentifier,
 ) : ValidationIdentifier {
+    public override val kind: ValidationLocationKind = ValidationLocationKind.MEASURE
     public override val identifier: Index = Index(measureIndex)
 }
 
@@ -42,6 +48,7 @@ public data class ValidationIdentifierForNote(
     public val noteIndex: Int,
     public override val validationIdentifierParent: ValidationIdentifier,
 ) : ValidationIdentifier {
+    public override val kind: ValidationLocationKind = ValidationLocationKind.NOTE
     public override val identifier: Index = Index(noteIndex)
 }
 
@@ -49,5 +56,6 @@ public data class ValidationIdentifierForPitchOfChord(
     public val pitchIndex: Int,
     public override val validationIdentifierParent: ValidationIdentifier,
 ) : ValidationIdentifier {
+    public override val kind: ValidationLocationKind = ValidationLocationKind.PITCH
     public override val identifier: Index = Index(pitchIndex)
 }

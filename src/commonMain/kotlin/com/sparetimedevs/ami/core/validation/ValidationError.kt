@@ -18,6 +18,7 @@ package com.sparetimedevs.ami.core.validation
 
 import com.sparetimedevs.ami.core.Id
 import com.sparetimedevs.ami.core.IdOrIndex
+import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 import kotlin.jvm.JvmInline
 
@@ -36,12 +37,36 @@ public value class ValidationErrorForProperty(
 public inline fun <reified T : Any> validationErrorForProperty(): ValidationErrorForProperty =
     ValidationErrorForProperty(T::class.simpleName ?: "unknown")
 
+/** The kind of thing a [ValidationIdentifier] points at. [text] is the name used in JSON and in rendered locations. */
+@Serializable
+public enum class ValidationLocationKind(
+    public val text: String,
+) {
+    @SerialName("score")
+    SCORE("score"),
+
+    @SerialName("part")
+    PART("part"),
+
+    @SerialName("measure")
+    MEASURE("measure"),
+
+    @SerialName("note")
+    NOTE("note"),
+
+    @SerialName("pitch")
+    PITCH("pitch"),
+}
+
 public interface ValidationIdentifier {
+    /** The kind of location this identifier names. `null` only for [NoValidationIdentifier]. */
+    public val kind: ValidationLocationKind?
     public val identifier: IdOrIndex
     public val validationIdentifierParent: ValidationIdentifier
 }
 
 public object NoValidationIdentifier : ValidationIdentifier {
+    public override val kind: ValidationLocationKind? = null
     public override val identifier: IdOrIndex = NoId
     public override val validationIdentifierParent: ValidationIdentifier = this
 }
