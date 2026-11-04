@@ -209,19 +209,31 @@ None
 
 ### Task 7: Pickups and measures without notes
 
-- [ ] Schema: add `Measure.pickup?: Fraction` (§4.1).
-- [ ] All three `Measure` variants gain `pickup: Fraction?` (default `null`) and `length`
+- [x] Schema: add `Measure.pickup?: Fraction` (§4.1).
+- [x] All three `Measure` variants gain `pickup: Fraction?` (default `null`) and `length`
   (`pickup ?: timeSignature.measureLength`, §4.2). `pickup` is mapped both ways and written only when set. Tests.
-- [ ] Validate `pickup` (D5, §4.3): it is allowed only on a part's first measure, and
+- [x] Validate `pickup` (D5, §4.3): it is allowed only on a part's first measure, and
   `0 < pickup < timeSignature.measureLength`. Tests with the measure location, including a pickup on measure 2 and a
   pickup as long as the whole measure.
-- [ ] A measure without notes is a `CompleteMeasure` of length `length`, whatever the stubbed classification says (F5).
+- [x] A measure without notes is a `CompleteMeasure` of length `length`, whatever the stubbed classification says (F5).
   A test reads a score whose measures all have `"notes": []`, and asserts that it validates and that every measure is a
   `CompleteMeasure` (§7).
 
 #### Notes from task 7
 
-None
+- `pickup: Fraction? = null` is the last property of all three `Measure` variants and the last parameter of
+  `Measure(attributes, notes, previousTimeSignature, pickup)`. `length` is a computed property on the interface
+  (`pickup ?: timeSignature.measureLength`), not constructor state.
+- `Fraction` is now `@Serializable` through a surrogate serializer (`{ numerator, denominator }`), because `Measure` is
+  `@Serializable`. Reading through it uses `unsafeCreate`; JSON input goes through the validating path, not this one.
+- Validation is in `validateMeasures` (`ValidateScore.kt`): each pickup is validated as a `Fraction` first (errors
+  accumulate with the attribute and note errors), then the range and first-measure rules run after the time signatures
+  are resolved. Both rule errors have property `Pickup` and the measure as location.
+- `Measure.toSerializable` writes `pickup` only when set. `Fraction.toSerializable()` is added in `ToSerializable.kt`.
+- F5 already held: the classification stub returns `CompleteMeasure` for everything, so a measure without notes is
+  complete. The test locks that in; when the stub is implemented it must keep empty measures complete.
+- Tests are in `PickupInMeasureTest`. No example uses a pickup yet (task 13). The schema change is committed in
+  `ami-music-spec` (`Measure.pickup`).
 
 ### Task 8: Chord symbols
 

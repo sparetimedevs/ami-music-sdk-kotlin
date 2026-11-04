@@ -16,6 +16,7 @@
 
 package com.sparetimedevs.ami.music.data.kotlin.measure
 
+import com.sparetimedevs.ami.music.data.kotlin.fraction.Fraction
 import com.sparetimedevs.ami.music.data.kotlin.note.Note
 import com.sparetimedevs.ami.music.data.kotlin.timesignature.BeatType
 import com.sparetimedevs.ami.music.data.kotlin.timesignature.Beats
@@ -28,11 +29,18 @@ public sealed interface Measure {
     public val attributes: MeasureAttributes?
     public val notes: List<Note>
 
+    /** The length of the first measure of a part when it is shorter than [timeSignature] says (D5), otherwise `null`. */
+    public val pickup: Fraction?
+
+    /** `pickup ?: timeSignature.measureLength`, as a fraction of a whole note. */
+    public val length: Fraction get() = pickup ?: timeSignature.measureLength
+
     @Serializable
     public data class CompleteMeasure(
         override val timeSignature: TimeSignature,
         override val attributes: MeasureAttributes?,
         override val notes: List<Note>,
+        override val pickup: Fraction? = null,
     ) : Measure
 
     @Serializable
@@ -40,6 +48,7 @@ public sealed interface Measure {
         override val timeSignature: TimeSignature,
         override val attributes: MeasureAttributes?,
         override val notes: List<Note>,
+        override val pickup: Fraction? = null,
     ) : Measure
 
     @Serializable
@@ -48,6 +57,7 @@ public sealed interface Measure {
         override val attributes: MeasureAttributes?,
         override val notes: List<Note>,
         val overfloodedNotes: List<Note>, // TODO or should this be its own type? OverfloodedNotes.
+        override val pickup: Fraction? = null,
     ) : Measure
 
     public companion object {
@@ -61,6 +71,7 @@ public sealed interface Measure {
             attributes: MeasureAttributes?,
             notes: List<Note>,
             previousTimeSignature: TimeSignature?,
+            pickup: Fraction? = null,
         ): Measure {
             val timeSignature = attributes?.time ?: previousTimeSignature ?: DEFAULT_TIME_SIGNATURE
             val resolvedAttributes =
@@ -71,15 +82,16 @@ public sealed interface Measure {
                 }
             return when {
                 notesShouldBeInAccordanceWithTimeSignature(notes, timeSignature) ->
-                    CompleteMeasure(timeSignature, resolvedAttributes, notes)
+                    CompleteMeasure(timeSignature, resolvedAttributes, notes, pickup)
                 notesAreTooManyForTimeSignature(notes, timeSignature) ->
                     OverfloodedMeasure(
                         timeSignature,
                         resolvedAttributes,
                         notes /* TODO split notes */,
                         notes,
+                        pickup,
                     )
-                else -> IncompleteMeasure(timeSignature, resolvedAttributes, notes)
+                else -> IncompleteMeasure(timeSignature, resolvedAttributes, notes, pickup)
             }
         }
 
@@ -89,7 +101,7 @@ public sealed interface Measure {
         private fun notesShouldBeInAccordanceWithTimeSignature(
             notes: List<Note>,
             timeSignature: TimeSignature,
-        ): Boolean = true // TODO implement
+        ): Boolean = true // TODO implement. A measure without notes is always complete, whatever its length (F5).
 
         private fun notesAreTooManyForTimeSignature(
             notes: List<Note>,

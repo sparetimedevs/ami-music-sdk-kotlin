@@ -52,7 +52,11 @@ public fun com.sparetimedevs.ami.music.data.kotlin.measure.Measure.toSerializabl
     Measure(
         attributes = this.attributes.toSerializable(this.timeSignature.takeIf { isFirstOfPart }),
         notes = this.notes.map { it.toSerializable() },
+        pickup = this.pickup?.toSerializable(),
     )
+
+public fun com.sparetimedevs.ami.music.data.kotlin.fraction.Fraction.toSerializable(): Fraction =
+    Fraction(numerator = this.numerator, denominator = this.denominator)
 
 /**
  * Writes attributes in canonical form (§4.4): `null` (so omitted) when there is nothing to write. A part's first measure

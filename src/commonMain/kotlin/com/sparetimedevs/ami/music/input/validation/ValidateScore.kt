@@ -18,6 +18,7 @@ package com.sparetimedevs.ami.music.input.validation
 
 import arrow.core.Either
 import arrow.core.EitherNel
+import arrow.core.NonEmptyList
 import arrow.core.flatMap
 import arrow.core.leftNel
 import com.sparetimedevs.ami.core.validation.NoValidationIdentifier
@@ -77,36 +78,95 @@ public fun com.sparetimedevs.ami.music.serialization.Part.validate(
     }
 
 /**
- * A measure depends on the ones before it (the time signature carries forward, D4), so first the attributes and notes of
- * all measures are validated, and then the measures are built in order.
+ * A measure depends on the ones before it (the time signature carries forward, D4, and a pickup is checked against the
+ * time signature), so first the attributes, notes and pickups of all measures are validated, and then the measures are
+ * built in order.
  */
 private fun validateMeasures(
     measures: List<com.sparetimedevs.ami.music.serialization.Measure>,
     validationIdentifier: ValidationIdentifier,
 ): EitherNel<ValidationError, List<Measure>> =
-    Either.zipOrAccumulate(
-        measures
-            .withIndex()
-            .map { (index, measure) ->
-                measure.attributes.validate(ValidationIdentifierForMeasure(index, validationIdentifier))
-            }.combineAllValidationErrors(),
-        measures
-            .withIndex()
-            .map { (index, measure) ->
-                val validationIdentifierForMeasure = ValidationIdentifierForMeasure(index, validationIdentifier)
-                measure.notes
-                    .withIndex()
-                    .map { (noteIndex, note) -> validateNote(noteIndex, note, validationIdentifierForMeasure) }
-                    .combineAllValidationErrors()
-            }.combineAllValidationErrors(),
-    ) { attributes, notes ->
-        var previousTimeSignature: TimeSignature? = null
-        attributes.zip(notes).map { (measureAttributes, measureNotes) ->
-            Measure(measureAttributes, measureNotes, previousTimeSignature).also {
-                previousTimeSignature = it.timeSignature
-            }
+    Either
+        .zipOrAccumulate(
+            measures
+                .withIndex()
+                .map { (index, measure) ->
+                    measure.attributes.validate(ValidationIdentifierForMeasure(index, validationIdentifier))
+                }.combineAllValidationErrors(),
+            measures
+                .withIndex()
+                .map { (index, measure) ->
+                    val validationIdentifierForMeasure = ValidationIdentifierForMeasure(index, validationIdentifier)
+                    measure.notes
+                        .withIndex()
+                        .map { (noteIndex, note) -> validateNote(noteIndex, note, validationIdentifierForMeasure) }
+                        .combineAllValidationErrors()
+                }.combineAllValidationErrors(),
+            measures
+                .withIndex()
+                .map { (index, measure) ->
+                    measure.pickup.validatePickup(ValidationIdentifierForMeasure(index, validationIdentifier))
+                }.combineAllValidationErrors(),
+        ) { attributes, notes, pickups -> Triple(attributes, notes, pickups) }
+        .flatMap { (attributes, notes, pickups) ->
+            var previousTimeSignature: TimeSignature? = null
+            val built =
+                attributes.indices.map { index ->
+                    Measure(attributes[index], notes[index], previousTimeSignature, pickups[index]).also {
+                        previousTimeSignature = it.timeSignature
+                    }
+                }
+            built
+                .withIndex()
+                .mapNotNull { (index, measure) ->
+                    measure.pickup?.let {
+                        checkPickup(
+                            index,
+                            it,
+                            measure.timeSignature,
+                            ValidationIdentifierForMeasure(index, validationIdentifier),
+                        )
+                    }
+                }.let { errors ->
+                    if (errors.isEmpty()) {
+                        Either.Right(
+                            built,
+                        )
+                    } else {
+                        Either.Left(NonEmptyList(errors.first(), errors.drop(1)))
+                    }
+                }
         }
+
+/** D5, §4.3: a pickup is allowed only on a part's first measure, and `0 < pickup < timeSignature.measureLength`. */
+private fun checkPickup(
+    index: Int,
+    pickup: Fraction,
+    timeSignature: TimeSignature,
+    validationIdentifier: ValidationIdentifier,
+): ValidationError? =
+    when {
+        index != 0 ->
+            ValidationError(
+                "Pickup $pickup is only allowed on the first measure of a part",
+                ValidationErrorForProperty(PICKUP_PROPERTY),
+                validationIdentifier,
+            )
+        pickup <= Fraction.ZERO || pickup >= timeSignature.measureLength ->
+            ValidationError(
+                "Pickup $pickup must be bigger than 0 and smaller than the measure length " +
+                    "${timeSignature.measureLength}",
+                ValidationErrorForProperty(PICKUP_PROPERTY),
+                validationIdentifier,
+            )
+        else -> null
     }
+
+private const val PICKUP_PROPERTY = "Pickup"
+
+private fun com.sparetimedevs.ami.music.serialization.Fraction?.validatePickup(
+    validationIdentifier: ValidationIdentifier,
+): EitherNel<ValidationError, Fraction?> = if (this == null) Either.Right(null) else validate(validationIdentifier)
 
 /** Empty attributes (`"attributes": {}`) are the same as no attributes. */
 public fun com.sparetimedevs.ami.music.serialization.MeasureAttributes?.validate(

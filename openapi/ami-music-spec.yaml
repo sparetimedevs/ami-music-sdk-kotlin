@@ -55,6 +55,9 @@ components:
       properties:
         attributes:
           $ref: '#/components/schemas/MeasureAttributes'
+        pickup:
+          $ref: '#/components/schemas/Fraction'
+          description: 'First measure of a part only: its real length as a fraction of a whole note, when shorter than the time signature.'
         notes:
           type: array
           items:

@@ -26,12 +26,18 @@ import com.sparetimedevs.ami.core.validation.ValidationErrorForProperty
 import com.sparetimedevs.ami.core.validation.ValidationIdentifier
 import com.sparetimedevs.ami.core.validation.getOrThrowFirstValidationError
 import com.sparetimedevs.ami.core.validation.validationErrorForProperty
+import kotlinx.serialization.KSerializer
+import kotlinx.serialization.Serializable
+import kotlinx.serialization.descriptors.SerialDescriptor
+import kotlinx.serialization.encoding.Decoder
+import kotlinx.serialization.encoding.Encoder
 import kotlin.math.abs
 
 /**
  * A non-negative rational number in lowest terms, e.g. a position in a measure as a fraction of a whole note.
  * Zero is `0/1`. Create one with [validate], [unsafeCreate] or, reducing the input, [of].
  */
+@Serializable(with = FractionSerializer::class)
 public class Fraction private constructor(
     public val numerator: Int,
     public val denominator: Int,
@@ -134,5 +140,29 @@ public class Fraction private constructor(
             a: Long,
             b: Long,
         ): Long = if (b == 0L) a else gcd(b, a % b)
+    }
+}
+
+@Serializable
+private class FractionSurrogate(
+    val numerator: Int,
+    val denominator: Int,
+)
+
+/** Serializes a [Fraction] as `{ numerator, denominator }`, validating when reading. */
+internal object FractionSerializer : KSerializer<Fraction> {
+    override val descriptor: SerialDescriptor = FractionSurrogate.serializer().descriptor
+
+    override fun serialize(
+        encoder: Encoder,
+        value: Fraction,
+    ) = encoder.encodeSerializableValue(
+        FractionSurrogate.serializer(),
+        FractionSurrogate(value.numerator, value.denominator),
+    )
+
+    override fun deserialize(decoder: Decoder): Fraction {
+        val surrogate = decoder.decodeSerializableValue(FractionSurrogate.serializer())
+        return Fraction.unsafeCreate(surrogate.numerator, surrogate.denominator)
     }
 }
