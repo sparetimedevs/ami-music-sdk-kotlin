@@ -59,6 +59,9 @@ public enum class ValidationLocationKind(
 
     @SerialName("harmony")
     HARMONY("harmony"),
+
+    @SerialName("lyric")
+    LYRIC("lyric"),
 }
 
 public interface ValidationIdentifier {

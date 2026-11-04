@@ -310,12 +310,12 @@ None
 
 ### Task 10: Lyrics
 
-- [ ] Schema: add `LyricFragment { offset: Fraction; text: string; verse?: int32 }` and `Measure.lyrics?` (§4.1).
-- [ ] The `Measure` variants gain `lyrics: List<LyricFragment>` (default empty), mapped both ways (D7, §4.4):
+- [x] Schema: add `LyricFragment { offset: Fraction; text: string; verse?: int32 }` and `Measure.lyrics?` (§4.1).
+- [x] The `Measure` variants gain `lyrics: List<LyricFragment>` (default empty), mapped both ways (D7, §4.4):
   - Verse 1 is written as `null`, and an explicit `verse: 1` reads the same as none.
   - Text is kept exactly as written, including leading and trailing spaces.
   - Tests.
-- [ ] Validate lyrics (§4.3):
+- [x] Validate lyrics (§4.3):
   - Offsets are checked as for harmonies, and strictly increase within each verse.
   - `text` isn't empty and is at most 512 characters; `verse` is 1…99.
   - Errors are located at `lyric i`.
@@ -323,7 +323,17 @@ None
 
 #### Notes from task 10
 
-None
+- `LyricFragment(offset, text, verse = 1)` lives in `music/data/kotlin/lyric/LyricFragment.kt`, with `validateText` (1…512
+  characters, property `LyricText`) and `validateVerse` (1…99, absent is 1, property `LyricVerse`). Whitespace-only text
+  is valid, only the empty string is not. `lyrics: List<LyricFragment>` is the last property of all three `Measure`
+  variants and the last parameter of `Measure(...)`. `toSerializable` writes verse 1 as `null` and an empty list as `null`.
+- `ValidationLocationKind.LYRIC` and `ValidationIdentifierForLyric(index, parent)` are added. The index is the position
+  in the measure's `lyrics` list, not within the verse.
+- `checkOffsets` in `ValidateScore.kt` gained `groups` (default: one group). Offsets must strictly increase only among
+  items with the same group value; lyrics pass their verse. The range check applies to all lyrics. Task 11 still needs
+  its own `≤ length` / non-decreasing variant.
+- Tests are in `LyricsInMeasureTest`. No example uses lyrics yet (task 13). The schema change is committed in
+  `ami-music-spec` (`LyricFragment`, `Measure.lyrics`).
 
 ### Task 11: Text directions
 

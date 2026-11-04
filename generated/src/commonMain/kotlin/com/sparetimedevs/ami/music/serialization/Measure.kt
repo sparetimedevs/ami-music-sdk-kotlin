@@ -17,6 +17,7 @@ package com.sparetimedevs.ami.music.serialization
 
 import com.sparetimedevs.ami.music.serialization.Fraction
 import com.sparetimedevs.ami.music.serialization.Harmony
+import com.sparetimedevs.ami.music.serialization.LyricFragment
 import com.sparetimedevs.ami.music.serialization.MeasureAttributes
 import com.sparetimedevs.ami.music.serialization.Pitched
 
@@ -31,6 +32,7 @@ import kotlinx.serialization.encoding.*
  * @param attributes 
  * @param pickup First measure of a part only: its real length as a fraction of a whole note, when shorter than the time signature.
  * @param harmonies Chord symbols in this measure, by position. Offsets strictly increase and lie within the measure.
+ * @param lyrics Lyric fragments in this measure, by position and verse. Offsets strictly increase within each verse.
  */
 @Serializable
 
@@ -44,7 +46,10 @@ public data class Measure (
     @SerialName(value = "pickup") val pickup: Fraction? = null,
 
     /* Chord symbols in this measure, by position. Offsets strictly increase and lie within the measure. */
-    @SerialName(value = "harmonies") val harmonies: kotlin.collections.List<Harmony>? = null
+    @SerialName(value = "harmonies") val harmonies: kotlin.collections.List<Harmony>? = null,
+
+    /* Lyric fragments in this measure, by position and verse. Offsets strictly increase within each verse. */
+    @SerialName(value = "lyrics") val lyrics: kotlin.collections.List<LyricFragment>? = null
 
 ) {
 

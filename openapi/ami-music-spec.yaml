@@ -101,6 +101,23 @@ components:
           format: int32
         mode:
           type: string
+    LyricFragment:
+      type: object
+      required:
+        - offset
+        - text
+      properties:
+        offset:
+          $ref: '#/components/schemas/Fraction'
+          description: "Position within the measure as a fraction of a whole note: 0 ≤ offset < the measure's length."
+        text:
+          type: string
+          description: The text exactly as written, including leading and trailing spaces. 1 to 512 characters.
+        verse:
+          type: integer
+          format: int32
+          description: Verse number, 1 to 99. Absent means verse 1.
+      description: A piece of lyrics at a position in a measure.
     Measure:
       type: object
       required:
@@ -116,6 +133,11 @@ components:
           items:
             $ref: '#/components/schemas/Harmony'
           description: Chord symbols in this measure, by position. Offsets strictly increase and lie within the measure.
+        lyrics:
+          type: array
+          items:
+            $ref: '#/components/schemas/LyricFragment'
+          description: Lyric fragments in this measure, by position and verse. Offsets strictly increase within each verse.
         notes:
           type: array
           items:

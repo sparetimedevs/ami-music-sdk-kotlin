@@ -67,3 +67,11 @@ public data class ValidationIdentifierForHarmony(
     public override val kind: ValidationLocationKind = ValidationLocationKind.HARMONY
     public override val identifier: Index = Index(harmonyIndex)
 }
+
+public data class ValidationIdentifierForLyric(
+    public val lyricIndex: Int,
+    public override val validationIdentifierParent: ValidationIdentifier,
+) : ValidationIdentifier {
+    public override val kind: ValidationLocationKind = ValidationLocationKind.LYRIC
+    public override val identifier: Index = Index(lyricIndex)
+}
