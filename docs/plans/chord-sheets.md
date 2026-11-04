@@ -82,19 +82,24 @@ Rules for the tasks below:
   if 1-based; decide when writing the §7 tests whether to render 1-based.
 - Not wired into `fromJson`/`toJson`; consumers call `toSerializable()` on the `AccumulatedValidationErrors`.
 
-### Task 3: Compatibility tests round-trip only a version's own JSON
+### Task 3: Compatibility tests read, write and read again
 
-- [ ] Change `AbstractCompatibilityTest` so that a suite runs the full round trip (read, then write back identical
-  JSON) only on JSON that its own SDK version wrote. For JSON from other versions it checks only that the JSON reads
-  into the expected `Score`.
-  - `compatibilitySdkCurrent`: full round trip on `openapi/examples`. Reading only on every frozen fixture, including
-    the `v0.0.2/` placeholders, which can't follow the canonical form.
-  - The versioned suites: full round trip on their own fixtures. Reading only on older fixtures, newer fixtures and
-    `openapi/examples`.
-  - All suites still pass on today's JSON. Task 4 changes what the current SDK writes, and frozen fixtures can't change
-    with it (spec §9, 2026-11-04).
-- [ ] Update the compatibility sections of `README.md`, `CLAUDE.md` and `compatibility-tests/README.md` to describe this
-  split.
+Compatibility means that an SDK reads JSON from another version into the same `Score` (§9, 2026-11-04). It does not
+mean writing that JSON back byte for byte:
+
+- Backward: the current SDK writes canonical JSON (D11, §4.4), so frozen fixtures with `"attributes": {}` come back
+  differently by design.
+- Forward: an older SDK drops fields it doesn't know (D14), so it can't write them back.
+
+Writer stability (the SDK writes exactly the JSON of `openapi/examples`) is tested in the main module by `ExamplesTest`,
+not by the compatibility suites. This task prepares for task 4, which changes what the current SDK writes.
+
+- [x] Change `AbstractCompatibilityTest` so that, for every file in `examples()`, it reads the JSON into the expected
+  `Score`, writes that `Score`, reads the result again and expects an equal `Score`. It no longer compares the written
+  JSON with the file. Every suite keeps its single `examples()` map, and all suites pass on today's JSON.
+- [x] Update the compatibility sections of `README.md`, `CLAUDE.md` and `compatibility-tests/README.md` to describe
+  this, including that writer stability is tested in `ExamplesTest`, and that until real releases exist the versioned
+  suites can't show a real difference between versions.
 
 #### Notes from task 3
 

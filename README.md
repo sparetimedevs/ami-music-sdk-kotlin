@@ -126,9 +126,12 @@ Two directions of compatibility matter:
   letting test suites that depend on older, published SDK artifacts read the current JSON examples.
 
 The module uses one Gradle test suite per SDK version (`compatibilitySdkCurrent`, `compatibilitySdkV0_0_1_Snapshot`,
-...). Each suite pins its own SDK dependency and runs the same round-trip test (deserialize JSON, compare to the
-expected Kotlin object, serialize back, compare to the JSON) via the shared `AbstractCompatibilityTest` in
-`testFixtures`.
+...). Each suite pins its own SDK dependency and runs the same test via the shared `AbstractCompatibilityTest` in
+`testFixtures`. Compatibility means that JSON written by any SDK version reads into the same Kotlin object. So for every
+file the test deserializes the JSON, compares it to the expected Kotlin object, serializes that object and deserializes
+the result again, expecting an equal object. It does not compare the written JSON with the file: the current SDK writes
+one canonical form, and an older SDK drops fields it doesn't know. That the SDK writes exactly the JSON of the
+`openapi/examples` is tested separately, in `ExamplesTest` in the main module.
 
 JSON files as serialized by each version are frozen under `compatibility-tests/fixtures/vX.Y.Z/` — never edited after
 being added. Every suite reads its own version's fixtures (baseline), older fixtures (backward) and newer fixtures plus

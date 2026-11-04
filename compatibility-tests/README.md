@@ -9,6 +9,14 @@ The frozen versioned JSON fixtures (`compatibility-tests/fixtures/vX.Y.Z/`) and 
 place, so the structure for true backward/forward compatibility testing exists. The biggest outstanding caveat is that
 everything runs against the same snapshot artifact and placeholder fixtures until real releases exist.
 
+**What is compared:** compatibility means that JSON written by any SDK version reads into the same `Score`. For every
+file, `AbstractCompatibilityTest` reads it into the expected `Score`, writes that `Score`, reads the result again, and
+expects an equal `Score`. It does not compare the written JSON with the file: the current SDK writes a canonical form,
+and an older SDK drops fields it doesn't know.
+
+**Writer stability is not tested here.** That the SDK writes exactly the JSON of `openapi/examples` is tested in the
+main module, in `src/jvmTest/.../example/ExamplesTest.kt`. That test checks writer stability, not compatibility.
+
 **Release-checklist habit:** every time a release is cut, snapshot its serialized JSON into a new `fixtures/vX.Y.Z/`
 directory as part of the release checklist. That's what makes the backward-compat matrix grow on its own.
 
@@ -17,7 +25,7 @@ directory as part of the release checklist. That's what makes the backward-compa
 - Clean abstraction with `AbstractCompatibilityTest<Error, A>`
 - Proper use of Gradle test suites for version isolation
 - Good use of `java-test-fixtures` plugin for sharing test infrastructure
-- Kotest assertions integration (`shouldBeRight`, `shouldEqualJson`)
+- Kotest assertions integration (`shouldBeRight`)
 - Makes good use of `@ParameterizedTest` instead of `examples().forEach { (jsonExamplePath, a) -> /* the test case */ }`
 - Clear separation between test fixtures and versioned test suites
 - Hook into `check` task ensures compatibility tests run in CI
@@ -52,7 +60,7 @@ canonical "truth". This way:
 classpath. Same fully-qualified class names coming from different artifacts is exactly the kind of classpath conflict
 that turns into confusing failures. Solvable (e.g., express expectations as JSON-comparable data, or generate per-suite
 sources), but it deserves design thought before implementing. Note that once frozen JSON fixtures (#4) are the truth,
-the `shouldEqualJson` round-trip check carries most of the correctness weight this item was aiming for anyway.
+the read, write and read check carries most of the correctness weight this item was aiming for anyway.
 
 ### Consider property-based testing
 

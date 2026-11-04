@@ -51,7 +51,7 @@ testing {
 
         register<JvmTestSuite>("compatibilitySdkV0_0_2_Snapshot") {
             dependencies {
-                implementation("com.sparetimedevs.ami:ami-music-sdk-kotlin:0.0.1-SNAPSHOT")
+                implementation("com.sparetimedevs.ami:ami-music-sdk-kotlin:0.0.2-SNAPSHOT")
                 implementation(testFixtures(project()))
                 implementation(libs.arrow.core)
                 implementation(libs.kotlinx.serialization.json)

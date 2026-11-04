@@ -19,7 +19,6 @@ package com.sparetimedevs.ami.compat
 import arrow.core.Either
 import arrow.core.getOrElse
 import io.kotest.assertions.arrow.core.shouldBeRight
-import io.kotest.assertions.json.shouldEqualJson
 import kotlinx.serialization.json.Json
 import org.junit.jupiter.api.TestInstance
 import org.junit.jupiter.params.ParameterizedTest
@@ -71,9 +70,15 @@ abstract class AbstractCompatibilityTest<Error, A> {
     fun exampleArguments(): List<Arguments> =
         examples().map { (jsonExamplePath, a) -> Arguments.of(jsonExamplePath, a) }
 
+    /**
+     * Compatibility means that JSON written by any SDK version reads into the same Kotlin object, and that this
+     * object survives being written and read again. It does not mean that the JSON is written back identically:
+     * the current SDK writes canonical JSON, and an older SDK drops fields it doesn't know. Writer stability is
+     * tested in the main module, in `ExamplesTest`.
+     */
     @ParameterizedTest(name = "{0}")
     @MethodSource("exampleArguments")
-    fun `fromJson and toJson should work with examples in JSON and Kotlin code`(
+    fun `fromJson should read JSON into the expected object and the object should survive toJson and fromJson`(
         jsonExamplePath: String,
         a: A,
     ) {
@@ -81,8 +86,11 @@ abstract class AbstractCompatibilityTest<Error, A> {
         val json = Files.readString(path)
 
         fromJson(jsonParser, json) shouldBeRight a
-        toJson(jsonParser, a).getOrElse { error ->
-            throw AssertionError("toJson failed for $jsonExamplePath, error is: $error")
-        } shouldEqualJson json
+
+        val written =
+            toJson(jsonParser, a).getOrElse { error ->
+                throw AssertionError("toJson failed for $jsonExamplePath, error is: $error")
+            }
+        fromJson(jsonParser, written) shouldBeRight a
     }
 }
