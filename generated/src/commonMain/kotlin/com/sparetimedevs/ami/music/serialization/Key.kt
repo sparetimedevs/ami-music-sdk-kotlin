@@ -23,13 +23,16 @@ import kotlinx.serialization.encoding.*
 /**
  * 
  *
- * @param todo 
+ * @param fifths 
+ * @param mode 
  */
 @Serializable
 
 public data class Key (
 
-    @SerialName(value = "todo") val todo: kotlin.String? = null
+    @SerialName(value = "fifths") @Required val fifths: kotlin.Int,
+
+    @SerialName(value = "mode") @Required val mode: kotlin.String
 
 ) {
 

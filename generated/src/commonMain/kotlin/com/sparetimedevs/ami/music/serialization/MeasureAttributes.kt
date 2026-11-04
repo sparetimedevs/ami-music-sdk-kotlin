@@ -16,6 +16,7 @@
 package com.sparetimedevs.ami.music.serialization
 
 import com.sparetimedevs.ami.music.serialization.Key
+import com.sparetimedevs.ami.music.serialization.Tempo
 import com.sparetimedevs.ami.music.serialization.TimeSignature
 
 import kotlinx.serialization.*
@@ -27,6 +28,7 @@ import kotlinx.serialization.encoding.*
  *
  * @param key 
  * @param time 
+ * @param tempo 
  */
 @Serializable
 
@@ -34,7 +36,9 @@ public data class MeasureAttributes (
 
     @SerialName(value = "key") val key: Key? = null,
 
-    @SerialName(value = "time") val time: TimeSignature? = null
+    @SerialName(value = "time") val time: TimeSignature? = null,
+
+    @SerialName(value = "tempo") val tempo: Tempo? = null
 
 ) {
 

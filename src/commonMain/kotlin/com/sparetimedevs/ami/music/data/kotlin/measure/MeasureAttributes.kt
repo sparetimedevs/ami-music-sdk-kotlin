@@ -16,13 +16,15 @@
 
 package com.sparetimedevs.ami.music.data.kotlin.measure
 
-import com.sparetimedevs.ami.core.Key
+import com.sparetimedevs.ami.music.data.kotlin.key.Key
+import com.sparetimedevs.ami.music.data.kotlin.tempo.Tempo
 import com.sparetimedevs.ami.music.data.kotlin.timesignature.TimeSignature
 import kotlinx.serialization.Serializable
 
 @Serializable public data class MeasureAttributes(
     val key: Key? = null,
     val time: TimeSignature? = null,
+    val tempo: Tempo? = null,
 ) {
-    internal fun isEmpty(): Boolean = key == null && time == null
+    internal fun isEmpty(): Boolean = key == null && time == null && tempo == null
 }

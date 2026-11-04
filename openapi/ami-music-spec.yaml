@@ -26,8 +26,14 @@ components:
           $ref: '#/components/schemas/Pitch'
     Key:
       type: object
+      required:
+        - fifths
+        - mode
       properties:
-        todo:
+        fifths:
+          type: integer
+          format: int32
+        mode:
           type: string
     Measure:
       type: object
@@ -47,6 +53,8 @@ components:
           $ref: '#/components/schemas/Key'
         time:
           $ref: '#/components/schemas/TimeSignature'
+        tempo:
+          $ref: '#/components/schemas/Tempo'
     NoteAttributes:
       type: object
       properties:
@@ -528,6 +536,14 @@ components:
                         alter: 0
                         noteName: A
                         octave: 4
+    Tempo:
+      type: object
+      required:
+        - quarterNotesPerMinute
+      properties:
+        quarterNotesPerMinute:
+          type: integer
+          format: int32
     TimeSignature:
       type: object
       required:

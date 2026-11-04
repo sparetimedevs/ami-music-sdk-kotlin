@@ -62,8 +62,22 @@ public fun com.sparetimedevs.ami.music.data.kotlin.measure.MeasureAttributes?.to
     firstMeasureTimeSignature: com.sparetimedevs.ami.music.data.kotlin.timesignature.TimeSignature? = null,
 ): MeasureAttributes? {
     val time = (this?.time ?: firstMeasureTimeSignature)?.toSerializable()
-    return if (time == null) null else MeasureAttributes(key = null /* TODO */, time = time)
+    val key = this?.key?.toSerializable()
+    val tempo = this?.tempo?.toSerializable()
+    return if (time == null && key == null &&
+        tempo == null
+    ) {
+        null
+    } else {
+        MeasureAttributes(key = key, time = time, tempo = tempo)
+    }
 }
+
+public fun com.sparetimedevs.ami.music.data.kotlin.key.Key.toSerializable(): Key =
+    Key(fifths = this.fifths.value.toInt(), mode = this.mode.name)
+
+public fun com.sparetimedevs.ami.music.data.kotlin.tempo.Tempo.toSerializable(): Tempo =
+    Tempo(quarterNotesPerMinute = this.quarterNotesPerMinute.value.toInt())
 
 public fun com.sparetimedevs.ami.music.data.kotlin.timesignature.TimeSignature.toSerializable(): TimeSignature =
     TimeSignature(beats = this.beats.value.toInt(), beatType = this.beatType.value.toInt())

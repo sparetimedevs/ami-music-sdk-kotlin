@@ -154,21 +154,31 @@ None
 
 ### Task 5: Key and tempo
 
-- [ ] Schema: replace the `Key` placeholder with `Key { fifths: int32; mode: string }`, and add
+- [x] Schema: replace the `Key` placeholder with `Key { fifths: int32; mode: string }`, and add
   `Tempo { quarterNotesPerMinute: int32 }` and `MeasureAttributes.tempo?` (§4.1).
-- [ ] Add `Key` with `KeyMode` (`MAJOR`, `MINOR`) to the model, replacing the placeholder in `core/NotYetImplemented.kt`.
+- [x] Add `Key` with `KeyMode` (`MAJOR`, `MINOR`) to the model, replacing the placeholder in `core/NotYetImplemented.kt`.
   Remove that file if nothing else uses it.
   - Validation: `fifths` −7…7, and `mode` is a known `KeyMode` (D9).
   - Mapped both ways, and written only on the measures that state it.
   - Tests for each rule, with the measure location.
-- [ ] Add `Tempo` (`quarterNotesPerMinute` 20…400) in the same way, with tests.
-- [ ] Add `Part.keyAt(measureIndex)` and `Part.tempoAt(measureIndex)` (§4.2).
+- [x] Add `Tempo` (`quarterNotesPerMinute` 20…400) in the same way, with tests.
+- [x] Add `Part.keyAt(measureIndex)` and `Part.tempoAt(measureIndex)` (§4.2).
   - Each returns the value from the last measure at or before that index that stated one, or `null` if none did.
   - Tests, plus a round trip of a part with a key change and a tempo change mid-piece, giving identical JSON.
 
 #### Notes from task 5
 
-None
+- `Key(fifths: Fifths, mode: KeyMode)` lives in `music/data/kotlin/key/Key.kt`; `Tempo(quarterNotesPerMinute:
+  QuarterNotesPerMinute)` in `music/data/kotlin/tempo/Tempo.kt`. `Fifths` and `QuarterNotesPerMinute` are validated value
+  classes (`validate(Int, ...)`, `unsafeCreate`), so errors carry the property `Fifths`, `KeyMode` or
+  `QuarterNotesPerMinute`. `core/NotYetImplemented.kt` is removed, nothing else used it.
+- `KeyMode` is written and read as `MAJOR` / `MINOR` (`name`), case sensitive.
+- `Part.keyAt` / `Part.tempoAt` are member functions on `Part` and only look at `attributes`, so they return `null`
+  before the first stated value (unlike the time signature, there is no default).
+- Tests are in `KeyAndTempoInMeasureAttributesTest`. The validation, in `ValidateScore.kt`, uses `zipOrAccumulate` on
+  key, time and tempo, so errors from all three accumulate for one measure.
+- The schema change is committed in `ami-music-spec` (`Key`, `Tempo`, `MeasureAttributes.tempo`). No example there uses
+  key or tempo yet, task 13's song example can.
 
 ### Task 6: `Fraction`
 

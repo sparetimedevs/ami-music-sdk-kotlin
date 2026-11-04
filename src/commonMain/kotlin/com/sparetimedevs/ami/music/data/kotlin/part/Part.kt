@@ -27,7 +27,9 @@ import com.sparetimedevs.ami.core.validation.ValidationError
 import com.sparetimedevs.ami.core.validation.ValidationIdentifier
 import com.sparetimedevs.ami.core.validation.getOrThrowFirstValidationError
 import com.sparetimedevs.ami.core.validation.validationErrorForProperty
+import com.sparetimedevs.ami.music.data.kotlin.key.Key
 import com.sparetimedevs.ami.music.data.kotlin.measure.Measure
+import com.sparetimedevs.ami.music.data.kotlin.tempo.Tempo
 import kotlinx.serialization.Serializable
 import kotlin.jvm.JvmInline
 
@@ -107,4 +109,19 @@ public data class Part(
     val name: PartName? = null,
     val instrument: PartInstrument? = null,
     val measures: List<Measure>,
-)
+) {
+    /** The key in effect at [measureIndex]: from the last measure at or before it that stated one, or `null`. */
+    public fun keyAt(measureIndex: Int): Key? =
+        measures.take(measureIndex + 1).lastNotNullOfOrNull { it.attributes?.key }
+
+    /** The tempo in effect at [measureIndex]: from the last measure at or before it that stated one, or `null`. */
+    public fun tempoAt(measureIndex: Int): Tempo? =
+        measures.take(measureIndex + 1).lastNotNullOfOrNull { it.attributes?.tempo }
+
+    private inline fun <T, R : Any> List<T>.lastNotNullOfOrNull(transform: (T) -> R?): R? {
+        for (index in indices.reversed()) {
+            transform(this[index])?.let { return it }
+        }
+        return null
+    }
+}

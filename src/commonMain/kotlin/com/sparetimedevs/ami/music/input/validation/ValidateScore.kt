@@ -26,6 +26,9 @@ import com.sparetimedevs.ami.core.validation.ValidationErrorForProperty
 import com.sparetimedevs.ami.core.validation.ValidationIdentifier
 import com.sparetimedevs.ami.core.validation.combineAllValidationErrors
 import com.sparetimedevs.ami.core.validation.validationErrorForProperty
+import com.sparetimedevs.ami.music.data.kotlin.key.Fifths
+import com.sparetimedevs.ami.music.data.kotlin.key.Key
+import com.sparetimedevs.ami.music.data.kotlin.key.KeyMode
 import com.sparetimedevs.ami.music.data.kotlin.measure.Measure
 import com.sparetimedevs.ami.music.data.kotlin.measure.MeasureAttributes
 import com.sparetimedevs.ami.music.data.kotlin.part.Part
@@ -34,6 +37,8 @@ import com.sparetimedevs.ami.music.data.kotlin.part.PartName
 import com.sparetimedevs.ami.music.data.kotlin.score.Score
 import com.sparetimedevs.ami.music.data.kotlin.score.ScoreId
 import com.sparetimedevs.ami.music.data.kotlin.score.ScoreTitle
+import com.sparetimedevs.ami.music.data.kotlin.tempo.QuarterNotesPerMinute
+import com.sparetimedevs.ami.music.data.kotlin.tempo.Tempo
 import com.sparetimedevs.ami.music.data.kotlin.timesignature.BeatType
 import com.sparetimedevs.ami.music.data.kotlin.timesignature.Beats
 import com.sparetimedevs.ami.music.data.kotlin.timesignature.TimeSignature
@@ -109,10 +114,34 @@ public fun com.sparetimedevs.ami.music.serialization.MeasureAttributes?.validate
     if (this == null) {
         Either.Right(null)
     } else {
-        // TODO validate key.
-        this.time.validate(validationIdentifier).map { time ->
-            MeasureAttributes(key = null, time = time).takeUnless { it.isEmpty() }
+        Either.zipOrAccumulate(
+            this.key.validate(validationIdentifier),
+            this.time.validate(validationIdentifier),
+            this.tempo.validate(validationIdentifier),
+        ) { key, time, tempo ->
+            MeasureAttributes(key = key, time = time, tempo = tempo).takeUnless { it.isEmpty() }
         }
+    }
+
+public fun com.sparetimedevs.ami.music.serialization.Key?.validate(
+    validationIdentifier: ValidationIdentifier = NoValidationIdentifier,
+): EitherNel<ValidationError, Key?> =
+    if (this == null) {
+        Either.Right(null)
+    } else {
+        Either.zipOrAccumulate(
+            Fifths.validate(this.fifths, validationIdentifier),
+            KeyMode.validate(this.mode, validationIdentifier),
+        ) { fifths, mode -> Key(fifths, mode) }
+    }
+
+public fun com.sparetimedevs.ami.music.serialization.Tempo?.validate(
+    validationIdentifier: ValidationIdentifier = NoValidationIdentifier,
+): EitherNel<ValidationError, Tempo?> =
+    if (this == null) {
+        Either.Right(null)
+    } else {
+        QuarterNotesPerMinute.validate(this.quarterNotesPerMinute, validationIdentifier).map { Tempo(it) }
     }
 
 public fun com.sparetimedevs.ami.music.serialization.TimeSignature?.validate(
