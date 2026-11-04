@@ -44,6 +44,10 @@ class CompatibilityTest : AbstractCompatibilityTest<DomainError, Score>() {
             "openapi/examples/Score_1064db99-3726-43d7-b0ed-3fc0281bfc02.json" to getExampleScoreHeighHoNobodyHome(),
         )
 
+    // The song uses chords, lyrics and other features that this version doesn't know. Reading it ignores them.
+    override fun readOnlyExamples(): List<String> =
+        listOf("openapi/examples/Score_ce2acd90-dfa0-4bfd-8ba0-ae1c00c7b7ec.json")
+
     override fun fromJson(
         jsonParser: Json,
         input: String,

@@ -253,14 +253,14 @@ The SDK exposes its version at runtime as `AmiMusicSdk.VERSION`, generated from 
 
 ## 7. Acceptance criteria
 
-- [ ] `./gradlew check` passes: all tests, on JVM and JS. A test may be changed, replaced or removed when the new behaviour requires it; the tests are there to build confidence that the implementation works.
-- [ ] The song example (F11) deserializes, validates, and serializes back to identical JSON.
-- [ ] Each rule in §4.3 has a test with invalid input that asserts the error and its location. One test shows several errors accumulating in a single result.
-- [ ] A score whose measures have no notes validates, and all its measures are `CompleteMeasure`s.
-- [ ] JSON without `attributes.time`, such as JSON written by `0.0.1-SNAPSHOT`, still reads as 4/4, into the same `Score` as its canonical form.
-- [ ] Validation errors serialize to JSON with their location (F8).
-- [ ] `AmiMusicSdk.VERSION` matches `libraryVersion`.
-- [ ] `AmiMusicSdk.json` reads JSON that contains an unknown field, and ignores that field.
+- [x] `./gradlew check` passes: all tests, on JVM and JS. A test may be changed, replaced or removed when the new behaviour requires it; the tests are there to build confidence that the implementation works.
+- [x] The song example (F11) deserializes, validates, and serializes back to identical JSON.
+- [x] Each rule in §4.3 has a test with invalid input that asserts the error and its location. One test shows several errors accumulating in a single result.
+- [x] A score whose measures have no notes validates, and all its measures are `CompleteMeasure`s.
+- [x] JSON without `attributes.time`, such as JSON written by `0.0.1-SNAPSHOT`, still reads as 4/4, into the same `Score` as its canonical form.
+- [x] Validation errors serialize to JSON with their location (F8).
+- [x] `AmiMusicSdk.VERSION` matches `libraryVersion`.
+- [x] `AmiMusicSdk.json` reads JSON that contains an unknown field, and ignores that field.
 
 ## 8. Open questions
 

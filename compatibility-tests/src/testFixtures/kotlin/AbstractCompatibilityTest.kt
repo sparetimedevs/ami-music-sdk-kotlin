@@ -67,8 +67,16 @@ abstract class AbstractCompatibilityTest<Error, A> {
         value: A,
     ): Either<Error, String>
 
+    /**
+     * JSON examples that this SDK version has no expected object for, e.g. because they use features it doesn't have.
+     * They only have to be read without errors.
+     */
+    protected open fun readOnlyExamples(): List<String> = emptyList()
+
     fun exampleArguments(): List<Arguments> =
         examples().map { (jsonExamplePath, a) -> Arguments.of(jsonExamplePath, a) }
+
+    fun readOnlyExampleArguments(): List<Arguments> = readOnlyExamples().map { Arguments.of(it) }
 
     /**
      * Compatibility means that JSON written by any SDK version reads into the same Kotlin object, and that this
@@ -92,5 +100,18 @@ abstract class AbstractCompatibilityTest<Error, A> {
                 throw AssertionError("toJson failed for $jsonExamplePath, error is: $error")
             }
         fromJson(jsonParser, written) shouldBeRight a
+    }
+
+    /**
+     * An older SDK reads JSON that uses features it doesn't know, by ignoring them (D14).
+     */
+    @ParameterizedTest(name = "{0}")
+    @MethodSource("readOnlyExampleArguments")
+    fun `fromJson should read JSON with features this version does not know without errors`(jsonExamplePath: String) {
+        val json = Files.readString(rootProjectDir.resolve(jsonExamplePath))
+
+        fromJson(jsonParser, json).onLeft { error ->
+            throw AssertionError("fromJson failed for $jsonExamplePath, error is: $error")
+        }
     }
 }

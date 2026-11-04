@@ -271,6 +271,259 @@ components:
           items:
             $ref: '#/components/schemas/Part'
       examples:
+        - id: ce2acd90-dfa0-4bfd-8ba0-ae1c00c7b7ec
+          title: When the Saints Go Marching In
+          parts:
+            - id: p-1
+              name: Part one
+              instrument:
+                name: Grand Piano
+                midiChannel: 0
+                midiProgram: 1
+              measures:
+                - attributes:
+                    time:
+                      beats: 4
+                      beatType: 4
+                    key:
+                      fifths: 0
+                      mode: MAJOR
+                    tempo:
+                      quarterNotesPerMinute: 100
+                  pickup:
+                    numerator: 3
+                    denominator: 4
+                  notes: []
+                  harmonies:
+                    - offset:
+                        numerator: 0
+                        denominator: 1
+                      chord:
+                        root: C
+                        kind: MAJOR
+                  lyrics:
+                    - offset:
+                        numerator: 0
+                        denominator: 1
+                      text: 'Oh, '
+                    - offset:
+                        numerator: 0
+                        denominator: 1
+                      text: 'Oh, '
+                      verse: 2
+                    - offset:
+                        numerator: 1
+                        denominator: 4
+                      text: 'when '
+                    - offset:
+                        numerator: 1
+                        denominator: 4
+                      text: 'when '
+                      verse: 2
+                    - offset:
+                        numerator: 1
+                        denominator: 2
+                      text: 'the '
+                    - offset:
+                        numerator: 1
+                        denominator: 2
+                      text: 'the '
+                      verse: 2
+                  textDirections:
+                    - offset:
+                        numerator: 0
+                        denominator: 1
+                      text: Swing
+                  sectionStarts:
+                    - offset:
+                        numerator: 0
+                        denominator: 1
+                      label: Verse
+                - notes: []
+                  harmonies:
+                    - offset:
+                        numerator: 0
+                        denominator: 1
+                      chord:
+                        root: C
+                        kind: MAJOR
+                    - offset:
+                        numerator: 1
+                        denominator: 2
+                      chord:
+                        root: G
+                        kind: DOMINANT
+                  lyrics:
+                    - offset:
+                        numerator: 0
+                        denominator: 1
+                      text: 'saints '
+                    - offset:
+                        numerator: 0
+                        denominator: 1
+                      text: 'sun '
+                      verse: 2
+                    - offset:
+                        numerator: 1
+                        denominator: 4
+                      text: 'go '
+                    - offset:
+                        numerator: 1
+                        denominator: 4
+                      text: be
+                      verse: 2
+                    - offset:
+                        numerator: 1
+                        denominator: 2
+                      text: march
+                    - offset:
+                        numerator: 1
+                        denominator: 2
+                      text: 'gins '
+                      verse: 2
+                    - offset:
+                        numerator: 3
+                        denominator: 4
+                      text: 'ing '
+                    - offset:
+                        numerator: 3
+                        denominator: 4
+                      text: 'to '
+                      verse: 2
+                - notes: []
+                  harmonies:
+                    - offset:
+                        numerator: 0
+                        denominator: 1
+                      chord:
+                        root: C
+                        kind: MAJOR
+                    - offset:
+                        numerator: 3
+                        denominator: 4
+                      chord:
+                        root: G
+                        kind: DOMINANT
+                  lyrics:
+                    - offset:
+                        numerator: 0
+                        denominator: 1
+                      text: in
+                    - offset:
+                        numerator: 0
+                        denominator: 1
+                      text: shine
+                      verse: 2
+                    - offset:
+                        numerator: 1
+                        denominator: 4
+                      text: 'Oh, '
+                    - offset:
+                        numerator: 1
+                        denominator: 4
+                      text: 'Oh, '
+                      verse: 2
+                    - offset:
+                        numerator: 1
+                        denominator: 2
+                      text: 'when '
+                    - offset:
+                        numerator: 1
+                        denominator: 2
+                      text: 'when '
+                      verse: 2
+                    - offset:
+                        numerator: 3
+                        denominator: 4
+                      text: 'the '
+                    - offset:
+                        numerator: 3
+                        denominator: 4
+                      text: 'the '
+                      verse: 2
+                  lineBreaks:
+                    - numerator: 1
+                      denominator: 4
+                - notes: []
+                  harmonies:
+                    - offset:
+                        numerator: 0
+                        denominator: 1
+                      chord:
+                        root: C
+                        kind: MAJOR
+                        kindText: add9
+                        degrees:
+                          - value: 9
+                            alter: 0
+                            type: ADD
+                    - offset:
+                        numerator: 1
+                        denominator: 2
+                      chord:
+                        root: F
+                        kind: MAJOR
+                  lyrics:
+                    - offset:
+                        numerator: 0
+                        denominator: 1
+                      text: 'saints '
+                    - offset:
+                        numerator: 0
+                        denominator: 1
+                      text: 'sun '
+                      verse: 2
+                    - offset:
+                        numerator: 1
+                        denominator: 4
+                      text: 'go '
+                    - offset:
+                        numerator: 1
+                        denominator: 4
+                      text: be
+                      verse: 2
+                    - offset:
+                        numerator: 1
+                        denominator: 2
+                      text: march
+                    - offset:
+                        numerator: 1
+                        denominator: 2
+                      text: 'gins '
+                      verse: 2
+                    - offset:
+                        numerator: 3
+                        denominator: 4
+                      text: 'ing '
+                    - offset:
+                        numerator: 3
+                        denominator: 4
+                      text: 'to '
+                      verse: 2
+                - notes: []
+                  harmonies:
+                    - offset:
+                        numerator: 0
+                        denominator: 1
+                      chord:
+                        root: C
+                        kind: MAJOR
+                        bass: G
+                    - offset:
+                        numerator: 1
+                        denominator: 2
+                      chord:
+                        kind: NONE
+                  lyrics:
+                    - offset:
+                        numerator: 0
+                        denominator: 1
+                      text: in
+                    - offset:
+                        numerator: 0
+                        denominator: 1
+                      text: shine
+                      verse: 2
         - id: 1064db99-3726-43d7-b0ed-3fc0281bfc02
           title: Heigh Ho Nobody Home
           parts:

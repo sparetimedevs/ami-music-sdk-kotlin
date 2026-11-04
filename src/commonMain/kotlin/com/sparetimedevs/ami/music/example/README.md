@@ -16,6 +16,14 @@
   - Old French song, with known adaptations in many other languages like Dutch (Vader Jacob) and English (Brother John).
   - 4/4 time signature
 
+- [When the Saints Go Marching In](./WhenTheSaintsGoMarchingIn.kt)
+  - Traditional American spiritual, in the public domain. The verse 2 text ("When the sun begins to shine") is a
+    traditional variant.
+  - A lead sheet: chords and two verses of lyrics, without notes
+  - Covers a pickup, chord changes on a half measure and on beat 4, a text direction, a line break inside a measure, a
+    labelled section start, an N.C., a slash chord (C/G) and an add9
+  - 4/4 time signature
+
 ### Example scores to add:
 
 - Sur le Pont d'Avignon

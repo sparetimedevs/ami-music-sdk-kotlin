@@ -20,6 +20,7 @@ import com.sparetimedevs.ami.core.DomainError
 import com.sparetimedevs.ami.music.data.kotlin.score.Score
 import com.sparetimedevs.ami.music.example.getExampleScore0
 import com.sparetimedevs.ami.music.example.getExampleScoreHeighHoNobodyHome
+import com.sparetimedevs.ami.music.example.getExampleScoreWhenTheSaintsGoMarchingIn
 import kotlinx.serialization.json.Json
 
 /**
@@ -39,7 +40,13 @@ class CompatibilityTest : AbstractCompatibilityTest<DomainError, Score>() {
                 getExampleScoreHeighHoNobodyHome(),
             "openapi/examples/Score_d737b4ae-fbaa-4b0d-9d36-d3651e30e93a.json" to getExampleScore0(),
             "openapi/examples/Score_1064db99-3726-43d7-b0ed-3fc0281bfc02.json" to getExampleScoreHeighHoNobodyHome(),
+            "openapi/examples/Score_ce2acd90-dfa0-4bfd-8ba0-ae1c00c7b7ec.json" to
+                getExampleScoreWhenTheSaintsGoMarchingIn(),
         )
+
+    // The current SDK knows all features of the song, so this also reads it without a comparison.
+    override fun readOnlyExamples(): List<String> =
+        listOf("openapi/examples/Score_ce2acd90-dfa0-4bfd-8ba0-ae1c00c7b7ec.json")
 
     override fun fromJson(
         jsonParser: Json,

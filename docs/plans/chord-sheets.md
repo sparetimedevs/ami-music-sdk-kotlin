@@ -393,21 +393,32 @@ None
 
 ### Task 13: The song example
 
-- [ ] Schema: add the song example to `examples.tsp` with `@example` on `Score`, in canonical form (F11).
+- [x] Schema: add the song example to `examples.tsp` with `@example` on `Score`, in canonical form (F11).
   - A traditional song or invented text, never copyrighted lyrics, in 4/4.
   - It covers a pickup, a half-measure change, a beat-4 change, chords-only measures, a text direction, a line break
     inside a measure, a labelled section start, two verses, an N.C., a slash chord and an add9.
-- [ ] Add its Kotlin twin in `music/example/`, and list the song in the example README with its source.
+- [x] Add its Kotlin twin in `music/example/`, and list the song in the example README with its source.
   - Add it to `ExamplesTest` and `compatibilitySdkCurrent`.
   - The JSON reads into the Kotlin twin, and the twin writes back to identical JSON (§7).
-- [ ] The older-SDK suites read the song's JSON without errors (D14). This needs a reading-only check in
+- [x] The older-SDK suites read the song's JSON without errors (D14). This needs a reading-only check in
   `AbstractCompatibilityTest` that takes no expected `Score`.
-- [ ] One commonTest shows errors from several new rules accumulating in a single result, each with its location (§7).
+- [x] One commonTest shows errors from several new rules accumulating in a single result, each with its location (§7).
   For example: an unreduced offset, an unknown chord kind and an empty lyric in different measures, plus an invalid
   tempo.
-- [ ] Check every acceptance criterion in §7 against a test, adding any that are missing, including one test per §4.3
+- [x] Check every acceptance criterion in §7 against a test, adding any that are missing, including one test per §4.3
   rule that asserts its error and location. Then tick the criteria in the spec.
 
 #### Notes from task 13
 
-None
+- The song is "When the Saints Go Marching In" (traditional, public domain), a lead sheet without notes: 5 measures,
+  pickup of 3/4, key C, tempo 100, chords on a half measure (G7 at 1/2) and on beat 4 (G7 at 3/4), `Cadd9`, `C/G`, an
+  N.C., a "Swing" text direction, a line break at 1/4 in measure 2, a "Verse" section start, and two verses. The verse 2
+  text is invented to match verse 1's syllables. Id `ce2acd90-dfa0-4bfd-8ba0-ae1c00c7b7ec`.
+- The Kotlin twin is `getExampleScoreWhenTheSaintsGoMarchingIn()` in `music/example/WhenTheSaintsGoMarchingIn.kt`.
+  `ExamplesTest` covers read, equal `Score` and write back to identical JSON.
+- `AbstractCompatibilityTest` has `readOnlyExamples()` (default empty) with its own parameterized test that only reads.
+  Older suites list the song there. JUnit fails a parameterized test with no arguments, so the current suite lists the
+  song there too, next to its entry in `examples()`.
+- The accumulation test is `AccumulatedErrorsTest`. The §4.3 audit found a test with error and location for every rule
+  already (see the per-subject test classes), so none were added. All §7 criteria in the spec are ticked.
+- The schema change is committed in `ami-music-spec` (song example, `@example(scoreExampleSaints)`).
