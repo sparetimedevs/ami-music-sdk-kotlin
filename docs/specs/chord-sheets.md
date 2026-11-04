@@ -1,6 +1,6 @@
 # Spec: Chord sheets powered by Ami music SDK
 
-> **Status: READY** (2026-11-03). No open questions. Decisions, and later revisions with their reasons, are logged in §9.
+> **Status: READY** (2026-11-04). No open questions. Decisions, and later revisions with their reasons, are logged in §9.
 
 ## 1. Request
 
@@ -15,8 +15,9 @@ This is a song, with some words
 
 **What the SDK delivers**
 - **The model:** chord symbols, lyrics, text directions, line breaks, section starts, time signature, key, tempo and pickup measures.
-- **JSON serialization** in one canonical form.
-- **Accumulated validation**, with error locations.
+- **JSON serialization** in one canonical form, with the SDK's own `Json` configuration (`AmiMusicSdk.json`).
+- **Accumulated validation**, with error locations, and the errors in a shape that serializes to JSON.
+- **The SDK's version at runtime** (`AmiMusicSdk.VERSION`).
 
 ## 2. Current state (facts that shape the design)
 
@@ -34,7 +35,7 @@ This is a song, with some words
 - **The time signature is not serialized.**
   - `Measure.validate` builds `Measure(attributes, notes)`, which falls back to the default 4/4.
   - `MeasureAttributes.validate` ignores its input and returns `null`.
-  - `toSerializable` writes `key = null`.
+  - `toSerializable` writes `key = null`, so every measure carries `"attributes": {}`.
 
 **Notes and pitches**
 - Only `Pitched` notes serialize. `Chord`, `Rest` and `Unpitched` hit `TODO()` in `toSerializable`.
@@ -46,15 +47,11 @@ This is a song, with some words
 - `fromJson(json, input)` decodes, then validates, returning `Either<DomainError, Score>`.
 - Errors accumulate as `ValidationError(message, validationErrorForProperty, validationIdentifier)`. The identifier is a chain: score → part → measure index → note index.
 
-**Serialization and compatibility tests**
-- **Consumers pass their own `Json`** to `fromJson` and `toJson`, so the configuration is theirs. One consumer for example, uses `encodeDefaults = true` and `explicitNulls = false`, which writes a different (still readable) form than `Json.Default`.
-- **The compatibility tests share one parser,** a field of `AbstractCompatibilityTest` in `testFixtures`, used by every suite, including the one that runs the old snapshot. It is `Json { ignoreUnknownKeys = true; encodeDefaults = true; explicitNulls = false }` (D14). The old snapshot needed no change for this, because the caller passes the parser.
-- **The tests require an exact round trip** (`shouldEqualJson`). Any other outcome is a failure; there is no way to state an expected incompatibility.
-- **The fixtures are placeholders.** `v0.0.1/` and `v0.0.2/` are copies of the current examples, and every suite resolves the same snapshot (see `compatibility-tests/README.md`).
+**Serialization:** consumers pass their own `Json` to `fromJson` and `toJson`, so the configuration is theirs. One consumer, for example, uses `encodeDefaults = true` and `explicitNulls = false`, which writes a different (still readable) form than `Json.Default`.
 
 **Version, publishing and consumers**
-- `libraryVersion = 0.0.2-SNAPSHOT`. The `v0.0.x` suites resolve `0.0.1-SNAPSHOT`, which no longer changes.
-- A few known consumers use `0.0.1-SNAPSHOT`.
+- `libraryVersion = 0.0.2-SNAPSHOT`.
+- A few known consumers use `0.0.1-SNAPSHOT`, which no longer changes.
 - The publication targets only the Sonatype Central **snapshots** repository. Release publishing isn't configured.
 
 **Toolchain:** Kotlin 2.4.10. Targets are JVM, JS (browser) and native. The JS klib is published as `ami-music-sdk-kotlin-js`.
@@ -66,17 +63,17 @@ This is a song, with some words
 | D1 | **One model.** Harmonies, lyrics, text directions, line breaks and section starts are time-positioned tracks on `Measure`. Notes stay optional. There is no separate lead-sheet type. | A chords-only song is a score with fewer things filled in. |
 | D2 | **Chord symbols copy MusicXML's `<harmony>`:** root, kind (MusicXML's 33 kind values), degrees, bass, and the kind as written. Roman numerals, function, inversion and fretboard frames are left out. | Lossless MusicXML import and export later. "N.C." is kind `NONE`. |
 | D3 | **Time positions are exact fractions of a whole note** (`Fraction`, always reduced), measured from the start of the measure. Never a `Double`. | The same unit as `NoteValue` (WHOLE = 1, QUARTER = 1/4). Exact like MusicXML's divisions, and independent of the time signature. |
-| D4 | **Time signature, key and tempo are measure attributes,** written only on the measure where they are set or change, as in MusicXML `<attributes>`. The writer always states the first measure's time signature; a reader treats a missing one as 4/4, today's behaviour. The Kotlin model resolves the effective time signature for every measure. | Changes mid-piece stay possible, and older JSON stays readable. |
+| D4 | **Time signature, key and tempo are measure attributes,** written only on the measure where they are set or change, as in MusicXML `<attributes>`. The writer always states the first measure's time signature; a reader fills in 4/4 when it is missing, today's behaviour. The Kotlin model resolves the effective time signature for every measure. | Changes mid-piece stay possible, and older JSON stays readable. |
 | D5 | **A pickup** (*opmaat*) is the first measure with its own shorter length, `pickup: Fraction` (MusicXML `implicit="yes"`). It is allowed only on the first measure for now. | A measure without notes can't imply its length, so it is stated. |
 | D6 | **Line breaks are offsets inside a measure** (`lineBreaks`), not a flag per measure. MusicXML export maps a break at offset 0 to `<print new-system="yes">` and moves any other break to the next measure. That loses layout only. | Lyric lines in children's songs often start on an upbeat, in the middle of the previous measure. |
 | D7 | **A lyric fragment** is `offset`, `text` and `verse` (default 1). Its text can be a syllable or a whole phrase, and whitespace is significant. There is no `syllabic` field yet. | Text input produces runs; MusicXML import will produce syllables. An optional field can be added later without breaking stored data. |
 | D8 | **The model holds only valid chord symbols.** A producer stores a chord name it can't parse as a text direction. | No "unparsed chord" state in the stored format. |
 | D9 | **Enumerated values are strings in the schema** (`kind`, `mode`, degree `type`, note names), validated in Kotlin, as `noteName` and `noteValue` are today. | An unknown value becomes a validation error with a location, not a parse exception. |
 | D10 | **`NoteName` gains `C_FLAT`, `F_FLAT`, `E_SHARP` and `B_SHARP`.** | Completes the single-accidental spellings, needed to spell chords in flat and sharp keys, and later for transposition. |
-| D11 | **Validation is strict and canonical.** Unsorted tracks, unreduced fractions and offsets outside the measure are errors (§4.3), never silently fixed. Writers omit empty tracks and default values (§4.4). | One JSON per score: exact round trips, stable equality, and clear producer bugs. |
+| D11 | **Validation is strict; writing is canonical.** Unsorted tracks, unreduced fractions and offsets outside the measure are errors (§4.3), never silently fixed. Readers accept other forms of the same model value, such as explicit defaults or a missing first time signature (D4). Writers write one form: they omit empty tracks and default values (§4.4). | One model value per score, written as one JSON: exact round trips, stable equality, and clear producer bugs. |
 | D12 | **The note union is out of scope.** `notes` stays `Pitched[]`, and a chords-only song writes `"notes": []`. | Songs have no notes in this phase; the union needs its own design (`ToSerializable.kt`'s `TODO()`s). |
-| D13 | **Versioning.** Work happens on `0.0.2-SNAPSHOT`. An official release is not part of this spec, and neither are its compatibility baseline (fixtures and a pinned suite) and the backward-compatibility guarantee that comes with it. | `0.0.1-SNAPSHOT` no longer changes, so its consumers keep working and the `v0.0.x` suites test a fixed artifact. The model change doesn't depend on a release. |
-| D14 | **Forward compatibility means reading with `ignoreUnknownKeys = true`.** An older SDK must read newer JSON without errors, dropping what it doesn't know. The SDK offers its configuration as `AmiMusicSdk.json` (§4.4), for consumers that store or exchange SDK JSON. | With `Json.Default`, every new field breaks every older reader. A dropped field is lost if an older client writes the score back, which is why §4.7 documents it. |
+| D13 | **Versioning.** Work happens on `0.0.2-SNAPSHOT`. An official release is not part of this spec, nor is the backward-compatibility guarantee that comes with it. | `0.0.1-SNAPSHOT` no longer changes, so its consumers keep working. The model change doesn't depend on a release. |
+| D14 | **Forward compatibility means reading with `ignoreUnknownKeys = true`.** An older SDK must read newer JSON without errors, dropping what it doesn't know. The SDK offers its configuration as `AmiMusicSdk.json` (§4.4), for consumers that store or exchange SDK JSON. | With `Json.Default`, every new field breaks every older reader. The cost: a dropped field is lost if an older client writes the score back. |
 | D15 | **Section starts mark where a new section of the song begins,** such as a verse or a chorus (`sectionStarts`: an `offset` and an optional `label`). This is meaning, not layout: chord sheets show a blank line before each one. MusicXML has no section element, so export writes a double bar line (`location="middle"` inside a measure), and a label (*Couplet*, *Refrein*) as a rehearsal mark. A section start at the song's own start is only allowed with a label (§4.3). | Keeps the blank line between verse and chorus, and later serves playback structure and repeats. |
 
 ## 4. Design
@@ -143,9 +140,9 @@ model TextDirection { offset: Fraction; text: string; }                  // Musi
 - **`Measure`.** All three variants gain `harmonies: List<Harmony>`, `lyrics: List<LyricFragment>`, `textDirections: List<TextDirection>`, `lineBreaks: List<Fraction>` and `sectionStarts: List<SectionStart>`, all default empty, and `pickup: Fraction?`, default `null`.
   - **`length`** is `pickup ?: timeSignature.measureLength`.
   - **`timeSignature`** stays the effective value, carried forward from the last measure that stated one.
-  - **`attributes`** holds what was written on this measure: `time`, `key` and `tempo`.
+  - **`attributes`** holds what was written on this measure: `time`, `key` and `tempo`. On the first measure `time` is always set, to 4/4 when the JSON leaves it out (D4).
   - **The effective key and tempo** come from helpers on `Part`, e.g. `part.keyAt(measureIndex)`.
-- **Classification.** A measure with no notes is a `CompleteMeasure` by definition, of length `length`. Classification by notes stays stubbed (§4.8).
+- **Classification.** A measure with no notes is a `CompleteMeasure` by definition, of length `length`. Classification by notes stays stubbed (§4.7).
 - **New types:**
   - `ChordSymbol`;
   - `ChordKind`: 33 entries, each carrying its MusicXML kind-value, e.g. `MINOR_SEVENTH("minor-seventh")`;
@@ -188,6 +185,7 @@ Every rule produces a `ValidationError` with a location, and all errors of one s
 - **`AmiMusicSdk.json` defines the form** (F13). Canonical JSON is what `toJson(AmiMusicSdk.json, score)` writes. Another configuration writes a different form, still readable.
 - **Writers omit defaults:** empty tracks (`harmonies`, `lyrics`, `textDirections`, `lineBreaks`, `sectionStarts`), `verse` 1, absent `kindText`, empty `degrees`, and `attributes` when it holds nothing. The mapping writes them as `null`, which `explicitNulls = false` leaves out. Readers accept the explicit forms too.
 - **Attributes appear only where set or changed,** and the first measure always carries `attributes.time` (D4).
+- **Existing scores change form.** Their measures lose `"attributes": {}`, and the first measure gains `attributes.time`. The existing examples are rewritten in this form (§6).
 - **Text is stored exactly as written,** including leading and trailing spaces in lyric fragments.
 
 The measure that starts the line *"This is a song, with some words"* from §1, in 4/4: C on beat 1, D on beat 3, and a new line starting here:
@@ -228,7 +226,7 @@ The SDK exposes its version at runtime as `AmiMusicSdk.VERSION`, generated from 
   - time, key and tempo changes in the middle of a measure;
   - Roman numerals;
   - how several parts relate to each other.
-- **Releasing:** release publishing to Maven Central, an official release, its fixtures and pinned suite, and the backward-compatibility guarantee from then on.
+- **Releasing:** release publishing to Maven Central, an official release, and the backward-compatibility guarantee from then on.
 
 ## 5. Functional requirements
 
@@ -246,23 +244,22 @@ The SDK exposes its version at runtime as `AmiMusicSdk.VERSION`, generated from 
 | F10 | `AmiMusicSdk.VERSION` (§4.5). |
 | F11 | A song example in `examples.tsp`, `openapi/examples/` and `music/example/`, covering: a pickup, a half-measure change, a beat-4 change, chords-only measures, a text direction, a line break inside a measure, a labelled section start, two verses, an "N.C.", a slash chord and an add9. Examples are public: traditional songs or invented text only, never copyrighted lyrics. |
 | F12 | All new code is in commonMain, with tests in commonTest that run on JVM and JS. |
-| F13 | `AmiMusicSdk.json`, the SDK's own `Json` instance: `ignoreUnknownKeys = true` (D14), `encodeDefaults = true`, `explicitNulls = false`. The same configuration as the compatibility tests' parser. |
+| F13 | `AmiMusicSdk.json`, the SDK's own `Json` instance: `ignoreUnknownKeys = true` (D14), `encodeDefaults = true`, `explicitNulls = false`. |
 
 ## 6. Rollout
 
-1. **`ami-music-spec`:** change `main.tsp` and `examples.tsp`, compile, copy the YAML here, run `openApiGenerate`.
-2. **Kotlin:** model, mapping, validation and tests (F1–F13). Each subject can be its own pull request, e.g. `Fraction` and attributes first, then harmony, then lyrics, directions, line breaks and section starts.
+1. **`ami-music-spec`:** change `main.tsp` and `examples.tsp` (the song example, and the existing examples in canonical form, §4.4), compile, copy the YAML here, run `openApiGenerate`.
+2. **Kotlin:** model, mapping, validation, examples and tests (F1–F13). Each subject can be its own pull request, e.g. `Fraction` and attributes first, then harmony, then lyrics, directions, line breaks and section starts.
 
 ## 7. Acceptance criteria
 
-- [ ] `./gradlew check` passes: unit and compatibility tests, on JVM and JS.
+- [ ] `./gradlew check` passes: all tests, on JVM and JS. A test may be changed, replaced or removed when the new behaviour requires it; the tests are there to build confidence that the implementation works.
 - [ ] The song example (F11) deserializes, validates, and serializes back to identical JSON.
 - [ ] Each rule in §4.3 has a test with invalid input that asserts the error and its location. One test shows several errors accumulating in a single result.
 - [ ] A score whose measures have no notes validates, and all its measures are `CompleteMeasure`s.
-- [ ] JSON without `attributes.time`, such as the current examples, still reads as 4/4.
+- [ ] JSON without `attributes.time`, such as JSON written by `0.0.1-SNAPSHOT`, still reads as 4/4, into the same `Score` as its canonical form.
 - [ ] Validation errors serialize to JSON with their location (F8).
 - [ ] `AmiMusicSdk.VERSION` matches `libraryVersion`.
-- [ ] The `v0.0.x` suites still run, and their fixtures are unchanged.
 - [ ] `AmiMusicSdk.json` reads JSON that contains an unknown field, and ignores that field.
 
 ## 8. Open questions
@@ -275,15 +272,17 @@ None.
 |---|---|
 | 2026-11-03 | Chord symbols follow MusicXML's `<harmony>`; harmonies and lyrics are time-positioned tracks on measures, with notes optional (D1, D2). |
 | 2026-11-03 | The full model and timing are built now, even though phase 1 only shows chords above lyrics with bar lines. |
-| 2026-11-03 | Notation and views are the consumers' responsibility for now; the SDK provides the model, serialization and validation (§4.8). |
-| 2026-11-03 | **Q1:** the `v0.0.x` suites stay and expect what actually happens, so they communicate breaking changes (D15, §4.7). |
-| 2026-11-03 | **Q2:** forward compatibility means reading with `ignoreUnknownKeys = true`. The tests could switch first, because the caller passes the parser. The SDK also offers `AmiMusicSdk.json` (D14, §4.4). |
+| 2026-11-03 | Notation and views are the consumers' responsibility for now; the SDK provides the model, serialization and validation (§4.7). |
+| 2026-11-03 | **Q2:** forward compatibility means reading with `ignoreUnknownKeys = true`. The SDK also offers `AmiMusicSdk.json` (D14, §4.4). |
 | 2026-11-03 | **Q3:** tempo as in MusicXML, in quarter notes per minute (§4.1). |
 | 2026-11-03 | **Revised (§4.3):** a text direction may sit at the very end of a measure (`offset ≤ length`), so text after a song's last line, such as `2x`, has a place. MusicXML allows the same for directions: the "current musical location is always within the current measure, even at the end of a measure". |
-| 2026-11-03 | **Added (D16):** section starts, so the blank line between verse and chorus survives as meaning rather than layout. |
-| 2026-11-03 | **Revised (D16):** section starts get their optional `label` now, not later, because the requestor's structured editor has a section header to type it in. |
-| 2026-11-03 | **Revised (F13, §4.4):** `AmiMusicSdk.json` encodes defaults (`encodeDefaults = true`, `explicitNulls = false`) instead of leaving them out, the same as the compatibility tests' parser. Canonical JSON still omits defaults, because the mapping writes them as `null`. |
+| 2026-11-03 | **Added (D15):** section starts, so the blank line between verse and chorus survives as meaning rather than layout. |
+| 2026-11-03 | **Revised (D15):** section starts get their optional `label` now, not later, because the requestor's structured editor has a section header to type it in. |
+| 2026-11-03 | **Revised (F13, §4.4):** `AmiMusicSdk.json` encodes defaults (`encodeDefaults = true`, `explicitNulls = false`) instead of leaving them out. Canonical JSON still omits defaults, because the mapping writes them as `null`. |
 | 2026-11-03 | **Revised (D13):** work happens on `0.0.2-SNAPSHOT` instead of `0.1.0-SNAPSHOT`. |
-| 2026-11-03 | **Revised (D13):** an official release, with its baseline and backward-compatibility guarantee, is decoupled from this spec (§4.8). |
+| 2026-11-03 | **Revised (D13):** an official release, with its backward-compatibility guarantee, is decoupled from this spec (§4.7). |
 | 2026-11-03 | Chord degrees get no index in the error location; the harmony's location and the property name are enough, until practice shows otherwise (§4.3). |
-| 2026-11-03 | **Added (§4.3, D16):** in a part's first measure, a line break at offset 0 and a section start there without a label are errors. The song's start is always the start of a line and of a section, so both would give a second JSON form for the same score (D11). |
+| 2026-11-03 | **Added (§4.3, D15):** in a part's first measure, a line break at offset 0 and a section start there without a label are errors. The song's start is always the start of a line and of a section, so both would give the same score a second model value (D11). |
+| 2026-11-03 | **Revised:** how the compatibility tests work is not part of this spec, so Q1 about them is withdrawn. |
+| 2026-11-04 | **Revised (§7):** all tests must pass. A test may be changed, replaced or removed when the new behaviour requires it, because the tests are there to build confidence that the implementation works. The canonical form changes existing scores (§4.4), so tests that round-trip older JSON have to change. |
+| 2026-11-04 | **Revised (D4, D11, §4.2):** a reader fills in 4/4 on the first measure when `attributes.time` is missing, so older JSON and its canonical form give the same `Score`. D11 now asks for one model value per score; readers accept other forms of it. |
