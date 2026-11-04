@@ -2,6 +2,7 @@ src/commonMain/kotlin/com/sparetimedevs/ami/music/serialization/Chord.kt
 src/commonMain/kotlin/com/sparetimedevs/ami/music/serialization/ChordDegree.kt
 src/commonMain/kotlin/com/sparetimedevs/ami/music/serialization/ChordSymbol.kt
 src/commonMain/kotlin/com/sparetimedevs/ami/music/serialization/Fraction.kt
+src/commonMain/kotlin/com/sparetimedevs/ami/music/serialization/Harmony.kt
 src/commonMain/kotlin/com/sparetimedevs/ami/music/serialization/Key.kt
 src/commonMain/kotlin/com/sparetimedevs/ami/music/serialization/Measure.kt
 src/commonMain/kotlin/com/sparetimedevs/ami/music/serialization/MeasureAttributes.kt

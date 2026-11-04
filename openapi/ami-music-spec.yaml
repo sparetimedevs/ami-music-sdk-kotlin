@@ -78,6 +78,18 @@ components:
           type: integer
           format: int32
       description: A non-negative rational number in lowest terms, e.g. a position within a measure as a fraction of a whole note. Zero is 0/1.
+    Harmony:
+      type: object
+      required:
+        - offset
+        - chord
+      properties:
+        offset:
+          $ref: '#/components/schemas/Fraction'
+          description: "Position within the measure as a fraction of a whole note: 0 ≤ offset < the measure's length."
+        chord:
+          $ref: '#/components/schemas/ChordSymbol'
+      description: A chord symbol at a position in a measure.
     Key:
       type: object
       required:
@@ -99,6 +111,11 @@ components:
         pickup:
           $ref: '#/components/schemas/Fraction'
           description: 'First measure of a part only: its real length as a fraction of a whole note, when shorter than the time signature.'
+        harmonies:
+          type: array
+          items:
+            $ref: '#/components/schemas/Harmony'
+          description: Chord symbols in this measure, by position. Offsets strictly increase and lie within the measure.
         notes:
           type: array
           items:

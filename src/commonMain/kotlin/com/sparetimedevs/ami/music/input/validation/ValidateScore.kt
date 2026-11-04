@@ -30,11 +30,13 @@ import com.sparetimedevs.ami.core.validation.validationErrorForProperty
 import com.sparetimedevs.ami.music.data.kotlin.chord.ChordDegree
 import com.sparetimedevs.ami.music.data.kotlin.chord.ChordSymbol
 import com.sparetimedevs.ami.music.data.kotlin.fraction.Fraction
+import com.sparetimedevs.ami.music.data.kotlin.harmony.Harmony
 import com.sparetimedevs.ami.music.data.kotlin.key.Fifths
 import com.sparetimedevs.ami.music.data.kotlin.key.Key
 import com.sparetimedevs.ami.music.data.kotlin.key.KeyMode
 import com.sparetimedevs.ami.music.data.kotlin.measure.Measure
 import com.sparetimedevs.ami.music.data.kotlin.measure.MeasureAttributes
+import com.sparetimedevs.ami.music.data.kotlin.note.Note
 import com.sparetimedevs.ami.music.data.kotlin.part.Part
 import com.sparetimedevs.ami.music.data.kotlin.part.PartId
 import com.sparetimedevs.ami.music.data.kotlin.part.PartName
@@ -109,36 +111,102 @@ private fun validateMeasures(
                 .map { (index, measure) ->
                     measure.pickup.validatePickup(ValidationIdentifierForMeasure(index, validationIdentifier))
                 }.combineAllValidationErrors(),
-        ) { attributes, notes, pickups -> Triple(attributes, notes, pickups) }
-        .flatMap { (attributes, notes, pickups) ->
+            measures
+                .withIndex()
+                .map { (index, measure) ->
+                    validateHarmonies(measure.harmonies, ValidationIdentifierForMeasure(index, validationIdentifier))
+                }.combineAllValidationErrors(),
+        ) { attributes, notes, pickups, harmonies -> ValidatedMeasureParts(attributes, notes, pickups, harmonies) }
+        .flatMap { parts ->
             var previousTimeSignature: TimeSignature? = null
             val built =
-                attributes.indices.map { index ->
-                    Measure(attributes[index], notes[index], previousTimeSignature, pickups[index]).also {
-                        previousTimeSignature = it.timeSignature
-                    }
+                parts.attributes.indices.map { index ->
+                    Measure(
+                        parts.attributes[index],
+                        parts.notes[index],
+                        previousTimeSignature,
+                        parts.pickups[index],
+                        parts.harmonies[index],
+                    ).also { previousTimeSignature = it.timeSignature }
                 }
-            built
-                .withIndex()
-                .mapNotNull { (index, measure) ->
-                    measure.pickup?.let {
-                        checkPickup(
-                            index,
-                            it,
-                            measure.timeSignature,
-                            ValidationIdentifierForMeasure(index, validationIdentifier),
+            // These checks need the length of the measure, so they run after the time signatures and pickups are resolved.
+            val errors =
+                built.withIndex().flatMap { (index, measure) ->
+                    val validationIdentifierForMeasure = ValidationIdentifierForMeasure(index, validationIdentifier)
+                    listOfNotNull(
+                        measure.pickup?.let {
+                            checkPickup(
+                                index,
+                                it,
+                                measure.timeSignature,
+                                validationIdentifierForMeasure,
+                            )
+                        },
+                    ) +
+                        checkOffsets(
+                            measure.harmonies.map { it.offset },
+                            measure.length,
+                            validationIdentifierForMeasure,
+                            ::ValidationIdentifierForHarmony,
                         )
-                    }
-                }.let { errors ->
-                    if (errors.isEmpty()) {
-                        Either.Right(
-                            built,
-                        )
-                    } else {
-                        Either.Left(NonEmptyList(errors.first(), errors.drop(1)))
-                    }
                 }
+            if (errors.isEmpty()) Either.Right(built) else Either.Left(NonEmptyList(errors.first(), errors.drop(1)))
         }
+
+private class ValidatedMeasureParts(
+    val attributes: List<MeasureAttributes?>,
+    val notes: List<List<Note>>,
+    val pickups: List<Fraction?>,
+    val harmonies: List<List<Harmony>>,
+)
+
+private fun validateHarmonies(
+    harmonies: List<com.sparetimedevs.ami.music.serialization.Harmony>?,
+    validationIdentifier: ValidationIdentifier,
+): EitherNel<ValidationError, List<Harmony>> =
+    (harmonies ?: emptyList())
+        .withIndex()
+        .map { (index, harmony) ->
+            val validationIdentifierForHarmony = ValidationIdentifierForHarmony(index, validationIdentifier)
+            Either.zipOrAccumulate(
+                harmony.offset.validate(validationIdentifierForHarmony),
+                harmony.chord.validate(validationIdentifierForHarmony),
+            ) { offset, chord -> Harmony(offset, chord) }
+        }.combineAllValidationErrors()
+
+/**
+ * The offset and order checks that every track reuses (§4.3): each offset lies in `0 ≤ offset < length`, and offsets
+ * strictly increase. Errors are located at the item, made by [identifierFor].
+ */
+private fun checkOffsets(
+    offsets: List<Fraction>,
+    length: Fraction,
+    measureIdentifier: ValidationIdentifier,
+    identifierFor: (Int, ValidationIdentifier) -> ValidationIdentifier,
+): List<ValidationError> =
+    offsets.withIndex().mapNotNull { (index, offset) ->
+        val identifier = identifierFor(index, measureIdentifier)
+        when {
+            offset >= length ->
+                ValidationError(
+                    "Offset $offset is outside the measure (length ${length.asText()})",
+                    ValidationErrorForProperty(OFFSET_PROPERTY),
+                    identifier,
+                )
+            index > 0 && offset <= offsets[index - 1] ->
+                ValidationError(
+                    "Offset $offset must be bigger than the previous offset ${offsets[index - 1]}",
+                    ValidationErrorForProperty(OFFSET_PROPERTY),
+                    identifier,
+                )
+            else -> null
+        }
+    }
+
+/** A whole number without its denominator: `1`, and `3/4` otherwise. */
+private fun Fraction.asText(): String = if (denominator == 1) "$numerator" else "$this"
+
+private const val OFFSET_PROPERTY = "Offset"
 
 /** D5, §4.3: a pickup is allowed only on a part's first measure, and `0 < pickup < timeSignature.measureLength`. */
 private fun checkPickup(

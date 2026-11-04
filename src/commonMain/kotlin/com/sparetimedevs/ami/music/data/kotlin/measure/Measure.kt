@@ -17,6 +17,7 @@
 package com.sparetimedevs.ami.music.data.kotlin.measure
 
 import com.sparetimedevs.ami.music.data.kotlin.fraction.Fraction
+import com.sparetimedevs.ami.music.data.kotlin.harmony.Harmony
 import com.sparetimedevs.ami.music.data.kotlin.note.Note
 import com.sparetimedevs.ami.music.data.kotlin.timesignature.BeatType
 import com.sparetimedevs.ami.music.data.kotlin.timesignature.Beats
@@ -32,6 +33,9 @@ public sealed interface Measure {
     /** The length of the first measure of a part when it is shorter than [timeSignature] says (D5), otherwise `null`. */
     public val pickup: Fraction?
 
+    /** Chord symbols by position (F9). Offsets strictly increase and lie within [length]. */
+    public val harmonies: List<Harmony>
+
     /** `pickup ?: timeSignature.measureLength`, as a fraction of a whole note. */
     public val length: Fraction get() = pickup ?: timeSignature.measureLength
 
@@ -41,6 +45,7 @@ public sealed interface Measure {
         override val attributes: MeasureAttributes?,
         override val notes: List<Note>,
         override val pickup: Fraction? = null,
+        override val harmonies: List<Harmony> = emptyList(),
     ) : Measure
 
     @Serializable
@@ -49,6 +54,7 @@ public sealed interface Measure {
         override val attributes: MeasureAttributes?,
         override val notes: List<Note>,
         override val pickup: Fraction? = null,
+        override val harmonies: List<Harmony> = emptyList(),
     ) : Measure
 
     @Serializable
@@ -58,6 +64,7 @@ public sealed interface Measure {
         override val notes: List<Note>,
         val overfloodedNotes: List<Note>, // TODO or should this be its own type? OverfloodedNotes.
         override val pickup: Fraction? = null,
+        override val harmonies: List<Harmony> = emptyList(),
     ) : Measure
 
     public companion object {
@@ -72,6 +79,7 @@ public sealed interface Measure {
             notes: List<Note>,
             previousTimeSignature: TimeSignature?,
             pickup: Fraction? = null,
+            harmonies: List<Harmony> = emptyList(),
         ): Measure {
             val timeSignature = attributes?.time ?: previousTimeSignature ?: DEFAULT_TIME_SIGNATURE
             val resolvedAttributes =
@@ -82,7 +90,7 @@ public sealed interface Measure {
                 }
             return when {
                 notesShouldBeInAccordanceWithTimeSignature(notes, timeSignature) ->
-                    CompleteMeasure(timeSignature, resolvedAttributes, notes, pickup)
+                    CompleteMeasure(timeSignature, resolvedAttributes, notes, pickup, harmonies)
                 notesAreTooManyForTimeSignature(notes, timeSignature) ->
                     OverfloodedMeasure(
                         timeSignature,
@@ -90,8 +98,9 @@ public sealed interface Measure {
                         notes /* TODO split notes */,
                         notes,
                         pickup,
+                        harmonies,
                     )
-                else -> IncompleteMeasure(timeSignature, resolvedAttributes, notes, pickup)
+                else -> IncompleteMeasure(timeSignature, resolvedAttributes, notes, pickup, harmonies)
             }
         }
 

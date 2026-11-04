@@ -277,22 +277,36 @@ None
 
 ### Task 9: Harmonies on measures
 
-- [ ] Schema: add `Harmony { offset: Fraction; chord: ChordSymbol }` and `Measure.harmonies?` (§4.1).
-- [ ] The `Measure` variants gain `harmonies: List<Harmony>` (default empty), mapped both ways. An empty list is
+- [x] Schema: add `Harmony { offset: Fraction; chord: ChordSymbol }` and `Measure.harmonies?` (§4.1).
+- [x] The `Measure` variants gain `harmonies: List<Harmony>` (default empty), mapped both ways. An empty list is
   written as `null`, and readers accept `[]` too (§4.4). Tests.
-- [ ] Add the offset and order checks that every track reuses (§4.3):
+- [x] Add the offset and order checks that every track reuses (§4.3):
   - An offset is a valid `Fraction` with `0 ≤ offset < length`, and harmony offsets strictly increase.
   - The checks need the measure's `length`, so they run after the part's time signatures and pickup are resolved.
   - Errors are located at `harmony i`, through a new identifier that the error shape from task 2 renders as kind
     `harmony`.
   - Tests include *"part p-1, measure 3, harmony 2: offset 5/4 is outside the measure (length 1)"*, an offset in a
     pickup measure, and a chord degree error located at its harmony.
-- [ ] A part with chords-only measures (`"notes": []`), C on beat 1 and D on beat 3, round-trips with
+- [x] A part with chords-only measures (`"notes": []`), C on beat 1 and D on beat 3, round-trips with
   `AmiMusicSdk.json` to identical JSON (F9).
 
 #### Notes from task 9
 
-None
+- `Harmony(offset: Fraction, chord: ChordSymbol)` lives in `music/data/kotlin/harmony/Harmony.kt`. `harmonies: List<Harmony>`
+  is the last property of all three `Measure` variants and the last parameter of `Measure(...)`; `toSerializable` writes
+  `null` for an empty list.
+- `ValidationLocationKind.HARMONY` and `ValidationIdentifierForHarmony(index, parent)` are added. Each harmony's offset and
+  chord are validated with that identifier, so a chord degree error is located at its harmony.
+- The reusable check is the private `checkOffsets(offsets, length, measureIdentifier, identifierFor)` in `ValidateScore.kt`:
+  `0 ≤ offset < length` and strictly increasing, both with property `Offset`. Tasks 10 and 12 call it with their own
+  identifier (lyrics need it per verse). Task 11 needs `≤ length` and non-decreasing, so it needs a variant of it.
+- `validateMeasures` collects the checks that need `length` (pickup and offsets) after resolving the time signatures, and
+  reports them together. They only run when attributes, notes, pickups and harmonies themselves are valid.
+- Messages render a whole-number length without denominator (`length 1`), as in the spec. `Fraction.toString()` still
+  gives `1/1`.
+- Tests are in `HarmonyInMeasureTest`. The schema change is committed in `ami-music-spec` (`Harmony`,
+  `Measure.harmonies`). No example uses harmonies yet (task 13).
+
 
 ### Task 10: Lyrics
 

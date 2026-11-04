@@ -59,3 +59,11 @@ public data class ValidationIdentifierForPitchOfChord(
     public override val kind: ValidationLocationKind = ValidationLocationKind.PITCH
     public override val identifier: Index = Index(pitchIndex)
 }
+
+public data class ValidationIdentifierForHarmony(
+    public val harmonyIndex: Int,
+    public override val validationIdentifierParent: ValidationIdentifier,
+) : ValidationIdentifier {
+    public override val kind: ValidationLocationKind = ValidationLocationKind.HARMONY
+    public override val identifier: Index = Index(harmonyIndex)
+}

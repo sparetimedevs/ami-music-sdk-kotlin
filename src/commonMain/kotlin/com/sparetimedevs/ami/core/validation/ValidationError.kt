@@ -56,6 +56,9 @@ public enum class ValidationLocationKind(
 
     @SerialName("pitch")
     PITCH("pitch"),
+
+    @SerialName("harmony")
+    HARMONY("harmony"),
 }
 
 public interface ValidationIdentifier {
