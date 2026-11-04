@@ -20,6 +20,7 @@ import com.sparetimedevs.ami.music.data.kotlin.fraction.Fraction
 import com.sparetimedevs.ami.music.data.kotlin.harmony.Harmony
 import com.sparetimedevs.ami.music.data.kotlin.lyric.LyricFragment
 import com.sparetimedevs.ami.music.data.kotlin.note.Note
+import com.sparetimedevs.ami.music.data.kotlin.section.SectionStart
 import com.sparetimedevs.ami.music.data.kotlin.textdirection.TextDirection
 import com.sparetimedevs.ami.music.data.kotlin.timesignature.BeatType
 import com.sparetimedevs.ami.music.data.kotlin.timesignature.Beats
@@ -44,6 +45,12 @@ public sealed interface Measure {
     /** Text directions by position, in order. Offsets don't decrease and lie within `0 ≤ offset ≤ length`. */
     public val textDirections: List<TextDirection>
 
+    /** Offsets where a new line starts. Strictly increasing, `0 ≤ offset < length` (D6). */
+    public val lineBreaks: List<Fraction>
+
+    /** Where a new section (verse, chorus) starts (D15). Offsets strictly increase, `0 ≤ offset < length`. */
+    public val sectionStarts: List<SectionStart>
+
     /** `pickup ?: timeSignature.measureLength`, as a fraction of a whole note. */
     public val length: Fraction get() = pickup ?: timeSignature.measureLength
 
@@ -56,6 +63,8 @@ public sealed interface Measure {
         override val harmonies: List<Harmony> = emptyList(),
         override val lyrics: List<LyricFragment> = emptyList(),
         override val textDirections: List<TextDirection> = emptyList(),
+        override val lineBreaks: List<Fraction> = emptyList(),
+        override val sectionStarts: List<SectionStart> = emptyList(),
     ) : Measure
 
     @Serializable
@@ -67,6 +76,8 @@ public sealed interface Measure {
         override val harmonies: List<Harmony> = emptyList(),
         override val lyrics: List<LyricFragment> = emptyList(),
         override val textDirections: List<TextDirection> = emptyList(),
+        override val lineBreaks: List<Fraction> = emptyList(),
+        override val sectionStarts: List<SectionStart> = emptyList(),
     ) : Measure
 
     @Serializable
@@ -79,6 +90,8 @@ public sealed interface Measure {
         override val harmonies: List<Harmony> = emptyList(),
         override val lyrics: List<LyricFragment> = emptyList(),
         override val textDirections: List<TextDirection> = emptyList(),
+        override val lineBreaks: List<Fraction> = emptyList(),
+        override val sectionStarts: List<SectionStart> = emptyList(),
     ) : Measure
 
     public companion object {
@@ -96,6 +109,8 @@ public sealed interface Measure {
             harmonies: List<Harmony> = emptyList(),
             lyrics: List<LyricFragment> = emptyList(),
             textDirections: List<TextDirection> = emptyList(),
+            lineBreaks: List<Fraction> = emptyList(),
+            sectionStarts: List<SectionStart> = emptyList(),
         ): Measure {
             val timeSignature = attributes?.time ?: previousTimeSignature ?: DEFAULT_TIME_SIGNATURE
             val resolvedAttributes =
@@ -106,7 +121,17 @@ public sealed interface Measure {
                 }
             return when {
                 notesShouldBeInAccordanceWithTimeSignature(notes, timeSignature) ->
-                    CompleteMeasure(timeSignature, resolvedAttributes, notes, pickup, harmonies, lyrics, textDirections)
+                    CompleteMeasure(
+                        timeSignature,
+                        resolvedAttributes,
+                        notes,
+                        pickup,
+                        harmonies,
+                        lyrics,
+                        textDirections,
+                        lineBreaks,
+                        sectionStarts,
+                    )
                 notesAreTooManyForTimeSignature(notes, timeSignature) ->
                     OverfloodedMeasure(
                         timeSignature,
@@ -117,6 +142,8 @@ public sealed interface Measure {
                         harmonies,
                         lyrics,
                         textDirections,
+                        lineBreaks,
+                        sectionStarts,
                     )
                 else ->
                     IncompleteMeasure(
@@ -127,6 +154,8 @@ public sealed interface Measure {
                         harmonies,
                         lyrics,
                         textDirections,
+                        lineBreaks,
+                        sectionStarts,
                     )
             }
         }

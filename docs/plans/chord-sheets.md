@@ -362,22 +362,34 @@ None
 
 ### Task 12: Line breaks and section starts
 
-- [ ] Schema: add `SectionStart { offset: Fraction; label?: string }`, `Measure.lineBreaks?: Fraction[]` and
+- [x] Schema: add `SectionStart { offset: Fraction; label?: string }`, `Measure.lineBreaks?: Fraction[]` and
   `Measure.sectionStarts?` (§4.1).
-- [ ] The `Measure` variants gain `lineBreaks: List<Fraction>` and `sectionStarts: List<SectionStart>` (default empty),
+- [x] The `Measure` variants gain `lineBreaks: List<Fraction>` and `sectionStarts: List<SectionStart>` (default empty),
   mapped both ways, with empty lists written as `null`. Tests.
-- [ ] Validate line breaks and section starts (§4.3, D15):
+- [x] Validate line breaks and section starts (§4.3, D15):
   - Offsets are checked as for harmonies, and each list strictly increases.
   - A `label` isn't empty after trimming and is at most 64 characters.
   - In a part's first measure, offset 0 holds no line break, and a section start there has a label.
   - Errors are located at `line break i` and `section start i`.
   - A test per rule.
-- [ ] The §4.4 sample measure (harmonies, lyrics and a line break at 0, in a measure after the first) round-trips with
+- [x] The §4.4 sample measure (harmonies, lyrics and a line break at 0, in a measure after the first) round-trips with
   `AmiMusicSdk.json` to identical JSON.
 
 #### Notes from task 12
 
-None
+- `SectionStart(offset, label: String? = null)` lives in `music/data/kotlin/section/SectionStart.kt`, with `validateLabel`
+  (not blank, at most 64 characters, property `SectionStartLabel`). The label is kept as written, not trimmed.
+  `lineBreaks: List<Fraction>` and `sectionStarts: List<SectionStart>` are the last two properties of all three
+  `Measure` variants and the last two parameters of `Measure(...)`. `toSerializable` writes empty lists as `null`.
+- `ValidationLocationKind.LINE_BREAK` (`line break`) and `SECTION_START` (`section start`) are added, with
+  `ValidationIdentifierForLineBreak` and `ValidationIdentifierForSectionStart`.
+- Both lists use the default strict `checkOffsets`. The song-start rule is the private `checkSongStart` in
+  `ValidateScore.kt` and runs for measure index 0 of each part: a line break at 0 is an `Offset` error at its line break,
+  a label-less section start at 0 is a `SectionStartLabel` error at its section start. It also fires when the same
+  offset is already reported as out of range or out of order, but that can't happen at offset 0.
+- Tests are in `LineBreaksAndSectionStartsInMeasureTest`, including the §4.4 sample measure (it follows a first measure
+  that states 4/4, because a line break at 0 is not allowed in the first measure). No example uses these yet (task 13).
+  The schema change is committed in `ami-music-spec` (`SectionStart`, `Measure.lineBreaks`, `Measure.sectionStarts`).
 
 ### Task 13: The song example
 

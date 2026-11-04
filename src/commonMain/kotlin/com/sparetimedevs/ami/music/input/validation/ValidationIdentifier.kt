@@ -83,3 +83,19 @@ public data class ValidationIdentifierForTextDirection(
     public override val kind: ValidationLocationKind = ValidationLocationKind.TEXT_DIRECTION
     public override val identifier: Index = Index(textDirectionIndex)
 }
+
+public data class ValidationIdentifierForLineBreak(
+    public val lineBreakIndex: Int,
+    public override val validationIdentifierParent: ValidationIdentifier,
+) : ValidationIdentifier {
+    public override val kind: ValidationLocationKind = ValidationLocationKind.LINE_BREAK
+    public override val identifier: Index = Index(lineBreakIndex)
+}
+
+public data class ValidationIdentifierForSectionStart(
+    public val sectionStartIndex: Int,
+    public override val validationIdentifierParent: ValidationIdentifier,
+) : ValidationIdentifier {
+    public override val kind: ValidationLocationKind = ValidationLocationKind.SECTION_START
+    public override val identifier: Index = Index(sectionStartIndex)
+}

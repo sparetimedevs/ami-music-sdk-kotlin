@@ -20,6 +20,7 @@ import com.sparetimedevs.ami.music.serialization.Harmony
 import com.sparetimedevs.ami.music.serialization.LyricFragment
 import com.sparetimedevs.ami.music.serialization.MeasureAttributes
 import com.sparetimedevs.ami.music.serialization.Pitched
+import com.sparetimedevs.ami.music.serialization.SectionStart
 import com.sparetimedevs.ami.music.serialization.TextDirection
 
 import kotlinx.serialization.*
@@ -35,6 +36,8 @@ import kotlinx.serialization.encoding.*
  * @param harmonies Chord symbols in this measure, by position. Offsets strictly increase and lie within the measure.
  * @param lyrics Lyric fragments in this measure, by position and verse. Offsets strictly increase within each verse.
  * @param textDirections Text directions in this measure, by position. Offsets don't decrease and lie within 0 ≤ offset ≤ the measure's length.
+ * @param lineBreaks Offsets within the measure where a new line starts. Strictly increasing, 0 ≤ offset < the measure's length.
+ * @param sectionStarts Where a new section (verse, chorus) starts in this measure. Offsets strictly increase and lie within the measure.
  */
 @Serializable
 
@@ -54,7 +57,13 @@ public data class Measure (
     @SerialName(value = "lyrics") val lyrics: kotlin.collections.List<LyricFragment>? = null,
 
     /* Text directions in this measure, by position. Offsets don't decrease and lie within 0 ≤ offset ≤ the measure's length. */
-    @SerialName(value = "textDirections") val textDirections: kotlin.collections.List<TextDirection>? = null
+    @SerialName(value = "textDirections") val textDirections: kotlin.collections.List<TextDirection>? = null,
+
+    /* Offsets within the measure where a new line starts. Strictly increasing, 0 ≤ offset < the measure's length. */
+    @SerialName(value = "lineBreaks") val lineBreaks: kotlin.collections.List<Fraction>? = null,
+
+    /* Where a new section (verse, chorus) starts in this measure. Offsets strictly increase and lie within the measure. */
+    @SerialName(value = "sectionStarts") val sectionStarts: kotlin.collections.List<SectionStart>? = null
 
 ) {
 

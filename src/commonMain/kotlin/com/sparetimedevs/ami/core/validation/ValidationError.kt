@@ -65,6 +65,12 @@ public enum class ValidationLocationKind(
 
     @SerialName("text direction")
     TEXT_DIRECTION("text direction"),
+
+    @SerialName("line break")
+    LINE_BREAK("line break"),
+
+    @SerialName("section start")
+    SECTION_START("section start"),
 }
 
 public interface ValidationIdentifier {

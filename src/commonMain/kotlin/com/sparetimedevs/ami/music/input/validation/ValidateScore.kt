@@ -44,6 +44,7 @@ import com.sparetimedevs.ami.music.data.kotlin.part.PartName
 import com.sparetimedevs.ami.music.data.kotlin.score.Score
 import com.sparetimedevs.ami.music.data.kotlin.score.ScoreId
 import com.sparetimedevs.ami.music.data.kotlin.score.ScoreTitle
+import com.sparetimedevs.ami.music.data.kotlin.section.SectionStart
 import com.sparetimedevs.ami.music.data.kotlin.tempo.QuarterNotesPerMinute
 import com.sparetimedevs.ami.music.data.kotlin.tempo.Tempo
 import com.sparetimedevs.ami.music.data.kotlin.textdirection.TextDirection
@@ -131,8 +132,30 @@ private fun validateMeasures(
                         ValidationIdentifierForMeasure(index, validationIdentifier),
                     )
                 }.combineAllValidationErrors(),
-        ) { attributes, notes, pickups, harmonies, lyrics, textDirections ->
-            ValidatedMeasureParts(attributes, notes, pickups, harmonies, lyrics, textDirections)
+            measures
+                .withIndex()
+                .map { (index, measure) ->
+                    validateLineBreaks(measure.lineBreaks, ValidationIdentifierForMeasure(index, validationIdentifier))
+                }.combineAllValidationErrors(),
+            measures
+                .withIndex()
+                .map { (index, measure) ->
+                    validateSectionStarts(
+                        measure.sectionStarts,
+                        ValidationIdentifierForMeasure(index, validationIdentifier),
+                    )
+                }.combineAllValidationErrors(),
+        ) { attributes, notes, pickups, harmonies, lyrics, textDirections, lineBreaks, sectionStarts ->
+            ValidatedMeasureParts(
+                attributes,
+                notes,
+                pickups,
+                harmonies,
+                lyrics,
+                textDirections,
+                lineBreaks,
+                sectionStarts,
+            )
         }.flatMap { parts ->
             var previousTimeSignature: TimeSignature? = null
             val built =
@@ -145,6 +168,8 @@ private fun validateMeasures(
                         parts.harmonies[index],
                         parts.lyrics[index],
                         parts.textDirections[index],
+                        parts.lineBreaks[index],
+                        parts.sectionStarts[index],
                     ).also { previousTimeSignature = it.timeSignature }
                 }
             // These checks need the length of the measure, so they run after the time signatures and pickups are resolved.
@@ -181,7 +206,20 @@ private fun validateMeasures(
                             ::ValidationIdentifierForTextDirection,
                             allowEnd = true,
                             allowEqual = true,
-                        )
+                        ) +
+                        checkOffsets(
+                            measure.lineBreaks,
+                            measure.length,
+                            validationIdentifierForMeasure,
+                            ::ValidationIdentifierForLineBreak,
+                        ) +
+                        checkOffsets(
+                            measure.sectionStarts.map { it.offset },
+                            measure.length,
+                            validationIdentifierForMeasure,
+                            ::ValidationIdentifierForSectionStart,
+                        ) +
+                        if (index == 0) checkSongStart(measure, validationIdentifierForMeasure) else emptyList()
                 }
             if (errors.isEmpty()) Either.Right(built) else Either.Left(NonEmptyList(errors.first(), errors.drop(1)))
         }
@@ -193,7 +231,64 @@ private class ValidatedMeasureParts(
     val harmonies: List<List<Harmony>>,
     val lyrics: List<List<LyricFragment>>,
     val textDirections: List<List<TextDirection>>,
+    val lineBreaks: List<List<Fraction>>,
+    val sectionStarts: List<List<SectionStart>>,
 )
+
+private fun validateLineBreaks(
+    lineBreaks: List<com.sparetimedevs.ami.music.serialization.Fraction>?,
+    validationIdentifier: ValidationIdentifier,
+): EitherNel<ValidationError, List<Fraction>> =
+    (lineBreaks ?: emptyList())
+        .withIndex()
+        .map { (index, lineBreak) ->
+            lineBreak.validate(ValidationIdentifierForLineBreak(index, validationIdentifier))
+        }.combineAllValidationErrors()
+
+private fun validateSectionStarts(
+    sectionStarts: List<com.sparetimedevs.ami.music.serialization.SectionStart>?,
+    validationIdentifier: ValidationIdentifier,
+): EitherNel<ValidationError, List<SectionStart>> =
+    (sectionStarts ?: emptyList())
+        .withIndex()
+        .map { (index, sectionStart) ->
+            val validationIdentifierForSectionStart = ValidationIdentifierForSectionStart(index, validationIdentifier)
+            Either.zipOrAccumulate(
+                sectionStart.offset.validate(validationIdentifierForSectionStart),
+                SectionStart.validateLabel(sectionStart.label, validationIdentifierForSectionStart),
+            ) { offset, label -> SectionStart(offset, label) }
+        }.combineAllValidationErrors()
+
+/**
+ * D15, §4.3: the song's start is always the start of a line and of a section, so in a part's first measure offset 0
+ * holds no line break, and a section start there has a label.
+ */
+private fun checkSongStart(
+    measure: Measure,
+    measureIdentifier: ValidationIdentifier,
+): List<ValidationError> =
+    measure.lineBreaks.withIndex().mapNotNull { (index, lineBreak) ->
+        if (lineBreak == Fraction.ZERO) {
+            ValidationError(
+                "A line break at offset 0 of the first measure is not allowed, the song always starts a line",
+                ValidationErrorForProperty(OFFSET_PROPERTY),
+                ValidationIdentifierForLineBreak(index, measureIdentifier),
+            )
+        } else {
+            null
+        }
+    } +
+        measure.sectionStarts.withIndex().mapNotNull { (index, sectionStart) ->
+            if (sectionStart.offset == Fraction.ZERO && sectionStart.label == null) {
+                ValidationError(
+                    "A section start at offset 0 of the first measure needs a label, the song always starts a section",
+                    ValidationErrorForProperty("SectionStartLabel"),
+                    ValidationIdentifierForSectionStart(index, measureIdentifier),
+                )
+            } else {
+                null
+            }
+        }
 
 private fun validateTextDirections(
     textDirections: List<com.sparetimedevs.ami.music.serialization.TextDirection>?,

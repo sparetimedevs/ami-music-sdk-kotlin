@@ -143,6 +143,16 @@ components:
           items:
             $ref: '#/components/schemas/TextDirection'
           description: Text directions in this measure, by position. Offsets don't decrease and lie within 0 ≤ offset ≤ the measure's length.
+        lineBreaks:
+          type: array
+          items:
+            $ref: '#/components/schemas/Fraction'
+          description: Offsets within the measure where a new line starts. Strictly increasing, 0 ≤ offset < the measure's length.
+        sectionStarts:
+          type: array
+          items:
+            $ref: '#/components/schemas/SectionStart'
+          description: Where a new section (verse, chorus) starts in this measure. Offsets strictly increase and lie within the measure.
         notes:
           type: array
           items:
@@ -637,6 +647,18 @@ components:
                         alter: 0
                         noteName: A
                         octave: 4
+    SectionStart:
+      type: object
+      required:
+        - offset
+      properties:
+        offset:
+          $ref: '#/components/schemas/Fraction'
+          description: "Position within the measure as a fraction of a whole note: 0 ≤ offset < the measure's length."
+        label:
+          type: string
+          description: Optional section name, such as "Couplet". Not empty after trimming, at most 64 characters.
+      description: The start of a new section of the song, such as a verse or a chorus.
     Tempo:
       type: object
       required:

@@ -56,6 +56,8 @@ public fun com.sparetimedevs.ami.music.data.kotlin.measure.Measure.toSerializabl
         harmonies = this.harmonies.takeIf { it.isNotEmpty() }?.map { it.toSerializable() },
         lyrics = this.lyrics.takeIf { it.isNotEmpty() }?.map { it.toSerializable() },
         textDirections = this.textDirections.takeIf { it.isNotEmpty() }?.map { it.toSerializable() },
+        lineBreaks = this.lineBreaks.takeIf { it.isNotEmpty() }?.map { it.toSerializable() },
+        sectionStarts = this.sectionStarts.takeIf { it.isNotEmpty() }?.map { it.toSerializable() },
     )
 
 public fun com.sparetimedevs.ami.music.data.kotlin.harmony.Harmony.toSerializable(): Harmony =
@@ -70,6 +72,9 @@ public fun com.sparetimedevs.ami.music.data.kotlin.lyric.LyricFragment.toSeriali
 
 public fun com.sparetimedevs.ami.music.data.kotlin.textdirection.TextDirection.toSerializable(): TextDirection =
     TextDirection(offset = this.offset.toSerializable(), text = this.text)
+
+public fun com.sparetimedevs.ami.music.data.kotlin.section.SectionStart.toSerializable(): SectionStart =
+    SectionStart(offset = this.offset.toSerializable(), label = this.label)
 
 public fun com.sparetimedevs.ami.music.data.kotlin.fraction.Fraction.toSerializable(): Fraction =
     Fraction(numerator = this.numerator, denominator = this.denominator)
