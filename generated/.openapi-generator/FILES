@@ -16,5 +16,6 @@ src/commonMain/kotlin/com/sparetimedevs/ami/music/serialization/Pitched.kt
 src/commonMain/kotlin/com/sparetimedevs/ami/music/serialization/Rest.kt
 src/commonMain/kotlin/com/sparetimedevs/ami/music/serialization/Score.kt
 src/commonMain/kotlin/com/sparetimedevs/ami/music/serialization/Tempo.kt
+src/commonMain/kotlin/com/sparetimedevs/ami/music/serialization/TextDirection.kt
 src/commonMain/kotlin/com/sparetimedevs/ami/music/serialization/TimeSignature.kt
 src/commonMain/kotlin/com/sparetimedevs/ami/music/serialization/Unpitched.kt

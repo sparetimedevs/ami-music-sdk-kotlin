@@ -62,6 +62,9 @@ public enum class ValidationLocationKind(
 
     @SerialName("lyric")
     LYRIC("lyric"),
+
+    @SerialName("text direction")
+    TEXT_DIRECTION("text direction"),
 }
 
 public interface ValidationIdentifier {

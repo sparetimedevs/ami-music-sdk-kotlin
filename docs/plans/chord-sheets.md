@@ -337,10 +337,10 @@ None
 
 ### Task 11: Text directions
 
-- [ ] Schema: add `TextDirection { offset: Fraction; text: string }` and `Measure.textDirections?` (§4.1).
-- [ ] The `Measure` variants gain `textDirections: List<TextDirection>` (default empty), mapped both ways, with an empty
+- [x] Schema: add `TextDirection { offset: Fraction; text: string }` and `Measure.textDirections?` (§4.1).
+- [x] The `Measure` variants gain `textDirections: List<TextDirection>` (default empty), mapped both ways, with an empty
   list written as `null`. Tests.
-- [ ] Validate text directions (§4.3):
+- [x] Validate text directions (§4.3):
   - `0 ≤ offset ≤ length`, so the very end of a measure is allowed.
   - Offsets don't decrease, and several directions at one offset keep their order.
   - `text` isn't empty and is at most 512 characters.
@@ -349,7 +349,16 @@ None
 
 #### Notes from task 11
 
-None
+- `TextDirection(offset, text)` lives in `music/data/kotlin/textdirection/TextDirection.kt`, with `validateText` (1…512
+  characters, property `TextDirectionText`). `textDirections: List<TextDirection>` is the last property of all three
+  `Measure` variants and the last parameter of `Measure(...)`. `toSerializable` writes an empty list as `null`.
+- `ValidationLocationKind.TEXT_DIRECTION` (serial name `text direction`) and `ValidationIdentifierForTextDirection` are
+  added; the location renders as `text direction 1`.
+- `checkOffsets` in `ValidateScore.kt` gained `allowEnd` (`offset ≤ length`) and `allowEqual` (non-decreasing). Only
+  text directions use them. Task 12 uses the default strict checks for line breaks and section starts.
+- Tests are in `TextDirectionsInMeasureTest`. No example uses text directions yet (task 13). The schema change is
+  committed in `ami-music-spec` (`TextDirection`, `Measure.textDirections`).
+
 
 ### Task 12: Line breaks and section starts
 

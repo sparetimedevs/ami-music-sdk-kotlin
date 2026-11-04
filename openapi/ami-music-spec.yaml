@@ -138,6 +138,11 @@ components:
           items:
             $ref: '#/components/schemas/LyricFragment'
           description: Lyric fragments in this measure, by position and verse. Offsets strictly increase within each verse.
+        textDirections:
+          type: array
+          items:
+            $ref: '#/components/schemas/TextDirection'
+          description: Text directions in this measure, by position. Offsets don't decrease and lie within 0 ≤ offset ≤ the measure's length.
         notes:
           type: array
           items:
@@ -640,6 +645,19 @@ components:
         quarterNotesPerMinute:
           type: integer
           format: int32
+    TextDirection:
+      type: object
+      required:
+        - offset
+        - text
+      properties:
+        offset:
+          $ref: '#/components/schemas/Fraction'
+          description: "Position within the measure as a fraction of a whole note: 0 ≤ offset ≤ the measure's length."
+        text:
+          type: string
+          description: The direction text. 1 to 512 characters.
+      description: A written direction at a position in a measure, such as "2x" or "D.C. al Fine".
     TimeSignature:
       type: object
       required:

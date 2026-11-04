@@ -75,3 +75,11 @@ public data class ValidationIdentifierForLyric(
     public override val kind: ValidationLocationKind = ValidationLocationKind.LYRIC
     public override val identifier: Index = Index(lyricIndex)
 }
+
+public data class ValidationIdentifierForTextDirection(
+    public val textDirectionIndex: Int,
+    public override val validationIdentifierParent: ValidationIdentifier,
+) : ValidationIdentifier {
+    public override val kind: ValidationLocationKind = ValidationLocationKind.TEXT_DIRECTION
+    public override val identifier: Index = Index(textDirectionIndex)
+}

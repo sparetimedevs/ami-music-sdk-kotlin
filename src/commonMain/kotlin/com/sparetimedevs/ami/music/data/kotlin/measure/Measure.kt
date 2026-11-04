@@ -20,6 +20,7 @@ import com.sparetimedevs.ami.music.data.kotlin.fraction.Fraction
 import com.sparetimedevs.ami.music.data.kotlin.harmony.Harmony
 import com.sparetimedevs.ami.music.data.kotlin.lyric.LyricFragment
 import com.sparetimedevs.ami.music.data.kotlin.note.Note
+import com.sparetimedevs.ami.music.data.kotlin.textdirection.TextDirection
 import com.sparetimedevs.ami.music.data.kotlin.timesignature.BeatType
 import com.sparetimedevs.ami.music.data.kotlin.timesignature.Beats
 import com.sparetimedevs.ami.music.data.kotlin.timesignature.TimeSignature
@@ -40,6 +41,9 @@ public sealed interface Measure {
     /** Lyric fragments by position and verse (D7). Offsets strictly increase within each verse. */
     public val lyrics: List<LyricFragment>
 
+    /** Text directions by position, in order. Offsets don't decrease and lie within `0 ≤ offset ≤ length`. */
+    public val textDirections: List<TextDirection>
+
     /** `pickup ?: timeSignature.measureLength`, as a fraction of a whole note. */
     public val length: Fraction get() = pickup ?: timeSignature.measureLength
 
@@ -51,6 +55,7 @@ public sealed interface Measure {
         override val pickup: Fraction? = null,
         override val harmonies: List<Harmony> = emptyList(),
         override val lyrics: List<LyricFragment> = emptyList(),
+        override val textDirections: List<TextDirection> = emptyList(),
     ) : Measure
 
     @Serializable
@@ -61,6 +66,7 @@ public sealed interface Measure {
         override val pickup: Fraction? = null,
         override val harmonies: List<Harmony> = emptyList(),
         override val lyrics: List<LyricFragment> = emptyList(),
+        override val textDirections: List<TextDirection> = emptyList(),
     ) : Measure
 
     @Serializable
@@ -72,6 +78,7 @@ public sealed interface Measure {
         override val pickup: Fraction? = null,
         override val harmonies: List<Harmony> = emptyList(),
         override val lyrics: List<LyricFragment> = emptyList(),
+        override val textDirections: List<TextDirection> = emptyList(),
     ) : Measure
 
     public companion object {
@@ -88,6 +95,7 @@ public sealed interface Measure {
             pickup: Fraction? = null,
             harmonies: List<Harmony> = emptyList(),
             lyrics: List<LyricFragment> = emptyList(),
+            textDirections: List<TextDirection> = emptyList(),
         ): Measure {
             val timeSignature = attributes?.time ?: previousTimeSignature ?: DEFAULT_TIME_SIGNATURE
             val resolvedAttributes =
@@ -98,7 +106,7 @@ public sealed interface Measure {
                 }
             return when {
                 notesShouldBeInAccordanceWithTimeSignature(notes, timeSignature) ->
-                    CompleteMeasure(timeSignature, resolvedAttributes, notes, pickup, harmonies, lyrics)
+                    CompleteMeasure(timeSignature, resolvedAttributes, notes, pickup, harmonies, lyrics, textDirections)
                 notesAreTooManyForTimeSignature(notes, timeSignature) ->
                     OverfloodedMeasure(
                         timeSignature,
@@ -108,8 +116,18 @@ public sealed interface Measure {
                         pickup,
                         harmonies,
                         lyrics,
+                        textDirections,
                     )
-                else -> IncompleteMeasure(timeSignature, resolvedAttributes, notes, pickup, harmonies, lyrics)
+                else ->
+                    IncompleteMeasure(
+                        timeSignature,
+                        resolvedAttributes,
+                        notes,
+                        pickup,
+                        harmonies,
+                        lyrics,
+                        textDirections,
+                    )
             }
         }
 

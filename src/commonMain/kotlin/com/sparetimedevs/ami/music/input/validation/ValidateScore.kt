@@ -46,6 +46,7 @@ import com.sparetimedevs.ami.music.data.kotlin.score.ScoreId
 import com.sparetimedevs.ami.music.data.kotlin.score.ScoreTitle
 import com.sparetimedevs.ami.music.data.kotlin.tempo.QuarterNotesPerMinute
 import com.sparetimedevs.ami.music.data.kotlin.tempo.Tempo
+import com.sparetimedevs.ami.music.data.kotlin.textdirection.TextDirection
 import com.sparetimedevs.ami.music.data.kotlin.timesignature.BeatType
 import com.sparetimedevs.ami.music.data.kotlin.timesignature.Beats
 import com.sparetimedevs.ami.music.data.kotlin.timesignature.TimeSignature
@@ -122,8 +123,16 @@ private fun validateMeasures(
                 .map { (index, measure) ->
                     validateLyrics(measure.lyrics, ValidationIdentifierForMeasure(index, validationIdentifier))
                 }.combineAllValidationErrors(),
-        ) { attributes, notes, pickups, harmonies, lyrics ->
-            ValidatedMeasureParts(attributes, notes, pickups, harmonies, lyrics)
+            measures
+                .withIndex()
+                .map { (index, measure) ->
+                    validateTextDirections(
+                        measure.textDirections,
+                        ValidationIdentifierForMeasure(index, validationIdentifier),
+                    )
+                }.combineAllValidationErrors(),
+        ) { attributes, notes, pickups, harmonies, lyrics, textDirections ->
+            ValidatedMeasureParts(attributes, notes, pickups, harmonies, lyrics, textDirections)
         }.flatMap { parts ->
             var previousTimeSignature: TimeSignature? = null
             val built =
@@ -135,6 +144,7 @@ private fun validateMeasures(
                         parts.pickups[index],
                         parts.harmonies[index],
                         parts.lyrics[index],
+                        parts.textDirections[index],
                     ).also { previousTimeSignature = it.timeSignature }
                 }
             // These checks need the length of the measure, so they run after the time signatures and pickups are resolved.
@@ -163,6 +173,14 @@ private fun validateMeasures(
                             validationIdentifierForMeasure,
                             ::ValidationIdentifierForLyric,
                             groups = measure.lyrics.map { it.verse },
+                        ) +
+                        checkOffsets(
+                            measure.textDirections.map { it.offset },
+                            measure.length,
+                            validationIdentifierForMeasure,
+                            ::ValidationIdentifierForTextDirection,
+                            allowEnd = true,
+                            allowEqual = true,
                         )
                 }
             if (errors.isEmpty()) Either.Right(built) else Either.Left(NonEmptyList(errors.first(), errors.drop(1)))
@@ -174,7 +192,22 @@ private class ValidatedMeasureParts(
     val pickups: List<Fraction?>,
     val harmonies: List<List<Harmony>>,
     val lyrics: List<List<LyricFragment>>,
+    val textDirections: List<List<TextDirection>>,
 )
+
+private fun validateTextDirections(
+    textDirections: List<com.sparetimedevs.ami.music.serialization.TextDirection>?,
+    validationIdentifier: ValidationIdentifier,
+): EitherNel<ValidationError, List<TextDirection>> =
+    (textDirections ?: emptyList())
+        .withIndex()
+        .map { (index, direction) ->
+            val validationIdentifierForDirection = ValidationIdentifierForTextDirection(index, validationIdentifier)
+            Either.zipOrAccumulate(
+                direction.offset.validate(validationIdentifierForDirection),
+                TextDirection.validateText(direction.text, validationIdentifierForDirection),
+            ) { offset, text -> TextDirection(offset, text) }
+        }.combineAllValidationErrors()
 
 private fun validateLyrics(
     lyrics: List<com.sparetimedevs.ami.music.serialization.LyricFragment>?,
@@ -208,7 +241,8 @@ private fun validateHarmonies(
 /**
  * The offset and order checks that every track reuses (§4.3): each offset lies in `0 ≤ offset < length`, and offsets
  * strictly increase. Errors are located at the item, made by [identifierFor]. Offsets only have to increase within
- * the items that share a value in [groups] (lyrics: the verse).
+ * the items that share a value in [groups] (lyrics: the verse). With [allowEnd] the offset may equal [length], with
+ * [allowEqual] offsets may repeat (text directions).
  */
 private fun checkOffsets(
     offsets: List<Fraction>,
@@ -216,20 +250,22 @@ private fun checkOffsets(
     measureIdentifier: ValidationIdentifier,
     identifierFor: (Int, ValidationIdentifier) -> ValidationIdentifier,
     groups: List<Any> = offsets.map { 0 },
+    allowEnd: Boolean = false,
+    allowEqual: Boolean = false,
 ): List<ValidationError> =
     offsets.withIndex().mapNotNull { (index, offset) ->
         val identifier = identifierFor(index, measureIdentifier)
         val previous = (index - 1 downTo 0).firstOrNull { groups[it] == groups[index] }?.let { offsets[it] }
         when {
-            offset >= length ->
+            if (allowEnd) offset > length else offset >= length ->
                 ValidationError(
                     "Offset $offset is outside the measure (length ${length.asText()})",
                     ValidationErrorForProperty(OFFSET_PROPERTY),
                     identifier,
                 )
-            previous != null && offset <= previous ->
+            previous != null && (if (allowEqual) offset < previous else offset <= previous) ->
                 ValidationError(
-                    "Offset $offset must be bigger than the previous offset $previous",
+                    "Offset $offset must be ${if (allowEqual) "at least" else "bigger than"} the previous offset $previous",
                     ValidationErrorForProperty(OFFSET_PROPERTY),
                     identifier,
                 )
