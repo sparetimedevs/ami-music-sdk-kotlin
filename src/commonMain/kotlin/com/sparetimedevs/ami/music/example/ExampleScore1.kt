@@ -17,6 +17,7 @@
 package com.sparetimedevs.ami.music.example
 
 import com.sparetimedevs.ami.music.data.kotlin.measure.Measure
+import com.sparetimedevs.ami.music.data.kotlin.measure.MeasureAttributes
 import com.sparetimedevs.ami.music.data.kotlin.midi.MidiChannel
 import com.sparetimedevs.ami.music.data.kotlin.midi.MidiProgram
 import com.sparetimedevs.ami.music.data.kotlin.note.Note
@@ -71,6 +72,7 @@ public fun getExampleScore1(): Score {
                                 Pitch(NoteName.F, Octave.unsafeCreate(4)),
                             ),
                         ),
+                        FOUR_FOUR,
                     ),
                     Measure(
                         null,
@@ -96,6 +98,7 @@ public fun getExampleScore1(): Score {
                                 Pitch(NoteName.C, Octave.unsafeCreate(5)),
                             ),
                         ),
+                        FOUR_FOUR,
                     ),
                 ),
             ),

@@ -107,30 +107,30 @@ None
 
 ### Task 4: Time signatures in measure attributes, in canonical form
 
-- [ ] Schema changes (§4.1, §4.4):
+- [x] Schema changes (§4.1, §4.4):
   - Add `TimeSignature { beats: int32; beatType: int32 }` and `MeasureAttributes.time?`.
   - In `examples.tsp`, rewrite the existing examples in canonical form: drop every `attributes: #{}`, and give each
     part's first measure `attributes: #{ time: #{ beats: 4, beatType: 4 } }`.
-- [ ] `MeasureAttributes` gains `time: TimeSignature?`.
+- [x] `MeasureAttributes` gains `time: TimeSignature?`.
   - `MeasureAttributes.validate` stops ignoring its input and validates `time` with the existing `Beats` and `BeatType`
     rules. An `int32` outside the `Byte` range is a validation error, not a wrapped value.
   - `"attributes": {}` reads the same as no `attributes`.
   - Tests cover each error and its measure location.
-- [ ] Resolve the effective time signature per part (D4, F4):
+- [x] Resolve the effective time signature per part (D4, F4):
   - A first measure without `attributes.time` gets 4/4 in its `attributes`.
   - Each measure's `timeSignature` carries forward from the last measure that stated one.
   - A measure depends on the ones before it, so part validation validates the attributes of all measures first and
     then folds over them.
   - Tests: a missing first time signature, and a 3/4 change in measure 3 that carries to measures 4 and 5.
-- [ ] Kotlin producers can't build a measure whose `timeSignature` contradicts its `attributes.time`.
+- [x] Kotlin producers can't build a measure whose `timeSignature` contradicts its `attributes.time`.
   - `Measure.invoke` derives `timeSignature` from `attributes.time`, and otherwise from the previous measure's, which
     the caller passes in. This replaces the 4/4 default marked `TODO remove this default`, also in `createMeasure`.
   - The Kotlin examples state 4/4 on each part's first measure, matching the rewritten JSON examples.
-- [ ] Write canonical attributes (§4.4, F9):
+- [x] Write canonical attributes (§4.4, F9):
   - `toSerializable` writes `attributes` only when it holds something.
   - It always writes the first measure's `time`, taken from its `timeSignature` when `attributes.time` is empty.
   - Update the expected JSON in `JsonTest`.
-- [ ] Older JSON reads into the same `Score` as its canonical form (§7). A commonTest covers this:
+- [x] Older JSON reads into the same `Score` as its canonical form (§7). A commonTest covers this:
   - JSON in the `0.0.1-SNAPSHOT` form (`"attributes": {}` everywhere, no `time`) and its canonical form read into equal
     `Score`s.
   - Writing that `Score` with `AmiMusicSdk.json` gives the canonical JSON.
@@ -138,7 +138,19 @@ None
 
 #### Notes from task 4
 
-None
+- `Measure(attributes, notes, previousTimeSignature)` has no default for the previous time signature. With `attributes.time`
+  missing and no previous measure it fills 4/4 into the attributes (D4), and it turns empty attributes into `null`. So
+  the "fill in 4/4" rule lives in one place, and part validation only folds over the measures.
+- Validation: `validateMeasures` in `ValidateScore.kt` validates all attributes and notes first, then folds. The public
+  `serialization.Measure.validate(index, ...)` is gone. `MeasureAttributes?.validate` returns `null` for empty attributes.
+- `Measure.toSerializable(isFirstOfPart)` and `MeasureAttributes?.toSerializable(firstMeasureTimeSignature)` write the
+  canonical form. `Part.toSerializable` passes `isFirstOfPart` for index 0.
+- `MeasureAttributes(key, time)` has defaults. The `Key` placeholder is still not mapped (task 5).
+- Examples: `createMeasure` (follows a 4/4 measure) and `createFirstMeasure` (states 4/4) in `MeasureHelper.kt`.
+- Kotlin/Native crashed with a `ClassCastException` (value class `Beats` cast to `NonEmptyList`) when a `flatMap` over
+  `EitherNel<_, Byte>` fed `Either.zipOrAccumulate`. Validate directly into `Beats`/`BeatType` instead. JVM tests alone
+  don't show this, run `./gradlew check`.
+- The schema change is committed in `ami-music-spec` (`TimeSignature`, `MeasureAttributes.time`, canonical examples).
 
 ### Task 5: Key and tempo
 

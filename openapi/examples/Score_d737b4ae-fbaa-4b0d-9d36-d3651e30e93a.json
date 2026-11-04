@@ -9,6 +9,12 @@
       "midiProgram" : 1
     },
     "measures" : [ {
+      "attributes" : {
+        "time" : {
+          "beats" : 4,
+          "beatType" : 4
+        }
+      },
       "notes" : [ {
         "duration" : {
           "noteValue" : "QUARTER",
@@ -53,8 +59,7 @@
           "noteName" : "E",
           "octave" : 4
         }
-      } ],
-      "attributes" : { }
+      } ]
     }, {
       "notes" : [ {
         "duration" : {
@@ -100,8 +105,7 @@
           "noteName" : "A",
           "octave" : 4
         }
-      } ],
-      "attributes" : { }
+      } ]
     } ]
   }, {
     "id" : "p-2",
@@ -112,6 +116,12 @@
       "midiProgram" : 30
     },
     "measures" : [ {
+      "attributes" : {
+        "time" : {
+          "beats" : 4,
+          "beatType" : 4
+        }
+      },
       "notes" : [ {
         "duration" : {
           "noteValue" : "QUARTER",
@@ -156,8 +166,7 @@
           "noteName" : "E",
           "octave" : 4
         }
-      } ],
-      "attributes" : { }
+      } ]
     }, {
       "notes" : [ {
         "duration" : {
@@ -203,8 +212,7 @@
           "noteName" : "A",
           "octave" : 4
         }
-      } ],
-      "attributes" : { }
+      } ]
     } ]
   } ]
 }

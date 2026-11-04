@@ -45,6 +45,8 @@ components:
       properties:
         key:
           $ref: '#/components/schemas/Key'
+        time:
+          $ref: '#/components/schemas/TimeSignature'
     NoteAttributes:
       type: object
       properties:
@@ -160,7 +162,11 @@ components:
                 midiChannel: 0
                 midiProgram: 1
               measures:
-                - notes:
+                - attributes:
+                    time:
+                      beats: 4
+                      beatType: 4
+                  notes:
                     - duration:
                         noteValue: HALF
                         modifier: NONE
@@ -177,7 +183,6 @@ components:
                         alter: 0
                         noteName: C
                         octave: 4
-                  attributes: {}
                 - notes:
                     - duration:
                         noteValue: QUARTER
@@ -211,7 +216,6 @@ components:
                         alter: 0
                         noteName: A
                         octave: 4
-                  attributes: {}
                 - notes:
                     - duration:
                         noteValue: QUARTER
@@ -245,7 +249,6 @@ components:
                         alter: 0
                         noteName: E
                         octave: 4
-                  attributes: {}
                 - notes:
                     - duration:
                         noteValue: _8TH
@@ -287,7 +290,6 @@ components:
                         alter: 0
                         noteName: E
                         octave: 4
-                  attributes: {}
                 - notes:
                     - duration:
                         noteValue: QUARTER
@@ -321,7 +323,6 @@ components:
                         alter: 0
                         noteName: G
                         octave: 4
-                  attributes: {}
                 - notes:
                     - duration:
                         noteValue: QUARTER
@@ -371,7 +372,6 @@ components:
                         alter: 0
                         noteName: E
                         octave: 4
-                  attributes: {}
         - id: d737b4ae-fbaa-4b0d-9d36-d3651e30e93a
           parts:
             - id: p-1
@@ -381,7 +381,11 @@ components:
                 midiChannel: 0
                 midiProgram: 1
               measures:
-                - notes:
+                - attributes:
+                    time:
+                      beats: 4
+                      beatType: 4
+                  notes:
                     - duration:
                         noteValue: QUARTER
                         modifier: NONE
@@ -414,7 +418,6 @@ components:
                         alter: 0
                         noteName: E
                         octave: 4
-                  attributes: {}
                 - notes:
                     - duration:
                         noteValue: QUARTER
@@ -448,7 +451,6 @@ components:
                         alter: 0
                         noteName: A
                         octave: 4
-                  attributes: {}
             - id: p-2
               name: Part two
               instrument:
@@ -456,7 +458,11 @@ components:
                 midiChannel: 1
                 midiProgram: 30
               measures:
-                - notes:
+                - attributes:
+                    time:
+                      beats: 4
+                      beatType: 4
+                  notes:
                     - duration:
                         noteValue: QUARTER
                         modifier: NONE
@@ -489,7 +495,6 @@ components:
                         alter: 0
                         noteName: E
                         octave: 4
-                  attributes: {}
                 - notes:
                     - duration:
                         noteValue: QUARTER
@@ -523,7 +528,18 @@ components:
                         alter: 0
                         noteName: A
                         octave: 4
-                  attributes: {}
+    TimeSignature:
+      type: object
+      required:
+        - beats
+        - beatType
+      properties:
+        beats:
+          type: integer
+          format: int32
+        beatType:
+          type: integer
+          format: int32
     Unpitched:
       type: object
       required:

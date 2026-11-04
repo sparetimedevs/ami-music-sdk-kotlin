@@ -36,7 +36,7 @@ public fun com.sparetimedevs.ami.music.data.kotlin.part.Part.toSerializable(): P
         id = this.id.value,
         name = this.name?.value,
         instrument = this.instrument?.toSerializable(),
-        measures = this.measures.map { it.toSerializable() },
+        measures = this.measures.mapIndexed { index, measure -> measure.toSerializable(isFirstOfPart = index == 0) },
     )
 
 public fun com.sparetimedevs.ami.music.data.kotlin.part.PartInstrument.toSerializable(): PartInstrument =
@@ -46,13 +46,27 @@ public fun com.sparetimedevs.ami.music.data.kotlin.part.PartInstrument.toSeriali
         midiProgram = this.midiProgram?.value?.toInt(),
     )
 
-public fun com.sparetimedevs.ami.music.data.kotlin.measure.Measure.toSerializable(): Measure =
-    Measure(attributes = this.attributes.toSerializable(), notes = this.notes.map { it.toSerializable() })
-
-public fun com.sparetimedevs.ami.music.data.kotlin.measure.MeasureAttributes?.toSerializable(): MeasureAttributes =
-    MeasureAttributes(
-        key = null, // TODO
+public fun com.sparetimedevs.ami.music.data.kotlin.measure.Measure.toSerializable(
+    isFirstOfPart: Boolean = false,
+): Measure =
+    Measure(
+        attributes = this.attributes.toSerializable(this.timeSignature.takeIf { isFirstOfPart }),
+        notes = this.notes.map { it.toSerializable() },
     )
+
+/**
+ * Writes attributes in canonical form (§4.4): `null` (so omitted) when there is nothing to write. A part's first measure
+ * passes its time signature as [firstMeasureTimeSignature], which is written when the attributes don't state one.
+ */
+public fun com.sparetimedevs.ami.music.data.kotlin.measure.MeasureAttributes?.toSerializable(
+    firstMeasureTimeSignature: com.sparetimedevs.ami.music.data.kotlin.timesignature.TimeSignature? = null,
+): MeasureAttributes? {
+    val time = (this?.time ?: firstMeasureTimeSignature)?.toSerializable()
+    return if (time == null) null else MeasureAttributes(key = null /* TODO */, time = time)
+}
+
+public fun com.sparetimedevs.ami.music.data.kotlin.timesignature.TimeSignature.toSerializable(): TimeSignature =
+    TimeSignature(beats = this.beats.value.toInt(), beatType = this.beatType.value.toInt())
 
 // TODO this should yield either Pitched, Unpitched, Chord, or Rest.
 public fun com.sparetimedevs.ami.music.data.kotlin.note.Note.toSerializable(): Pitched =

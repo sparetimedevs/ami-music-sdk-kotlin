@@ -51,27 +51,40 @@ public sealed interface Measure {
     ) : Measure
 
     public companion object {
+        /**
+         * Creates a measure whose [Measure.timeSignature] never contradicts its [Measure.attributes]: it is
+         * `attributes.time` when stated, and otherwise [previousTimeSignature], the one of the previous measure in the
+         * part. A part's first measure has no previous one ([previousTimeSignature] is `null`), and gets 4/4 in its
+         * attributes when it doesn't state a time signature (D4). Empty attributes are the same as no attributes.
+         */
         public operator fun invoke(
             attributes: MeasureAttributes?,
             notes: List<Note>,
-            timeSignature: TimeSignature =
-                TimeSignature(
-                    Beats.unsafeCreate(4),
-                    BeatType.unsafeCreate(4),
-                ), // TODO remove this default, and change order.
-        ): Measure =
-            when {
+            previousTimeSignature: TimeSignature?,
+        ): Measure {
+            val timeSignature = attributes?.time ?: previousTimeSignature ?: DEFAULT_TIME_SIGNATURE
+            val resolvedAttributes =
+                when {
+                    attributes?.time == null && previousTimeSignature == null ->
+                        (attributes ?: MeasureAttributes()).copy(time = timeSignature)
+                    else -> attributes?.takeUnless { it.isEmpty() }
+                }
+            return when {
                 notesShouldBeInAccordanceWithTimeSignature(notes, timeSignature) ->
-                    CompleteMeasure(timeSignature, attributes, notes)
+                    CompleteMeasure(timeSignature, resolvedAttributes, notes)
                 notesAreTooManyForTimeSignature(notes, timeSignature) ->
                     OverfloodedMeasure(
                         timeSignature,
-                        attributes,
+                        resolvedAttributes,
                         notes /* TODO split notes */,
                         notes,
                     )
-                else -> IncompleteMeasure(timeSignature, attributes, notes)
+                else -> IncompleteMeasure(timeSignature, resolvedAttributes, notes)
             }
+        }
+
+        private val DEFAULT_TIME_SIGNATURE: TimeSignature =
+            TimeSignature(Beats.unsafeCreate(4), BeatType.unsafeCreate(4))
 
         private fun notesShouldBeInAccordanceWithTimeSignature(
             notes: List<Note>,

@@ -17,6 +17,7 @@
 package com.sparetimedevs.ami.music.example
 
 import com.sparetimedevs.ami.music.data.kotlin.measure.Measure
+import com.sparetimedevs.ami.music.data.kotlin.measure.MeasureAttributes
 import com.sparetimedevs.ami.music.data.kotlin.midi.MidiChannel
 import com.sparetimedevs.ami.music.data.kotlin.midi.MidiProgram
 import com.sparetimedevs.ami.music.data.kotlin.note.Note.Pitched
@@ -50,7 +51,7 @@ public fun getExampleScore0(): Score {
                 measures =
                     listOf(
                         Measure(
-                            null,
+                            MeasureAttributes(time = FOUR_FOUR),
                             listOf(
                                 Pitched(
                                     duration = NoteDuration(noteValue = NoteValue.QUARTER),
@@ -117,6 +118,7 @@ public fun getExampleScore0(): Score {
                                         ),
                                 ),
                             ),
+                            null,
                         ),
                         Measure(
                             attributes = null,
@@ -187,6 +189,7 @@ public fun getExampleScore0(): Score {
                                             ),
                                     ),
                                 ),
+                            previousTimeSignature = FOUR_FOUR,
                         ),
                     ),
             ),
@@ -202,7 +205,7 @@ public fun getExampleScore0(): Score {
                 measures =
                     listOf(
                         Measure(
-                            attributes = null,
+                            attributes = MeasureAttributes(time = FOUR_FOUR),
                             notes =
                                 listOf(
                                     Pitched(
@@ -270,6 +273,7 @@ public fun getExampleScore0(): Score {
                                             ),
                                     ),
                                 ),
+                            previousTimeSignature = null,
                         ),
                         Measure(
                             attributes = null,
@@ -340,6 +344,7 @@ public fun getExampleScore0(): Score {
                                             ),
                                     ),
                                 ),
+                            previousTimeSignature = FOUR_FOUR,
                         ),
                     ),
             ),

@@ -17,6 +17,7 @@
 package com.sparetimedevs.ami.music.example
 
 import com.sparetimedevs.ami.music.data.kotlin.measure.Measure
+import com.sparetimedevs.ami.music.data.kotlin.measure.MeasureAttributes
 import com.sparetimedevs.ami.music.data.kotlin.midi.MidiChannel
 import com.sparetimedevs.ami.music.data.kotlin.midi.MidiProgram
 import com.sparetimedevs.ami.music.data.kotlin.note.Note
@@ -51,7 +52,7 @@ public fun getExampleScoreHeighHoNobodyHome(): Score {
                 measures =
                     listOf(
                         Measure(
-                            null,
+                            MeasureAttributes(time = FOUR_FOUR),
                             listOf(
                                 Note.Pitched(
                                     NoteDuration(NoteValue.HALF),
@@ -64,6 +65,7 @@ public fun getExampleScoreHeighHoNobodyHome(): Score {
                                     Pitch(NoteName.C, Octave.unsafeCreate(4)),
                                 ),
                             ),
+                            null,
                         ),
                         Measure(
                             null,
@@ -89,6 +91,7 @@ public fun getExampleScoreHeighHoNobodyHome(): Score {
                                     Pitch(NoteName.A, Octave.unsafeCreate(4)),
                                 ),
                             ),
+                            FOUR_FOUR,
                         ),
                         Measure(
                             null,
@@ -114,6 +117,7 @@ public fun getExampleScoreHeighHoNobodyHome(): Score {
                                     Pitch(NoteName.E, Octave.unsafeCreate(4)),
                                 ),
                             ),
+                            FOUR_FOUR,
                         ),
                         Measure(
                             null,
@@ -144,6 +148,7 @@ public fun getExampleScoreHeighHoNobodyHome(): Score {
                                     Pitch(NoteName.E, Octave.unsafeCreate(4)),
                                 ),
                             ),
+                            FOUR_FOUR,
                         ),
                         Measure(
                             null,
@@ -169,6 +174,7 @@ public fun getExampleScoreHeighHoNobodyHome(): Score {
                                     Pitch(NoteName.G, Octave.unsafeCreate(4)),
                                 ),
                             ),
+                            FOUR_FOUR,
                         ),
                         Measure(
                             null,
@@ -204,6 +210,7 @@ public fun getExampleScoreHeighHoNobodyHome(): Score {
                                     Pitch(NoteName.E, Octave.unsafeCreate(4)),
                                 ),
                             ),
+                            FOUR_FOUR,
                         ),
                     ),
             ),

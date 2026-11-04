@@ -44,7 +44,7 @@ public fun getExampleScoreFrereJacques(): Score {
                     ),
                 measures =
                     listOf(
-                        createMeasure(
+                        createFirstMeasure(
                             createNote(noteName = NoteName.C, duration = NoteValue.QUARTER),
                             createNote(noteName = NoteName.D, duration = NoteValue.QUARTER),
                             createNote(noteName = NoteName.E, duration = NoteValue.QUARTER),
