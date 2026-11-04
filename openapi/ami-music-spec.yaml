@@ -24,6 +24,47 @@ components:
             $ref: '#/components/schemas/Pitch'
         rootNote:
           $ref: '#/components/schemas/Pitch'
+    ChordDegree:
+      type: object
+      required:
+        - value
+        - alter
+        - type
+      properties:
+        value:
+          type: integer
+          format: int32
+          description: 2…13
+        alter:
+          type: integer
+          format: int32
+          description: −2…2
+        type:
+          type: string
+          description: ADD | ALTER | SUBTRACT
+    ChordSymbol:
+      type: object
+      required:
+        - kind
+      properties:
+        root:
+          type: string
+          description: NoteName; absent only when kind is NONE.
+        kind:
+          type: string
+          description: ChordKind, e.g. MAJOR, MINOR, DOMINANT, MAJOR_SEVENTH, SUSPENDED_FOURTH, NONE.
+        kindText:
+          type: string
+          description: The kind as written, e.g. "m7" or "-7" (MusicXML <kind text>). At most 32 characters.
+        degrees:
+          type: array
+          items:
+            $ref: '#/components/schemas/ChordDegree'
+          description: Alterations of the chord, e.g. add9.
+        bass:
+          type: string
+          description: NoteName of the bass, for slash chords such as C/G.
+      description: A chord symbol as in MusicXML's <harmony>.
     Fraction:
       type: object
       required:

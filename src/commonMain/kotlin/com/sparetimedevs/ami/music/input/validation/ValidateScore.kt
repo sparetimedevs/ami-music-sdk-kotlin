@@ -27,6 +27,8 @@ import com.sparetimedevs.ami.core.validation.ValidationErrorForProperty
 import com.sparetimedevs.ami.core.validation.ValidationIdentifier
 import com.sparetimedevs.ami.core.validation.combineAllValidationErrors
 import com.sparetimedevs.ami.core.validation.validationErrorForProperty
+import com.sparetimedevs.ami.music.data.kotlin.chord.ChordDegree
+import com.sparetimedevs.ami.music.data.kotlin.chord.ChordSymbol
 import com.sparetimedevs.ami.music.data.kotlin.fraction.Fraction
 import com.sparetimedevs.ami.music.data.kotlin.key.Fifths
 import com.sparetimedevs.ami.music.data.kotlin.key.Key
@@ -253,3 +255,17 @@ private fun outsideByteRange(
         validationErrorForProperty,
         validationIdentifier,
     )
+
+public fun com.sparetimedevs.ami.music.serialization.ChordDegree.validate(
+    validationIdentifier: ValidationIdentifier = NoValidationIdentifier,
+): EitherNel<ValidationError, ChordDegree> =
+    ChordDegree.validate(this.value, this.alter, this.type, validationIdentifier)
+
+public fun com.sparetimedevs.ami.music.serialization.ChordSymbol.validate(
+    validationIdentifier: ValidationIdentifier = NoValidationIdentifier,
+): EitherNel<ValidationError, ChordSymbol> =
+    Either
+        .zipOrAccumulate(
+            ChordSymbol.validate(this.root, this.kind, this.kindText, emptyList(), this.bass, validationIdentifier),
+            (this.degrees ?: emptyList()).map { it.validate(validationIdentifier) }.combineAllValidationErrors(),
+        ) { symbol, degrees -> symbol.copy(degrees = degrees) }

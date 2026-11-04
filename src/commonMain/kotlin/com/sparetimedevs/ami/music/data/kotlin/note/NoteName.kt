@@ -33,6 +33,8 @@ public enum class NoteName {
     A_SHARP,
     B_FLAT,
     B,
+    B_SHARP,
+    C_FLAT,
     C,
     C_SHARP,
     D_FLAT,
@@ -40,6 +42,8 @@ public enum class NoteName {
     D_SHARP,
     E_FLAT,
     E,
+    E_SHARP,
+    F_FLAT,
     F,
     F_SHARP,
     G_FLAT,
@@ -52,31 +56,16 @@ public enum class NoteName {
             input: String,
             validationIdentifier: ValidationIdentifier = NoValidationIdentifier,
         ): EitherNel<ValidationError, NoteName> =
-            when (input) {
-                A_FLAT.name -> A_FLAT.right()
-                A.name -> A.right()
-                A_SHARP.name -> A_SHARP.right()
-                B_FLAT.name -> B_FLAT.right()
-                B.name -> B.right()
-                C.name -> C.right()
-                C_SHARP.name -> C_SHARP.right()
-                D_FLAT.name -> D_FLAT.right()
-                D.name -> D.right()
-                D_SHARP.name -> D_SHARP.right()
-                E_FLAT.name -> E_FLAT.right()
-                E.name -> E.right()
-                F.name -> F.right()
-                F_SHARP.name -> F_SHARP.right()
-                G_FLAT.name -> G_FLAT.right()
-                G.name -> G.right()
-                G_SHARP.name -> G_SHARP.right()
-                else ->
+            when (val noteName = entries.firstOrNull { it.name == input }) {
+                null ->
                     ValidationError(
                         "Note name can't be value $input",
                         validationErrorForProperty<NoteName>(),
                         validationIdentifier,
                     ).nel()
                         .left()
+
+                else -> noteName.right()
             }
     }
 }

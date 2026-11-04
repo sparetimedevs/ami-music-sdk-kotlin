@@ -119,3 +119,15 @@ public fun com.sparetimedevs.ami.music.data.kotlin.note.Pitch.toSerializable(): 
         noteName = this.noteName.name,
         octave = this.octave.value.toInt(),
     )
+
+public fun com.sparetimedevs.ami.music.data.kotlin.chord.ChordDegree.toSerializable(): ChordDegree =
+    ChordDegree(value = this.value.value.toInt(), alter = this.alter.value.toInt(), type = this.type.name)
+
+public fun com.sparetimedevs.ami.music.data.kotlin.chord.ChordSymbol.toSerializable(): ChordSymbol =
+    ChordSymbol(
+        root = this.root?.name,
+        kind = this.kind.name,
+        kindText = this.kindText?.value,
+        degrees = this.degrees.takeIf { it.isNotEmpty() }?.map { it.toSerializable() },
+        bass = this.bass?.name,
+    )

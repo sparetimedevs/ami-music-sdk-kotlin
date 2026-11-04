@@ -237,10 +237,10 @@ None
 
 ### Task 8: Chord symbols
 
-- [ ] Schema: add `ChordSymbol` and `ChordDegree` (§4.1). `Measure` doesn't use them yet.
-- [ ] `NoteName` gains `C_FLAT`, `F_FLAT`, `E_SHARP` and `B_SHARP`, and `NoteName.validate` accepts them (D10, F6). A
+- [x] Schema: add `ChordSymbol` and `ChordDegree` (§4.1). `Measure` doesn't use them yet.
+- [x] `NoteName` gains `C_FLAT`, `F_FLAT`, `E_SHARP` and `B_SHARP`, and `NoteName.validate` accepts them (D10, F6). A
   test checks that all 21 spellings validate.
-- [ ] Add `ChordKind` with MusicXML's 33 kind values. Each entry carries its MusicXML name, e.g.
+- [x] Add `ChordKind` with MusicXML's 33 kind values. Each entry carries its MusicXML name, e.g.
   `MINOR_SEVENTH("minor-seventh")`. The 33 values:
   - major, minor, augmented, diminished, dominant, major-seventh, minor-seventh, diminished-seventh,
     augmented-seventh, half-diminished, major-minor, major-sixth, minor-sixth;
@@ -250,9 +250,9 @@ None
 
   `ChordKind` is validated from its entry name as a string (D9). Tests: 33 distinct entries with their MusicXML names,
   and an unknown kind is a validation error.
-- [ ] Add `ChordDegree` (`value` 2…13, `alter` −2…2) with `DegreeType` (`ADD`, `ALTER`, `SUBTRACT`), validated, with a
+- [x] Add `ChordDegree` (`value` 2…13, `alter` −2…2) with `DegreeType` (`ADD`, `ALTER`, `SUBTRACT`), validated, with a
   test per rule.
-- [ ] Add `ChordSymbol` (`root`, `kind`, `kindText`, `degrees`, `bass`; D2).
+- [x] Add `ChordSymbol` (`root`, `kind`, `kindText`, `degrees`, `bass`; D2).
   - Validation (§4.3): `root` is present exactly when `kind` isn't `NONE`; `bass` is absent for `NONE`; `root` and
     `bass` are known `NoteName`s; `kindText` is at most 32 characters; the degrees are valid.
   - Mapped both ways. An absent `kindText` and empty `degrees` are written as `null` (§4.4).
@@ -260,7 +260,20 @@ None
 
 #### Notes from task 8
 
-None
+- Types live in `music/data/kotlin/chord/`: `ChordKind` (33 entries, `musicXmlName`), `ChordDegree` with value classes
+  `DegreeValue`, `DegreeAlter` and enum `DegreeType`, and `ChordSymbol` with value class `KindText`. All are
+  `@Serializable`. `NoteName` now has 21 entries.
+- Enums are written and read by entry `name` (`MINOR_SEVENTH`), case sensitive, like `KeyMode`; `musicXmlName` is only
+  for a later MusicXML export.
+- Error properties: `ChordKind`, `NoteName`, `KindText`, `DegreeValue`, `DegreeAlter`, `DegreeType`, and `ChordSymbol` for
+  the root/bass presence rules. The presence rules only run when root, kind, kind text and bass are individually valid.
+- `ChordSymbol.validate(root, kind, kindText, degrees, bass, identifier)` takes already validated degrees; the extension
+  `serialization.ChordSymbol.validate(identifier)` in `ValidateScore.kt` validates the degrees too, with the same
+  identifier, so task 9 only has to pass the harmony's identifier. `ChordSymbol.toSerializable()` writes `null` for
+  absent kind text and empty degrees.
+- Tests are in `ChordSymbolTest` and round-trip through `serialization.ChordSymbol` JSON, since `Measure` doesn't use
+  chords yet. The generated `ChordSymbol` writes required `kind` before `root` in JSON.
+- The schema change is committed in `ami-music-spec` (`ChordSymbol`, `ChordDegree`).
 
 ### Task 9: Harmonies on measures
 
