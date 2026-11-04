@@ -12,6 +12,18 @@ The SDK contains:
 - ways to serialize and deserialize the data.
 - ways to validate serialized data when deserializing.
 
+### Reading and writing scores
+
+Use `AmiMusicSdk.json`, the SDK's own `Json` configuration, to read and write scores. It ignores unknown fields (so
+JSON from a newer SDK version can be read), encodes defaults and leaves out nulls.
+
+```kotlin
+val score: Either<DomainError, Score> = fromJson(AmiMusicSdk.json, jsonString)
+val json: Either<DomainError, String> = toJson(AmiMusicSdk.json, scoreValue)
+```
+
+The SDK's version is available at runtime as `AmiMusicSdk.VERSION`.
+
 ### Design principles
 
 The SDK is designed with optionality in mind. You should be able to use all functionality, or just some, or none and

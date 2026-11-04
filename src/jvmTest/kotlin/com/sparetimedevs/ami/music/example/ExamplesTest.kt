@@ -17,11 +17,11 @@
 package com.sparetimedevs.ami.music.example
 
 import arrow.core.getOrElse
+import com.sparetimedevs.ami.AmiMusicSdk
 import com.sparetimedevs.ami.music.serialization.fromJson
 import com.sparetimedevs.ami.music.serialization.toJson
 import io.kotest.assertions.arrow.core.shouldBeRight
 import io.kotest.assertions.json.shouldEqualJson
-import kotlinx.serialization.json.Json
 import java.nio.file.Files
 import java.nio.file.Paths
 import kotlin.test.Test
@@ -31,12 +31,7 @@ import kotlin.test.Test
  */
 @Suppress("ktlint:standard:max-line-length")
 class ExamplesTest {
-    val jsonParser =
-        Json {
-            ignoreUnknownKeys = true
-            encodeDefaults = true
-            explicitNulls = false
-        }
+    val jsonParser = AmiMusicSdk.json
 
     val mapOfJsonAndKotlinExamples =
         mapOf(

@@ -37,11 +37,11 @@ Rules for the tasks below:
 
 ### Task 1: `AmiMusicSdk.json` and `AmiMusicSdk.VERSION`
 
-- [ ] Add a public `AmiMusicSdk` object in commonMain with `json`: `ignoreUnknownKeys = true`, `encodeDefaults = true`,
+- [x] Add a public `AmiMusicSdk` object in commonMain with `json`: `ignoreUnknownKeys = true`, `encodeDefaults = true`,
   `explicitNulls = false` (F13, D14). A test reads score JSON that has unknown fields at score, part and measure level,
   and gets the same `Score` as from the JSON without them (§7). `ExamplesTest` uses `AmiMusicSdk.json` instead of its
   own copy, and the README shows how to read and write scores with it.
-- [ ] Generate `AmiMusicSdk.VERSION` from `libraryVersion` (F10, §4.5):
+- [x] Generate `AmiMusicSdk.VERSION` from `libraryVersion` (F10, §4.5):
   - A Gradle task writes the version as a constant into a directory under `build/`.
   - The directory is registered with `commonMain`'s `kotlin.srcDir(<task provider>)`, so every target's compilation and
     sources jar depend on the task.
@@ -49,7 +49,12 @@ Rules for the tasks below:
 
 #### Notes from task 1
 
-None
+- `AmiMusicSdk` lives in package `com.sparetimedevs.ami`. `VERSION` is `const val VERSION = GENERATED_SDK_VERSION`, where
+  the internal constant is written by the `generateSdkVersion` Gradle task into
+  `build/generated/sdk-version/commonMain/kotlin`.
+- The compatibility-tests module keeps its own `Json` copy in `AbstractCompatibilityTest`, because the versioned suites
+  pin older SDK artifacts that have no `AmiMusicSdk`. Keep that copy identical to `AmiMusicSdk.json`.
+- Backticked test names in commonTest can't contain commas (Kotlin/Native rejects them).
 
 ### Task 2: Validation errors in a serializable shape
 

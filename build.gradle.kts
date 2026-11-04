@@ -25,6 +25,26 @@ repositories {
     mavenLocal()
 }
 
+val generateSdkVersion =
+    tasks.register("generateSdkVersion") {
+        group = "build"
+        description = "Generates the constant holding the SDK version (AmiMusicSdk.VERSION)."
+
+        val version = libraryVersion
+        val outputDir = layout.buildDirectory.dir("generated/sdk-version/commonMain/kotlin")
+        inputs.property("version", version)
+        outputs.dir(outputDir)
+
+        doLast {
+            val dir = outputDir.get().asFile.resolve("com/sparetimedevs/ami")
+            dir.mkdirs()
+            dir.resolve("GeneratedSdkVersion.kt").writeText(
+                "package com.sparetimedevs.ami\n\n" +
+                    "internal const val GENERATED_SDK_VERSION: String = \"$version\"\n",
+            )
+        }
+    }
+
 kotlin {
     explicitApi()
     jvmToolchain(11)
@@ -69,6 +89,9 @@ kotlin {
         }
         // Add generated sources to the commonMain source set
         commonMain.get().kotlin.srcDir("$rootDir/generated/src/commonMain/kotlin")
+        // Add the generated SDK version to the commonMain source set, so every target's compilation and sources jar
+        // depend on the task that writes it.
+        commonMain.get().kotlin.srcDir(generateSdkVersion)
     }
 }
 
