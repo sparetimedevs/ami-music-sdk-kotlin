@@ -16,6 +16,7 @@
 
 package com.sparetimedevs.ami.music.data.kotlin.timesignature
 
+import com.sparetimedevs.ami.music.data.kotlin.fraction.Fraction
 import kotlinx.serialization.Serializable
 
 /**
@@ -25,4 +26,8 @@ import kotlinx.serialization.Serializable
 @Serializable public data class TimeSignature(
     val beats: Beats,
     val beatType: BeatType,
-)
+) {
+    /** The length of a measure with this time signature as a fraction of a whole note: 4/4 is 1, 6/8 is 3/4. */
+    val measureLength: Fraction
+        get() = Fraction.of(beats.value.toInt(), beatType.value.toInt())
+}

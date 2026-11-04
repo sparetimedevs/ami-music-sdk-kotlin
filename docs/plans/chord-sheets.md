@@ -182,22 +182,30 @@ None
 
 ### Task 6: `Fraction`
 
-- [ ] Schema: add `Fraction { numerator: int32; denominator: int32 }` (§4.1).
-- [ ] Add `Fraction` to the Kotlin model (F1, D3):
+- [x] Schema: add `Fraction { numerator: int32; denominator: int32 }` (§4.1).
+- [x] Add `Fraction` to the Kotlin model (F1, D3):
   - Validation of a numerator and a denominator: denominator > 0, numerator ≥ 0, and reduced (zero is `0/1`).
   - A validating extension on the generated `Fraction`.
   - A reducing factory for Kotlin producers: `Fraction.of(2, 4)` is `1/2`.
   - A test for each rule, with the property in the error.
-- [ ] Add comparison, addition and subtraction to `Fraction`.
+- [x] Add comparison, addition and subtraction to `Fraction`.
   - Compute in `Long` and reduce.
   - Subtracting below zero fails, as `unsafeCreate` does.
   - Tests include 1/4096 steps and sums past a whole note.
-- [ ] Add `TimeSignature.measureLength`: `beats / beatType` as a reduced `Fraction`. Tests for 4/4 (1), 3/4 (3/4), 6/8
+- [x] Add `TimeSignature.measureLength`: `beats / beatType` as a reduced `Fraction`. Tests for 4/4 (1), 3/4 (3/4), 6/8
   (3/4) and 2/2 (1).
 
 #### Notes from task 6
 
-None
+- `Fraction` lives in `music/data/kotlin/fraction/Fraction.kt`: a class with a private constructor (`numerator`, `denominator`
+  as `Int`), `Comparable`, `plus`, `minus`, `ZERO`, `ONE`. Create with `Fraction.validate(n, d, identifier)`,
+  `unsafeCreate` (no reducing) or `of` (reducing). `of`, `plus` and `minus` compute in `Long`, reduce, and throw
+  `ValidationException` for a negative result and `ArithmeticException` if the result doesn't fit in an `Int`.
+- Error properties: `Denominator`, `Numerator` (these two accumulate) and `Fraction` for "not in lowest terms".
+- The validating extension `serialization.Fraction.validate(identifier)` is in `ValidateScore.kt`. No `toSerializable`
+  yet, task 7 adds the mapping when `Measure.pickup` needs it.
+- `TimeSignature.measureLength` is a computed property, not part of the serialized form.
+- The schema change is committed in `ami-music-spec` (`Fraction`).
 
 ### Task 7: Pickups and measures without notes
 

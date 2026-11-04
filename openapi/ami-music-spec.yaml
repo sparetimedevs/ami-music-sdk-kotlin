@@ -24,6 +24,19 @@ components:
             $ref: '#/components/schemas/Pitch'
         rootNote:
           $ref: '#/components/schemas/Pitch'
+    Fraction:
+      type: object
+      required:
+        - numerator
+        - denominator
+      properties:
+        numerator:
+          type: integer
+          format: int32
+        denominator:
+          type: integer
+          format: int32
+      description: A non-negative rational number in lowest terms, e.g. a position within a measure as a fraction of a whole note. Zero is 0/1.
     Key:
       type: object
       required:

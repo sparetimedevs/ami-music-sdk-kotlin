@@ -26,6 +26,7 @@ import com.sparetimedevs.ami.core.validation.ValidationErrorForProperty
 import com.sparetimedevs.ami.core.validation.ValidationIdentifier
 import com.sparetimedevs.ami.core.validation.combineAllValidationErrors
 import com.sparetimedevs.ami.core.validation.validationErrorForProperty
+import com.sparetimedevs.ami.music.data.kotlin.fraction.Fraction
 import com.sparetimedevs.ami.music.data.kotlin.key.Fifths
 import com.sparetimedevs.ami.music.data.kotlin.key.Key
 import com.sparetimedevs.ami.music.data.kotlin.key.KeyMode
@@ -134,6 +135,10 @@ public fun com.sparetimedevs.ami.music.serialization.Key?.validate(
             KeyMode.validate(this.mode, validationIdentifier),
         ) { fifths, mode -> Key(fifths, mode) }
     }
+
+public fun com.sparetimedevs.ami.music.serialization.Fraction.validate(
+    validationIdentifier: ValidationIdentifier = NoValidationIdentifier,
+): EitherNel<ValidationError, Fraction> = Fraction.validate(this.numerator, this.denominator, validationIdentifier)
 
 public fun com.sparetimedevs.ami.music.serialization.Tempo?.validate(
     validationIdentifier: ValidationIdentifier = NoValidationIdentifier,
